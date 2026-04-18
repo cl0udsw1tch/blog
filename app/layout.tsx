@@ -27,9 +27,11 @@ export default function RootLayout({
             lang="en"
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         >
-            <body className="min-h-full min-w-full w-full h-full flex-col justify-between">
-                {children}
-                <footer className="bg-black text-white p-5 pl-10 flex-1 font-mono" style={{ height: '100px', width: "100%" }}>
+            <body className="min-h-full min-w-full w-full h-full flex flex-col justify-between">
+                <main className="min-w-full w-full text-center py-10 px-10 basis-[90%] grow shrink-0">
+                    {children}
+                </main>
+                <footer className="bg-black text-white p-5 pl-10 basis-[10%] grow-0 shrink-0 font-mono" style={{ minHeight: '100px', width: "100%" }}>
                     <a href={'https://nureinumeya.vercel.app'}>About me</a>
                     <span> | </span>
                     <Link href={'mailto:nurein.umeya@alumni.utoronto.ca'}>Contact</Link>

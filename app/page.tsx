@@ -8,7 +8,7 @@ const papers = [
 export default function Home() {
     return (
 
-        <main className="min-w-full w-full flex-row justify-center max-w-3xl items-center text-center py-32 px-16 flex-1" style={{ minHeight: '90vh' }}>
+        <div >
 
             <div className="border-b-gray-300 border-b-2" style={{ height: '100px' }}>
                 <h1 className="text-3xl" >Articles</h1>
@@ -22,7 +22,7 @@ export default function Home() {
                 </li>)}
             </ul>
 
-        </main>
+        </div>
 
     );
 }
