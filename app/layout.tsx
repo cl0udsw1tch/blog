@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import Home from "./components/home";
-
+import { Inter } from 'next/font/google'
+import { Playfair_Display } from "next/font/google";
+import { Open_Sans, Lato } from "next/font/google";
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -14,10 +16,30 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
+const opensans = Open_Sans({
+    variable: "--font-open-sans",
+    subsets: ["latin"],
+});
+const lato = Lato({
+    variable: "--font-lato",
+    subsets: ["latin"],
+    weight: ['400']
+});
 export const metadata: Metadata = {
     title: "Math and AI blog by Nurein Umeya.",
     description: "Machine Learning, AI, Engineering, Computer Science...",
 };
+
+
+const inter = Inter({
+    subsets: ['latin'],
+    variable: '--font-inter', // This creates the variable
+})
+const playfair = Playfair_Display({
+    subsets: ['latin'],
+    weight: ['400', '700'],
+    variable: '--font-playfair',
+})
 
 export default function RootLayout({
     children,
@@ -27,14 +49,17 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+            className={`${lato.variable} ${opensans.variable} ${playfair.variable} ${inter.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         >
-            <body className="min-h-full min-w-full w-full h-full flex flex-col justify-between">
-                <header className="basis-1 grow-0 shrink-0 p-12">
+            <head>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+            </head>
+            <body className="min-h-full min-w-full w-full h-full flex flex-col justify-between items-center">
+                <header className="basis-1 grow-0 shrink-0 p-12 pb-0">
                     <Home />
 
                 </header>
-                <main className="min-w-full w-full text-center py-10 px-10 basis-[80%] grow shrink-0">
+                <main className="min-w-full w-full text-center py-10 px-10 basis-[80%] grow shrink-0 flex flex-row justify-center">
                     {children}
                 </main>
                 <footer className="bg-black text-white p-5 pl-10 basis-[10%] grow-0 shrink-0 font-mono" style={{ minHeight: '100px', width: "100%" }}>

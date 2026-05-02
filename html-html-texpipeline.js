@@ -2,11 +2,10 @@ import rehypeDocument from 'rehype-document'
 import rehypeKatex from 'rehype-katex'
 import rehypeParse from 'rehype-parse'
 import rehypeStringify from 'rehype-stringify'
-import remarkParse from 'remark-parse'
-import remarkMath from 'remark-math'
-import remarkRehype from 'remark-rehype'
 import rehypeRaw from 'rehype-raw'
 import rehypeMathjax from 'rehype-mathjax'
+import rehypeEasytex from 'rehype-easytex'
+
 import { read, write } from 'to-vfile'
 import { unified } from 'unified'
 import path from 'path'
@@ -38,16 +37,14 @@ if (!existsSync(output_dir)) {
 }
 
 const file = await unified()
-    .use(remarkParse)
-    .use(remarkMath)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeRaw)
+    .use(rehypeParse, { fragment: true })
+    .use(rehypeEasytex)
     .use(rehypeKatex)
-    .use(rehypeDocument, {
-        css: 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css'
-    })
-    .use(rehypeStringify)
-    .process(await read(`./papers/${paper}/input.md`))
+    // .use(rehypeDocument, {
+    //     css: 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css'
+    // })
+    .use(rehypeStringify, { fragment: true })
+    .process(await read(input_path))
 
 file.path = output_path
 await write(file)

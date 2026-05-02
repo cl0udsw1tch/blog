@@ -1,7 +1,352 @@
-<p>
-    Lift(<code class="language-math">L</code>) can be determined by Lift Coefficient
-    (<code class="language-math">C_L</code>) like the following equation.
+<h1 class="text-5xl my-20" style="text-align:center; font-family: var(--font-playfair);">Tensorial Formulation of
+    Backpropagation</h1>
+
+<p>The matrix formulation of both feed-foward neural networks and convolutional neural networks (and other networks as
+    well, for example, transformers) is inspired by the linear relationship between the parameters of the network.
+    However,
+    when the dimensions of the space the parameters live in begins to grow, and so do the relationships between
+    parameters,
+    matrices become an inappropriate tool to mathematically describe the model and a rather clumsy tool to describe the
+    backpropogation algorithm, so here, tensors are chosen instead.
 </p>
-<pre><code class="language-math">
-        L = \frac{1}{2} \rho v^2 S C_L \int_0^1
-    </code></pre>
+
+<h2 class="text-3xl my-8" style="font-family: var(--font-playfair);"> 1. Feed Forward Neural Networks
+</h2>
+
+
+We will call a neural network a layered model that produces features of samples in a "linear" way, by using
+parameters
+and the sample features at previous layers and then applying a non-linear transform. Define the following:
+<ul style="list-style: disc;">
+    <li>
+        Dataset: $$\mathcal{D} = \{(x^i, v^i)\}_{i \in I} $$ for some index set $I$, where $x^i \in \mathbb{R}^n$ is a
+        sample
+        with $n$ features, and $v^i \in \mathbb{R}$ is its label
+
+    </li>
+    <li>
+        The $j$th feature of the $i$th sample produced at hidden layer $l-1$, feeding into hidden
+        layer
+        $l$.
+        $$(y_{l})^{i,j}$$
+
+    </li>
+</ul>
+Suppose now we have $(y_{l-1})^{i,j}$ for every $j$ in some index set $\mathcal{V}_{l-1}$. We aim to produce [one
+of]
+the next features $(y_{l})^{i,k}$ for the same sample $i$; namely feature number $k \in \mathcal{V}_l$ not
+necessarily
+equal to $j$. The feed-forward neural network (FFN) achieves this in two steps:
+<div class="border-2 bg-emerald-100 p-10 my-4 rounded-md">
+
+    <ol type="1" style="list-style-type: decimal; list-style-position: outside; padding-left: 0px;">
+        <li>
+            We take a set of <span class="italic font-bold">parameters</span> $\{(W_l)^{j,k} \in \mathbb{R}\}_{j \in
+            \mathcal{V}_{l-1}} \cup \{(b_l)^k\}$ - we may also call
+            these <span class="italic font-bold">weights and biases</span> - and multiply each to the respective $j$th
+            feature of
+            the $i$th sample at layer $l-1$,
+            before
+            summing. That is, we produce
+            $$
+            \begin{equation}
+            (z_l)^{i,k} = \sum_{j \in \mathcal{V}_{l-1}}(y_{l-1})^{i,j} (W_l)^{j,k} + (b_l)^k
+            \end{equation}
+            $$
+            a "preimage" of the $k$th feature of the $i$th sample at layer $l$. Just the preimage thus far, since at
+            step
+            2...
+
+
+        </li>
+        <li>
+            a <span class="italic font-bold">smooth, nonlinear transform</span> from $C^{\infty}(\mathbb{R},
+            \mathbb{R})$ is
+            henceforth applied:
+            $$
+            \begin{equation}
+            (y_l)^{i,k} = f_l((z_l)^{i,k})
+            \end{equation}
+            $$
+            producing the desired feature.
+
+
+        </li>
+    </ol>
+
+</div>
+
+<h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Tensors</h3>
+
+It is at this point we will specify important details needed to understand the rest of the article. Firstly, we will use
+<span class="italic">Einstein's Summation Convention</span> (ESC) to simplify sums with a repeated index, signifying the
+summation of the terms
+over said index. For example, we can rewrite (1) as
+$$
+\begin{equation}
+(z_l)^{i,k} = (y_{l-1})^{i,j} (W_l)^{j,k} + b^k
+\end{equation}
+$$
+where the sum is meant to be over $j$, which repeats, and where all terms are zero outside of their domains. This too
+deserves formalization. Firstly, let's consider $(y_l)$ as a well defined object, namely, a <span
+    class="italic font-bold">tensor</span> over infinite
+dimensional vector spaces, but with <span class="italic">finite support</span>. Let's clarify, since the $(y_l)^{a,b}$
+objects encompass $\mathcal{V}_l$ features
+for $n$ samples, lets define
+$$
+\begin{align}
+y_l &= \sum_{i,k} (y_l)^{i,k} e_i \otimes e_k \in \mathbb{R}^{\mathbb{Z}} \otimes \mathbb{R}^{\mathbb{Z}} \\
+W_l &= \sum_{j,k} (W_l)^{j,k} e_j \otimes e_k \in \mathbb{R}^{\mathbb{Z}} \otimes \mathbb{R}^{\mathbb{Z}} \\
+b_l &= \sum_{i,k} (b_l)^{i,k} e_i \otimes e_k \in \mathbb{R}^{\mathbb{Z}} \otimes \mathbb{R}^{\mathbb{Z}}
+\end{align}
+$$
+where $(b_l)^{i,k} = (b_l)^{i',k} = (b_l)^k $ for all $i,i'$.
+
+<div class="border-2 p-2 m-2 bg-emerald-100 rounded-md">
+
+    Throughout the article, $V = \mathbb{R}^{\mathbb{Z}}$ and so $y_l,W_l,z_l,b_l \in V \otimes V$.
+</div>
+We will also make use of <span class="italic">Abstract Index Notation </span> (AIN), which is particularly useful when
+representing the <span class="italic">shape</span> of
+a tensor. For example, we could write $(y_l)^{ab}$ to denote that $y_l \in V \otimes V$, or
+for a more general example
+$$
+T^{ab}{}_{c}{}^{d}{}_{e}
+$$
+to denote a tensor $T \in V \otimes V \otimes V^* \otimes V \otimes V^*$.
+<br />
+We proceed from the
+tensorized version of (1)
+$$
+\begin{align}
+(z_l)^{i,k} e_i \otimes e_k &= ((y_{l-1})^{i,j} (W_l)^{j,k} + (b_l)^{i,k} ) e_i \otimes e_k \\
+\implies z_l &= \sum_{i,j,k} (y_{l-1})^{i,j} (W_l)^{j,k} e_i \otimes e_k + \sum_{i,k} (b_l)^{i,k} e_i \otimes e_k \in
+V
+\otimes V
+\end{align}
+$$
+We also need to transform the $C^{\infty}(\mathbb{R}, \mathbb{R})$ transform into one that acts on tensors, that is one
+from $C^{\infty}(V \otimes V, V \otimes V )$ by defining
+$$
+\begin{equation}
+y_l = F_l(z_l) = \sum_{i,k} f_l((z_l)^{i,k}) e_i \otimes e_k
+\end{equation}
+$$
+<h3 class="text-2xl" style="font-family: var(--font-playfair);">Contraction, Inner Products, Metric Tensors</h3>
+<br />
+The issue with (8) is that is kind of useless; we want to speak in a language of tensors and yet are using the
+coefficients of the layer features and parameters, instead of working with their tensor representations directly. Using
+basic linear algebra, one realizes that (8) can be formulated as a matrix product, where the inner product is over the
+space indexed by $j$. Using <span class="italic">tensors</span> however, we see (6) as the image of the metric tensor,
+or, if one of the $j$ were lowered, as a contraction. Before jumping in, we need to agree on contraction notation; in
+(AIN) this is straighforward: if it had been the case that our tensors were of mixed $(1,1)$ rank, we could write
+$$
+\begin{equation}
+(z_l)^a{}_c = (y_{l-1})^a{}_b (W_l)^b{}_c + (b_l)^a{}_c
+\end{equation}
+$$
+However, we actually want to write contraction as a well-formed function, since we will need to derivate later, so lets
+agree on the convention
+
+<div class="bg-cyan-100 border-2 rounded-md p-0 m-2">
+    $$C_{i_1 \ldots i_{\phi}}^{i'_1 \ldots i'_{\phi}}(T) := \text{contraction over covector and contravector slot } i_j,
+    i'_j \text{ for each } j $$
+</div>
+
+assuming of course $T$ is homogenous over the $i$th and $j$th slots (i.e they are over the same vector space up-to
+duality). Rewriting the equation for our $(1,1)$ tensors:
+$$
+\begin{equation}
+z_l = C^3_2(y_l \otimes W_l) + b_l
+\end{equation}
+$$
+<br />
+Unfortunately our tensors arent of rank $(1,1)$ and the shared index across $y_{l-1}, W_l$ is across $(V, V)$ not $(V^*,
+V)$, so
+the operation we're looking for is the inner-product, or, contraction against a metric tensor. We should talk briefly
+about the metric tensor $g_{ab}$ and the inverse metric tensor $ {g}^{ab}$.
+$V$ has the canonical orthonormal basis, and is endowed with the canonical inner
+product. For $V$, the basis is $\{e_i\}$ and the inner product is given by $\langle e_i, e_j \rangle =
+\delta_{ij}$. For the dual space $V^*$, the basis is $\{e^i\}$ with inner product $\langle e^i, e^j \rangle =
+\delta_{ij} $.
+The metric tensors are then given by agreement with the inner products
+$$\begin{align} g_{ab} = g_{i,j} e^i \otimes e^j =
+\delta_{ij} e^i \otimes e^j \\
+{g}^{ab} = g^{i,j} e_i \otimes e_j = \delta_{ij} e_i \otimes e_j \end{align}$$
+
+Typically we would fully contract either tensor against the product of two input tensors, however we are going to need
+to denote partially contracting against the metric tensor. Thus let us generalize the previously mentioned metrics
+using maps
+<div class="bg-cyan-100 border-2 m-2 rounded-md">
+    $$ G_{i_1 \ldots i_{\phi}, i'_1 \ldots i'_{\phi}}^{j_1 \ldots j_{\psi}, j'_1 \ldots j'_{\psi}}(A,B)
+    $$
+
+    $$
+    = C_{a_1 \ldots a_{\phi}, b_1 \ldots b_{\phi}, j_1 \ldots j_{\psi}, j'_1 \ldots j'_{\psi}}^{i_1 \ldots
+    i_{\phi}, i'_1 \ldots i'_{\phi},c_1 \ldots c_{\psi}, d_1 \ldots d_{\psi}}(\bigotimes_{m\leq \phi} g_{a_mb_m}
+    \bigotimes_{n \leq \psi}
+    g^{c_nd_n} \otimes A \otimes B)
+    $$
+    $$ =
+    g_{i_1i'_1}\ldots g_{i_{\phi}i'_{\phi}} g^{j_1j'_1} \ldots g^{j_{\psi}j'_{\psi}}AB$$
+    $$= \text{contraction of } A
+    \otimes
+    B
+    \text{ against each }
+    g_{ab} \text{ over contravariant slots } i_p, i'_p $$ $$ \text{and } g^{ab} \text{ over covariant
+    slots } j_q, j'_q \text{ of } A,B \text{ resp. }
+    $$
+</div>
+
+
+Now we can find a suitable tensorial representation for (8) in terms of tensors, not coefficients.
+<div>
+    $$
+    z_l = (y_{l-1})^{i,j}(W_l)^{j,k}e_i \otimes e_k + (b_l)^{i,k} e_i \otimes e_k= G_{b,c}((y_{l-1})^{ab}, (W_l)^{cd}) +
+    (b_l)^{ad}
+    $$
+</div>
+
+
+<h3 class="text-2xl mt-8 mb-8" style="font-family: var(--font-playfair);">The Model </h3>
+<p>
+    We now formalize the FNN model $\mathcal{F}$ completely.
+
+<div class="bg-emerald-100 border-2 px-8 py-6 rounded-md">
+    <ul style="list-style: disc">
+        <li>
+            We will call a <span class="font-bold">layer</span> $l$ the function $$y_{l-1} \mapsto \mathcal{L}_l(y_{l-1}
+            ; W_l, b_l) =
+            \Gamma_l(y_{l-1}, W_l, b_l)$$ where
+            $$
+            \begin{equation}
+            \Gamma_{l}(S, T, U) = F_l(g_{bc}S^{ab}T^{cd}+ U)
+            \end{equation}
+            $$
+            We will call the <span class="font-bold">neuron</span> $k$ at layer $l$ the function $$
+            y_{l-1} \mapsto \mathcal{N}_{l,k}(y_{l-1} ; W_l, b_l) = \gamma_{l,k}(y_{l-1}, W_l, b_l) $$ where $$
+            \gamma_{l,k}(S, T, U) =
+            F_l(g_{bc}S^{ab}(T^{jk} e_j
+            \otimes e_k)^{cd}+U^{i,k}e_i \otimes e_k) $$$$
+            = \Gamma_l(S, T^{jk} e_j \otimes e_k, U^{i,k}e_i \otimes e_k)
+            $$
+            Note that
+            $$
+            \sum_k \gamma_{l,k}(S, T, U) = \Gamma_l(S, T, U)
+            $$
+            that is, a layer is a sum of neurons.
+        </li>
+        <li>
+            First we start with the <span class="font-bold">input layer </span>, $\mathcal{L}_0$. We define
+            $$(y_0)^{i,j} := (x^i)^j $$
+            $$
+            x:= \sum_{i,j} (x^i)^{j}e_i \otimes e_j = \sum_{i,j} (y_0)^{i,j}e_i \otimes e_j = y_0
+
+            $$
+            and define $\mathcal{L}_0$ by $x \mapsto y_0$, so $\mathcal{L}_0$ is the
+            identity. It's not
+            strictly a <span class="italic">computational</span> layer like defined earlier,
+            however some folks like to speak of an input layer, which refers to this.
+        </li>
+        <li>
+            The <span class="font-bold">hidden</span> layers are $\{\mathcal{L}_l\}_{ l=1\dots L}$
+        </li>
+        <li>
+            The <span class="font-bold">output</span> layer is $$y_L \mapsto \mathcal{L}_{L+1}(y_L; W_{L+1}, b_{L+1}) =
+            F_{L+1}( g_{bc}(y_L)^{ab}(W_{L+1})^{cd} + b_{L+1})$$ where $F_{L+1}$ is called the activation function.
+        </li>
+        <li>
+            The <span class="font-bold">model</span> $\mathcal{F}$ is defined by
+            $$ \mathcal{F}(x ; \theta) = \mathcal{L}_{L+1}(\cdot ; W_{L+1},b_{L+1}) \circ \ldots \circ
+            \mathcal{L}_{1}(\cdot ;
+            W_{1}, b_1)
+            \circ \mathcal{L_0} (x) $$ where $$\theta = W_1,b_1 \ldots W_{L+1},b_{L+1} $$ are the parameters of the
+            model.
+        </li>
+
+    </ul>
+</div>
+<h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss, Empirical Risk</h3>
+We have so far the ability to compute the output of our parameterized model $y_{L+1} = \mathcal{F}(x;\theta)$. We assume
+for each $i$
+that $$(x^i,v^i) \sim P(X,Y)$$ for some joint distribution $P$ with PDF $p$, over the space of samples and labels,
+denoted by the random
+variables $X$ and $Y$ resp.
+Define
+a
+<span class="font-bold">loss function</span> $\mathbb{R} \times \mathbb{R} \to \mathbb{R}:$
+$$ a, b \mapsto \Delta(a, b) $$
+
+For a model $h$, the <span class="font-bold italic">loss</span> at a sample $(x^i, v^i) \in \mathcal{D}$ is
+$$
+l(x^i,v^i,h) = \Delta(h(x^i), v^i)
+$$
+The <span class="font-bold">risk</span> is the expected value of the loss over $X \times Y$
+$$
+R(h) = \mathbb{E}_{X,Y}(l(x,y,h)) = \int l(x,y,h) p(x,y) dxdy
+$$ which is intractable, so the <span class="font-bold">empirical risk</span> is used instead, which, as data size
+grows, converges to the risk by the LLN:
+$$
+\begin{equation}
+\hat{R}(h) = \frac{1}{I}\sum_i l(x^i,v^i,h)
+\end{equation}
+$$
+<span class="font-bold">Empirical Risk Minimization</span> chooses a model space, in this case, $\mathcal{H} =
+\{\mathcal{F}(\cdot;\theta) \}_{\theta}$ and finds
+$$
+\argmin_{h \in \mathcal{H}}\hat{R}(h) = \mathcal{F}(\cdot;\argmin_{\theta}\hat{R}(\mathcal{F}(\cdot ; \theta)))
+$$
+so we find the $\argmin$ on the RHS, where
+$$
+\hat{R}(\mathcal{F}(\cdot ; \theta)) = \frac{1}{I}\sum_i\Delta(\mathcal{F}(x^i ; \theta), v^i)
+$$
+
+<h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss Function, Activation Functions</h3>
+We will need a way to choose the loss function $\Delta$. While we could make an arbitrary choice, we could also use
+<span class="font-bold"> Maximum Likelihood Estimation </span>(MLE) to derive it.
+Let $X = X_1 \ldots X_I, Y=Y_1\ldots Y_I, Z_i = (X_i, Y_i), D = Z_1 \ldots Z_I$.
+Firstly, assume the dataset follows
+some distribution $\mathcal{P}$ from a family of distributions parameterized by $\theta$. That is $$D \sim
+\mathcal{P}({\theta}) \in \mathscr{P}=\{\mathcal{P}({\theta'}) , \theta'
+\in \Theta
+\}$$ with density
+$p(d;\theta)$.
+The likelihood is
+$$
+\mathbb{L}(\theta; d) = p(d; \theta)
+$$
+If we assume $Z_i$ is IID for each $i$, we can
+write
+$$
+\mathbb{L}(\theta; d) = p(d;\theta) = \prod_i p(x^i, v^i; \theta)
+$$
+Factoring gives
+$$
+\begin{equation}
+\mathbb{L}(\theta; d) = \prod_i p(x^i)p(v^i|x^i; \theta)
+\end{equation}
+$$
+
+
+
+Taking the negative log gives
+$$
+-\log(\mathbb{L}(\theta; d)) = -\sum_i \log(p(x^i)) - \sum_i \log(p(v^i|x^i; \theta))
+$$
+which we want minimized over $\theta$, in order to maximize (16).
+To do so, we need only find
+$$
+
+\begin{equation}
+\argmin_{\theta}\left(- \sum_i \log(p(v^i|x^i; \theta))\right)
+\end{equation}
+$$
+We assume that $\mathbb{P}_{\mathcal{F}(x;\theta)} \in \mathcal{P}$
+
+<h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Backpropogation</h3>
+
+
+<div style="height: 20vh"></div>
+
+
+END
