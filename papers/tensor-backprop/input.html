@@ -351,7 +351,10 @@ the form (17). By our assumption on the data and $\mathscr{P}$,
 $$(Y|X=x) \sim \mathcal{P}_{Y|X}(y|x; \theta) $$ with $$p_{Y|X}(y|x;\theta)=p_0(y;\mathcal{F}(x,\theta))$$
 $$\implies (Y|X=x) \sim \mathcal{P}_0(Y;\nu=\mathcal{f}(x;\theta))$$
 
-for some apriori chosen $\mathcal{P}_0$ with density $p_0$. Letting $\nu=\mathcal{f}(x;\theta)$, we now investigate
+for some apriori chosen $\mathcal{P}_0$ with density $p_0$. Letting $$\nu=\sum_j\nu^{i,j}e_i\otimes
+e_j=\mathcal{f}(x;\theta)$$ for an
+outcome $x=x^i := \sum_j x^{i,j}e_i \otimes e_j$ we now
+investigate
 suitable choices for
 $\mathcal{P}_0$ by the nature of $Y|X=x$:
 <ul style="list-style: disc; margin-top: 10px;">
@@ -362,7 +365,27 @@ $\mathcal{P}_0$ by the nature of $Y|X=x$:
         $$p_0(y;\nu) =
         \nu^y(1-\nu)^{1-y} $$
         $$\implies l(x^i, v^i, \mathcal{F}(\cdot; \theta))= -\log(p_0(v^i, \nu)) = -\left(v^i\log(\nu) +
-        (1-v^i)\log(1-\nu)\right) $$ that is, the <span class="font-bold">Binary Cross Entropy</span> (BCE) loss.
+        (1-v^i)\log(1-\nu)\right) $$ that is, the <span class="font-bold">Binary Cross Entropy</span> (BCE) loss. Such a
+        loss demands our output $\nu=\mathcal{F}(x, \theta)$ obey certain properties:
+        <ol style="list-style: lower-latin; margin: 10px;">
+            <li>
+                $
+                \text{supp}^b(\nu^{ab}) \subset \{e_1\} (\implies \text{supp}^b((z_{L+1})^{ab}) \subset \{e_1\})
+                $
+
+            </li>
+            <li>
+                $\nu^{i,j} \in [0,1]$
+            </li>
+        </ol>
+        so that operations are well defined, by using $\nu^{i,1}$ in place of $\nu$ when needed. To satisfy (b) we
+        choose
+        the activation
+        $f_{L+1}$ to be the <span class="font-bold">sigmoid</span>
+        activation
+        $$
+        f_{L+1}: \mathbb{R} \to \mathbb{R} = z \mapsto \frac{1}{1+e^{-z}}
+        $$
 
     </li>
     <li>
@@ -372,6 +395,32 @@ $\mathcal{P}_0$ by the nature of $Y|X=x$:
             (\nu^c)^{[y=c]}$$ </li>
             $$\implies l(x^i, v^i, \mathcal{F}(\cdot; \theta))= -\log(p_0(v^i, \nu)) =-\sum_c
             [v^i=c]\log(\nu^c) $$ that is, the <span class="font-bold">Categorical Cross Entropy</span> (CCE) loss.
+            Such a
+            loss demands our output $\nu=\mathcal{F}(x, \theta)$ obey certain properties:
+            <ol style="list-style: lower-latin; margin: 10px;">
+                <li>
+                    $
+                    \text{supp}^{b}(\nu^{ab}) \subset \{e_c\}_{c\in C} (\implies \text{supp}^b((z_{L+1})^{ab}) \subset
+                    \{e_c\}_{c\in
+                    C})
+                    $
+
+                </li>
+                <li>
+                    $\nu^{i,c} \in [0,1], \sum_c \nu^{i,c} = 1$
+                </li>
+            </ol>
+            so that operations are well defined by using $\nu^{i,c}$ in place of $\nu^c$ when needed. To satisfy (b) we
+            choose
+            the activation
+            $F_{L+1}$ to be the <span class="font-bold">softmax</span>
+            activation, a type of tensor activation:
+            $$
+            F_{L+1}: V\otimes V\to V \otimes V= z^{i,j}e_i \otimes e_j \mapsto \frac{e^{z^{i,j}}}{\sum_k e^{z^{i,k}}}e_i
+            \otimes
+            e_j
+            $$
+
     <li>
         If $(Y|X=x) \in \mathbb{R}$ in the case of a regression, then $$
         \mathcal{P}_0(Y;\nu)=\mathcal{N}(Y;\mu=\nu,\sigma^2=1) $$
@@ -380,6 +429,18 @@ $\mathcal{P}_0$ by the nature of $Y|X=x$:
         \frac{1}{2}(v^i - \nu)^2 $$
         although note to minimize the above, one need only minimize the <span class="font-bold">Mean Squared
             Error</span> (MSE) term $(v^i-\nu)^2$.
+        Such a
+        loss demands our output $\nu=\mathcal{F}(x, \theta)$ obey certain properties:
+        <ol style="list-style: lower-latin; margin: 10px;">
+            <li>
+                $
+                \text{supp}^b(\nu^{ab}) \subset \{e_1\} (\implies \text{supp}^b((z_{L+1})^{ab}) \subset \{e_1\})
+                $
+
+            </li>
+        </ol>
+        so that operations are well defined, by using $\nu^{i,1}$ in place of $\nu$ when needed. For regression, the
+        activation is unrestricted and can infact be left out entirely by being set to the identity.
     </li>
 </ul>
 
