@@ -267,81 +267,121 @@ Now we can find a suitable tensorial representation for (8) in terms of tensors,
     </ul>
 </div>
 <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss, Empirical Risk</h3>
-We have so far the ability to compute the output of our parameterized model $y_{L+1} = \mathcal{F}(x;\theta)$. We assume
-for each $i$
-that $$(x^i,v^i) \sim P(X,Y)$$ for some joint distribution $P$ with PDF $p$, over the space of samples and labels,
-denoted by the random
-variables $X$ and $Y$ resp.
+We have so far the ability to compute the output of our parameterized model $y_{L+1} = \mathcal{F}(x;\theta)$. Let $X,Y$
+be the random variables for input features and labels.
+Let $$X,Y \sim \mathcal{P}(X,Y) $$ with pdf $p_{X,Y}(x,y)$. Let $X_i,Y_i$ be the ith feature and label random variables,
+and assume
+$$X_i, Y_i \sim_{i.i.d} \mathcal{P}(X,Y)$$
 Define
 a
 <span class="font-bold">loss function</span> $\mathbb{R} \times \mathbb{R} \to \mathbb{R}:$
-$$ a, b \mapsto \Delta(a, b) $$
+$$ w, \hat{w} \mapsto \Delta(w, \hat{w}) $$
 
 For a model $h$, the <span class="font-bold italic">loss</span> at a sample $(x^i, v^i) \in \mathcal{D}$ is
 $$
-l(x^i,v^i,h) = \Delta(h(x^i), v^i)
+l(x^i,v^i,h) = \Delta(v^i, h(x^i))
 $$
 The <span class="font-bold">risk</span> is the expected value of the loss over $X \times Y$
 $$
-R(h) = \mathbb{E}_{X,Y}(l(x,y,h)) = \int l(x,y,h) p(x,y) dxdy
+R(h) = \mathbb{E}_{X,Y}(l(x,y,h)) = \int l(x,y,h) p_{X,Y}(x,y) dxdy
 $$ which is intractable, so the <span class="font-bold">empirical risk</span> is used instead, which, as data size
 grows, converges to the risk by the LLN:
 $$
 \begin{equation}
-\hat{R}(h) = \frac{1}{I}\sum_i l(x^i,v^i,h)
+\hat{R}(d, h) = \frac{1}{I}\sum_i l(x^i,v^i,h) \to \mathbb{E}_{X,Y}(l(x,y,h))
+
 \end{equation}
-$$
+$$as $I\to\infty$ where $d=(x^1,v^1\ldots x^I,v^I)$ is the realized sample.
 <span class="font-bold">Empirical Risk Minimization</span> chooses a model space, in this case, $\mathcal{H} =
 \{\mathcal{F}(\cdot;\theta) \}_{\theta}$ and finds
 $$
-\argmin_{h \in \mathcal{H}}\hat{R}(h) = \mathcal{F}(\cdot;\argmin_{\theta}\hat{R}(\mathcal{F}(\cdot ; \theta)))
+\argmin_{h \in \mathcal{H}}\hat{R}(d, h) = \mathcal{F}(\cdot;\argmin_{\theta}\hat{R}(d, \mathcal{F}(\cdot ;
+\theta)))
 $$
 so we find the $\argmin$ on the RHS, where
 $$
-\hat{R}(\mathcal{F}(\cdot ; \theta)) = \frac{1}{I}\sum_i\Delta(\mathcal{F}(x^i ; \theta), v^i)
+\argmin_{\theta} \hat{R}(d, \mathcal{F}(\cdot ; \theta)) = \argmin_{\theta}\frac{1}{I}\sum_i\Delta(v^i, \mathcal{F}(x^i
+;
+\theta))
 $$
 
 <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss Function, Activation Functions</h3>
 We will need a way to choose the loss function $\Delta$. While we could make an arbitrary choice, we could also use
 <span class="font-bold"> Maximum Likelihood Estimation </span>(MLE) to derive it.
-Let $X = X_1 \ldots X_I, Y=Y_1\ldots Y_I, Z_i = (X_i, Y_i), D = Z_1 \ldots Z_I$.
-Firstly, assume the dataset follows
-some distribution $\mathcal{P}$ from a family of distributions parameterized by $\theta$. That is $$D \sim
-\mathcal{P}({\theta}) \in \mathscr{P}=\{\mathcal{P}({\theta'}) , \theta'
+
+Let $$\mathscr{P}=\{\mathcal{P}(X,Y; \theta) : p_{X,Y}(x,y;\theta) =
+p_{Y|X}(y|x;\theta)p_X(x) = p_0(y;\mathcal{F}(x;\theta))p_X(x) \}_{\theta
 \in \Theta
-\}$$ with density
-$p(d;\theta)$.
+}$$ and assume
+$$X,Y \sim
+\mathcal{P}(X, Y; {\theta}) \in \mathscr{P} $$
+with density
+$p_{X,Y}(x,y;\theta) = p_0(y;\mathcal{F}(x;\theta))p_X(x)$.
+The sample distribution for the random vector ${\bf D}= (X_1,Y_1)\ldots(X_I,Y_I)$ is then given by the density
+$$
+p_{{\bf D}}({\bf d};\theta)=_{i.i.d} \prod_i p(x_i, y_i;\theta) = \prod_i p_0(y_i;\mathcal{F}(x_i;\theta))p_X(x_i)
+$$
+
 The likelihood is
 $$
-\mathbb{L}(\theta; d) = p(d; \theta)
-$$
-If we assume $Z_i$ is IID for each $i$, we can
-write
-$$
-\mathbb{L}(\theta; d) = p(d;\theta) = \prod_i p(x^i, v^i; \theta)
-$$
-Factoring gives
-$$
-\begin{equation}
-\mathbb{L}(\theta; d) = \prod_i p(x^i)p(v^i|x^i; \theta)
-\end{equation}
-$$
+\mathbb{L}(\theta; {\bf \mathfrak{d}}) = p_{\bf D}({\bf \mathfrak{d}}; \theta) = \prod_i
+p_0(v^i;\mathcal{F}(x^i;\theta))p_X(x^i)
 
-
-
+$$
+where ${\bf \mathfrak{d}}$ is a realized sample.
 Taking the negative log gives
 $$
--\log(\mathbb{L}(\theta; d)) = -\sum_i \log(p(x^i)) - \sum_i \log(p(v^i|x^i; \theta))
+-\log(\mathbb{L}(\theta; {\bf \mathfrak{d}})) = -\sum_i \log(p_X(x^i)) - \sum_i \log(p_0(v^i;\mathcal{F}(x^i; \theta)))
 $$
-which we want minimized over $\theta$, in order to maximize (16).
+which we want minimized over $\theta$.
 To do so, we need only find
 $$
 
 \begin{equation}
-\argmin_{\theta}\left(- \sum_i \log(p(v^i|x^i; \theta))\right)
+\argmin_{\theta}\left(- \sum_i \log(p_0(v^i;\mathcal{F}(x^i; \theta)))\right)
 \end{equation}
 $$
-We assume that $\mathbb{P}_{\mathcal{F}(x;\theta)} \in \mathcal{P}$
+and set $$\Delta(a, b) := -\log(p_0(a;b)) $$
+$$ \begin{equation}\implies l(x^i, v^i, \mathcal{F}(\cdot;\theta)) = \Delta(v^i, \mathcal{F}(x^i;\theta)) =
+-\log(p_0(v^i;\mathcal{F}(x^i;
+\theta))) \end{equation}$$
+$$ \implies (16) = I * \argmin_{\theta} \hat{R}(\mathfrak{d},\mathcal{F}(\cdot; \theta))$$
+so maximizing the likelihood assuming class $\mathscr{P}$ will also minimize the empirical risk if the loss is given in
+the form (17). By our assumption on the data and $\mathscr{P}$,
+$$(Y|X=x) \sim \mathcal{P}_{Y|X}(y|x; \theta) $$ with $$p_{Y|X}(y|x;\theta)=p_0(y;\mathcal{F}(x,\theta))$$
+$$\implies (Y|X=x) \sim \mathcal{P}_0(Y;\nu=\mathcal{f}(x;\theta))$$
+
+for some apriori chosen $\mathcal{P}_0$ with density $p_0$. Letting $\nu=\mathcal{f}(x;\theta)$, we now investigate
+suitable choices for
+$\mathcal{P}_0$ by the nature of $Y|X=x$:
+<ul style="list-style: disc; margin-top: 10px;">
+    <li>
+        If $(Y|X=x) \in \{0,1\}$ in the case of a binary learning task, then $$\mathcal{P}_0(Y;\nu)
+        =
+        \textbf{Bernoulli}(Y;\nu)$$ is a suitable choice (although actually derived from the axioms of probability) with
+        $$p_0(y;\nu) =
+        \nu^y(1-\nu)^{1-y} $$
+        $$\implies l(x^i, v^i, \mathcal{F}(\cdot; \theta))= -\log(p_0(v^i, \nu)) = -\left(v^i\log(\nu) +
+        (1-v^i)\log(1-\nu)\right) $$ that is, the <span class="font-bold">Binary Cross Entropy</span> (BCE) loss.
+
+    </li>
+    <li>
+        If $(Y|X=x) \in S \subset \mathbb{Z} : \lvert S \rvert < \infty$ more broadly, in the case of categorical
+            learning, then (noting $\nu$ is a vector $\nu^c e_c$) $$ \mathcal{P}_0(Y;\nu)=\textbf{Categorical}(Y;\nu) $$
+            is a suitable choice (although actually derived from the axioms of probability) with $$p_0(y;\nu)=\prod_c
+            (\nu^c)^{[y=c]}$$ </li>
+            $$\implies l(x^i, v^i, \mathcal{F}(\cdot; \theta))= -\log(p_0(v^i, \nu)) =-\sum_c
+            [v^i=c]\log(\nu^c) $$ that is, the <span class="font-bold">Categorical Cross Entropy</span> (CCE) loss.
+    <li>
+        If $(Y|X=x) \in \mathbb{R}$ in the case of a regression, then $$
+        \mathcal{P}_0(Y;\nu)=\mathcal{N}(Y;\mu=\nu,\sigma^2=1) $$
+        is a suitable choice with $$p_0(y;\nu)=\frac{1}{\sqrt{2\pi}} \exp\left({-\frac{(y-\nu)^2}{2}}\right)$$
+        $$\implies l(x^i, v^i, \mathcal{F}(\cdot; \theta))= -\log(p_0(v^i, \nu)) =-\log(\frac{1}{\sqrt{2\pi}}) +
+        \frac{1}{2}(v^i - \nu)^2 $$
+        although note to minimize the above, one need only minimize the <span class="font-bold">Mean Squared
+            Error</span> (MSE) term $(v^i-\nu)^2$.
+    </li>
+</ul>
 
 <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Backpropogation</h3>
 
