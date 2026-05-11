@@ -11,6 +11,6 @@ export default function Page() {
     }, [])
     console.log(html)
     return (
-        <div className="p-10 max-w-screen-md text-left" dangerouslySetInnerHTML={{ __html: html }} style={{ fontFamily: 'var(--font-open-sans)' }}></div>
+        <div className="p-10 max-w-screen-lg text-left" dangerouslySetInnerHTML={{ __html: html }} style={{ fontFamily: 'var(--font-open-sans)' }}></div>
     )
 }
