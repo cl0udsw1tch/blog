@@ -586,28 +586,35 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
 
     Define
     $$
-    T(\cdot, \theta) =
+    \begin{align}
+    S &amp;= \frac{1}{I}{\bf \Delta}(\bar{\bm{v}}, \cdot) \circ F_{L+1} \\
+    T(\cdot, \theta) &amp;=
     \Gamma_{L+1}(\cdot; \theta_{L+1}) \circ ... \circ \mathcal{L}_0
     \implies \mathcal{F}(\bar{\bf x}; \theta) = F_{L+1} \circ T(\bar{\bf x}, \theta)
+    \end{align}
     $$
 
 
-    The last model function to depend on $\theta$ is $\Gamma_{L+1}$ so we can factor out the derivative of last
-    activation $F_{L+1}$ using the chain rule
+    Then
 
 
     $$
     \begin{align}
-    \partial_{\theta} \hat{R}(\bar{\bf d},
+    \hat{R}(\bar{\bf d},
     \mathcal{F}(\cdot; \theta))
-    &amp;= \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ \partial_{2}
-    (F_{L+1}
-    \circ T)(\bar{\bf
-    x},\theta)\\
-    &amp;= \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bf y}) \circ D F_{L+1}({\bf z}_{L+1}) \circ
+    &amp;= {\bf \Delta}(\bar{\bm{v}}, \cdot) \circ \mathcal{F}({\bf x}; \theta) \\
+    &amp; = S \circ T ({\bf x}, \theta) \\
+    \implies \partial_{\theta} \hat{R}(\bar{\bf d},
+    \mathcal{F}(\cdot; \theta))
+    &amp;= DS
+    ({\bf z}_{L+1}) \circ
     \partial_{2} T(\bar{\bf x},\theta)\\
+
     \end{align}
     $$
+
+    It turns out that combining ${\bf \Delta}$ and $F_{L+1}$ into $S$ results in very elegant derivatives, which we will
+    derive below.
 
 
     <ul style="list-style: disc; list-style-position: inside;" class="my-10 py-5 border-y-1 border-y-emerald-400">
@@ -671,9 +678,8 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             \end{align*}
 
             $$
-            Now we find $\partial_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) \circ D F_{L+1}(\bm{z}_{L+1}) =
-            \partial_{\bm{z}_{L+1}}
-            {\bf \Delta}(\bm{\bar{v}}, F_{L+1} (\bm{z}_{L+1}))
+            Now we find $DS
+            (\bm{z}_{L+1})
             $ by making the previous preturbations
 
             $$
@@ -702,7 +708,9 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
 
             d\bm{z}_{L+1}
             \right) \\
-            \implies \partial_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) \circ D F_{L+1}(\bm{z}_{L+1}) &amp;= \bm{h}
+            \implies DS
+            (\bm{z}_{L+1})
+            &amp;= \bm{h}
             \mapsto
             {\bf 1}^T \left(
 
@@ -828,16 +836,13 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             d {\bf z}_{L+1} \\
             \end{align*}
             $$
-            Now we find $\partial_2 {\bf \Delta}({\bar{\bf v}}, \hat{\bf y}) \circ D F_{L+1}({\bf z}_{L+1}) =
-            \partial_{{\bf z}_{L+1}}
-            {\bf \Delta}(\bm{\bar{v}}, F_{L+1} ({\bf z}_{L+1}))
-            $ by making the previous preturbations
+            Now we find $DS({\bf z}_{L+1}) $ by making the previous preturbations
 
             $$
             \begin{align*}
             & d {\bf \Delta}(\bm{\bar{v}},\hat{\bf y}) \\
             &amp;= d {\bf \Delta}(\bm{\bar{v}},
-            \mathcal{F}_{L+1}(\bm{z}_{L+1}) ) = d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
+            F_{L+1}({\bf z}_{L+1}) ) = d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
             &amp;= -{\bf 1}^T \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
             d \hat{\bf y} \right){\bf 1} \\
 
@@ -870,8 +875,7 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
 
             $$
             \begin{align*}
-            D_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bf y}) \circ D
-            \mathcal{F}_{L+1}({\bf z}_{L+1}) &amp;= {\bf h} \mapsto {\bf 1}^T \left((\hat{\bf y} - \Bbb{X}) \odot {\bf
+            DS({\bf z}_{L+1}) &amp;= {\bf h} \mapsto {\bf 1}^T \left((\hat{\bf y} - \Bbb{X}) \odot {\bf
             h}
             \right)
             {\bf 1}
@@ -915,7 +919,7 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             $$
             If $F_{L+1}$ is the identity, we further conclude
             $$
-            \partial_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) \circ D F_{L+1}(\bm{z}_{L+1}) = 2\langle \cdot,
+            DS(\bm{z}_{L+1}) = 2\langle \cdot,
             \hat{\bm{y}}- \bm{\bar{v}} \rangle
 
             $$
@@ -933,8 +937,8 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
         </li>
     </ul>
 
-    We are now remained with finding $\partial_2 T(\bar{\bf x},\theta)
-    = \partial_{\theta} (\Gamma_{L+1}(\cdot; \theta) \circ \ldots \circ \mathcal{L}_0)(\bar{\bf x}; \theta)$ which we
+    We are now remained with finding $\partial_{\theta} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    $ which we
     can
     do recursively, making up the
     backpropogation procedure.
@@ -942,7 +946,10 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
 
     $$
     \begin{align*}
-    \partial_{\theta_{L+1}} T(\bar{\bf x}, \theta) &amp;= \partial_{\theta_{L+1}}\Gamma_{L+1}({\bf y}_L; \theta_{L+1})
+    \partial_{\theta_{L+1}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    &amp;= DS({\bf z}_{L+1}) \circ
+    \partial_{2}\Gamma_{L+1}({\bf y}_L;
+    \theta_{L+1})
     \end{align*}
     $$
 
@@ -951,25 +958,31 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
     $$
     \begin{align*}
     U_l(\cdot, \theta) :&amp;=
-    \Gamma_{L+1}(\cdot; \theta_{L+1}) \circ F_{L} \circ ... \circ F_{l+1} \circ \Gamma_{l+1}(\cdot; \theta_{l+1}) \\
-    \implies T(\bar{\bf x}, \theta) &amp;= \left(
+    S \circ \Gamma_{L+1}(\cdot; \theta_{L+1}) \circ F_{L} \circ ... \circ F_{l+1} \circ
+    \Gamma_{l+1}(\cdot; \theta_{l+1}) \\
+    \implies \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    &amp;= \left(
     U_l(\cdot, \theta) \circ F_l \circ \Gamma_l(\cdot; \theta_l) \circ \ldots \circ \mathcal{L}_0 \right)(\bar{\bf x})
     \end{align*}
     $$$$
     \begin{align}
 
-    \implies \begin{cases} \partial_{\theta_l} T(\bar{\bf x}, \theta) &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ
+    \implies \begin{cases} \partial_{\theta_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    &amp;= \partial_{1} U_l({\bf y}_l,
+    \theta) \circ
     DF_l({\bf z}_l)
     \circ
     \partial_{2}\Gamma_l({\bf
     y}_{l-1};
     \theta_l) \\
-    \partial_{W_l} T(\bar{\bf x}, \theta) &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
+    \partial_{W_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
     \circ
     \partial_{W_l}\Gamma_l({\bf
     y}_{l-1};
     \theta_l) \\
-    \partial_{b_l} T(\bar{\bf x}, \theta) &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
+    \partial_{b_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
     \circ
     \partial_{b_l}\Gamma_l({\bf
     y}_{l-1};
@@ -980,25 +993,63 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
     $$
     where
     $$
-    \begin{align*}
+    \begin{align}
     U_{l}(\cdot, \theta) &amp;= \begin{cases}
-    \Gamma_{L+1}(\cdot; \theta_{L+1}) & l=L \\
+    S \circ \Gamma_{L+1}(\cdot; \theta_{L+1}) & l=L \\
     U_{l+1}(\cdot, \theta) \circ F_{l+1} \circ \Gamma_{l+1}(\cdot; \theta_{l+1}) & l&lt;L \end{cases} \\ \implies
     \partial_{1} U_l({\bf y}_l, \theta) &amp;=\begin{cases}
-    \partial_1
+    DS({\bf z}_{L+1}) \circ \partial_1
     \Gamma_{L+1}({\bf y}_{L}; \theta_{L+1}) & l=L\\
     \partial_{1} U_{l+1}({\bf y}_{l+1}, \theta) \circ
-    DF_{l+1}({\bf z}_{l+1}) \circ \partial_1 \Gamma_{l+1}({\bf y}_l, \theta) & l&lt;L \end{cases} \end{align*} $$ So
+    DF_{l+1}({\bf z}_{l+1}) \circ \partial_1 \Gamma_{l+1}({\bf y}_l, \theta) & l&lt;L \end{cases} \end{align} $$
+
+    So
     the recursion is well posed.
 
     Finally
     $$
-    \partial_2 T(\bar{\bf x}, \theta) = (d\theta_1 \dots d\theta_{L+1}) \mapsto \sum_l \partial_{\theta_l} T(\bar{\bf
-    x}, \theta)[d \theta_l]
+    \partial_{\theta} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    = (d\theta_1 \dots d\theta_{L+1}) \mapsto \sum_l \partial_{\theta_l}
+    \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    [d \theta_l]
     $$
+    allowing the full computation of $\partial_{\theta}\hat{R}(\bar{\bf d}, \mathcal{F}(\cdot;\theta))$.
 
-    A few derivatives will need to be computed to solve for both $\partial_{\theta_l} T(\bar{\bf x}, \theta) $ and $
-    \partial_{1} U_l({\bf y}_l, \theta) $.
+    A few derivatives will need to be computed. We will write the maps using their tensor identifications, as that will
+    allow an alternative way to not only compose maps but also compute their adoints, which we will need when finding
+    the gradient.
+
+    <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">The Hom-Tensor Identification</h2>
+    A word on the canonical identification: if we have a map $T \in \text{Hom}(V, W)$ where $V$ is a tensor product
+    space with
+    basis $\{e_{\mathcal{I}}\} $, and the basis for $V^*$ is induced by the standard inner product $\langle
+    e_{\mathcal{I}} , e_{\mathcal{J}}
+    \rangle = \delta_{\mathcal{I}, \mathcal{J}} $ giving $\{(e_{\mathcal{I}})' = \langle \cdot , e_{\mathcal{I}} \rangle
+    \}$,
+    then using
+    $$
+    \text{Hom}(V,W) \cong W\otimes V^* \\
+
+
+    (\bigotimes V_i)^* \cong \bigotimes V_i^*
+    $$
+    we have the identification
+    <div class="bg-cyan-100 border-2 rounded-2xl p-2 m-4">
+        $$
+        \phi: T \mapsto T(e_{\mathcal{I}}) \otimes (e_{\mathcal{I}})' \mapsto T(e_{\mathcal{I}}) \otimes e^{\mathcal{I}}
+        = \phi(T)
+
+        $$
+
+    </div>
+    Composition with $\phi(S) = S(f_{\mathcal J}) \otimes f^{\mathcal{J}}$ is then given by the slot-wise contraction of
+    the
+    input slot $e^{\mathcal{I}}$ of $\phi(T)$ with the output slot $S(f_{\mathcal{J}})$ of $S$
+    $$
+    \phi(T \circ S) = T(e_{\mathcal{I}}) \otimes
+    e^{\mathcal{I}}(S(f_{\mathcal{J}})) \otimes f^{\mathcal{J}} =
+    e^{\mathcal{I}}(S(f_{\mathcal{J}})) T(e_{\mathcal{I}}) \otimes f^{\mathcal{J}} = (\phi(T))^{a}{}_b (\phi(S))^{b}{}_c
+    $$
     <ul style="list-style: disc; list-style-position: inside;" class="my-10">
         <li class="my-4">
             $DF_l({\bf z}_l)$: <br />
@@ -1010,6 +1061,13 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             \end{align*}
             $$
             where $F_l'({\bf z}_l) := f_l'((z_l)^{i,j})e_i \otimes e_j$
+            $$
+            \begin{align*}
+            \implies \phi(DFl({\bf z}_l)) &amp;= F'_l({\bf z}_l) \odot (e_i \otimes e_j) \otimes e^i
+            \otimes e^j = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes e^i
+            \otimes e^j \\
+            \end{align*}
+            $$
 
         </li>
         <li class="my-4">
@@ -1023,14 +1081,16 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
 
             \partial_{W_l} \Gamma_l({\bf
             y}_{l-1};
-            \theta_l) &amp;= dW_l \mapsto g_{bc}({\bf y}_{l-1})^{ab}(dW_l)^{cd} \\
+            \theta_l) =&amp;\quad dW_l \mapsto g_{bc}({\bf y}_{l-1})^{ab}(dW_l)^{cd} \\
+            \xmapsto[]{\phi}&amp;\quad g_{bc}({\bf y}_{l-1})^{ab}(e_i \otimes e_j)^{cd} \otimes
+            e^i \otimes e^j\\
+            =&amp;\quad ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j\\
+
             \partial_{b_l} \Gamma_l({\bf
             y}_{l-1};
-            \theta_l) &amp;= db_l \mapsto \sum_i e_i \otimes db_l \\
+            \theta_l) =&amp;\quad db_l \mapsto \sum_i e_i \otimes db_l \\
+            \xmapsto[]{\phi}&amp;\quad \sum_{i,j} e_i \otimes e^j
 
-            \implies \partial_{\theta_l} \Gamma_l({\bf
-            y}_{l-1};
-            \theta_l) &amp;= (dW_l, db_l) \mapsto g_{bc}({\bf y}_{l-1})^{ab}(dW_l)^{cd} + \sum_i e_i \otimes db_l
             \end{align*}
             $$
         </li>
@@ -1041,24 +1101,63 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             \begin{align*}
             \partial_{1} \Gamma_l({\bf
             y}_{l-1};
-            \theta_l) &amp;= d{\bf y}_l \mapsto g_{bc}(d{\bf y}_{l-1})^{ab}(W_l)^{cd} \\
+            \theta_l) =&amp;\quad d{\bf y}_{l-1} \mapsto g_{bc}(d{\bf y}_{l-1})^{ab}(W_l)^{cd} \\
+            \xmapsto[]{\phi}&amp;\quad g_{bc}(e_i \otimes e_j)^{ab}(W_l)^{cd} \otimes e^i \otimes e^j\\
+            =&amp;\quad (W_l)^{jx} e_i \otimes e_x \otimes e^i \otimes e^j
             \end{align*}
             $$
         </li>
     </ul>
-    Now we can calculate the full derivative of each parameter:
+
+
+    Now we can calculate the full derivative of each parameter.
+    <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">The Gradients</h2>
+    In practice, solving for $\theta^* = \argmin \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))$ is infeasible for
+    many reasons, two important ones being the many flat regions of the objective $\hat{R}$ and the large matrix
+    inversions that would have to be computed. However,
+    now that we've obtained the partial derivatives of $\hat{R}$ at $(\bar{\bf d}; \mathcal{F}(\cdot; \theta))$ we can
+    subtract the gradient from $\theta$ to move towards the optimal point. The procedure to move from partial
+    derivatives (maps) to gradients (tensor "vectors") will be discussed.
+    Firstly, some shorthands; let $l$ be a layer index and denote
     $$
     \begin{align*}
-    \partial_{W_l} T(\bar{\bf x}, \theta) &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
+    {\bm{\xi}}_l &amp;=
+    \phi(\partial_{1} U_l({\bf y}_l, \theta))\\
+    {\bm{\xi}}_z &amp;= \phi(\partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)) \\
+    {\bm{\delta}}_w &amp;= \phi(\partial_{W_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))) \\
+    {\bm{\delta}}_b &amp;= \phi(\partial_{b_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))\\
+    \bm{\epsilon}_w &amp;= \phi(\partial_{W_l}\Gamma_l({\bf
+    y}_{l-1};
+    \theta_l)) &amp;= ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j \\
+    \bm{\epsilon}_b &amp;= \phi(\partial_{b_l}\Gamma_l({\bf
+    y}_{l-1};
+    \theta_l)) &amp;= \sum_{i,j} e_i \otimes e^j
+    \\
+    \bm{\epsilon}_z &amp;= \phi(DF_l({\bf z}_l)) &amp; = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes e^i
+    \otimes e^j\\
+    \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma_l({\bf
+    y}_{l-1};
+    \theta_l)) &amp;= (W_l)^{j,x} e_i \otimes e_x \otimes e^i \otimes e^j
+    \\
+
+    \end{align*}
+    $$
+    By the preceding work we can find the derivative tensors for each parameter
+    $$
+    \begin{align*}
+
+    \bm{\delta}_w &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
+    \theta)
+    \circ DF_l({\bf z}_l)
     \circ
     \partial_{W_l}\Gamma_l({\bf
     y}_{l-1};
-    \theta_l) \\
-    &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
-    \circ
-    \partial_{W_l}\Gamma_l({\bf
-    y}_{l-1};
-    \theta_l) \\
+    \theta_l) \right) \\
+    &amp;= (\bm{\xi}_z){}_{ab}
+    (\bm{\epsilon}_w)^{ab}{}_{cd} \\
+    &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e^i \otimes e^q \\
+
+
     \partial_{b_l} T(\bar{\bf x}, \theta) &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
     \circ
     \partial_{b_l}\Gamma_l({\bf
