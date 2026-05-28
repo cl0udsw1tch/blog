@@ -597,12 +597,14 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             \bm{\hat{y}}^{\rangle i \langle}) = -\left(\bar{v}^i\log(\hat{\bm{y}}^{\rangle i \langle}) +
             (1-\bar{v}^i)\log(\hat{\bm{y}}^{\rangle i \langle})\right) $ in the case of a binary learning task, then
             tensorizing gives
+
+
             $$
-            {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = -{\bf 1}^T \left(\bar{\bm v} \odot
+            {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = -{\bf 1}_{a} \left(\bar{\bm v} \odot
             \log(\hat{\bm{y}}) + ({\bf 1}-
             \bar{\bm v}) \odot \log({\bf 1} -
             \hat{\bm{y}})
-            \right)
+            \right)^{a}
             $$
 
             Perburb $\hat{\bm{y}}$ by $d\hat{\bm{y}}$, then
@@ -612,15 +614,15 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             \begin{align*}
             d \log(\bm{\hat{y}} ) &amp;= \bm{\hat{y}}^{-1} \odot d \bm{\hat{y}} \\
             d \log(1-\bm{\hat{y}}) &amp;= - ({\bf 1}-\bm{\hat{y}})^{-1} \odot d \bm{\hat{y}} \\
-            \implies d {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= -{\bf 1}^T \left(\bar{\bm v} \odot
+            \implies d {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= -{\bf 1}_{a} \left(\bar{\bm v} \odot
             (\bm{\hat{y}}^{-1} \odot d \bm{\hat{y}}) + ({\bf 1}-\bar{\bm{v}}) \odot (- ({\bf 1}-\bm{\hat{y}})^{-1} \odot
             d \bm{\hat{y}})
-            \right) \\
-            &amp;= {\bf 1}^T \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
-            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right) \\
-            \implies D_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto {\bf 1}^T \left(\left(({\bf
+            \right)^a \\
+            &amp;= {\bf 1}_{a} \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
+            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right)^a \\
+            \implies D_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto {\bf 1}_{a} \left(\left(({\bf
             1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
-            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \bm{h}\right)
+            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \bm{h}\right)^a
 
             \end{align*}
             $$
@@ -659,13 +661,13 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             $$
             \begin{align*}
             & d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
-            &amp;= {\bf 1}^T \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
-            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right) \\
-            &amp;= {\bf 1}^T \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
+            &amp;= {\bf 1}_a \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
+            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right)^a \\
+            &amp;= {\bf 1}_a \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
             -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \left(\hat{\bm{y}}\odot
             ({\bf 1} - \hat{\bm{y}})\odot
-            d\bm{z}_{L+1} \right)\right) \\
-            &amp;= {\bf 1}^T \left(
+            d\bm{z}_{L+1} \right)\right)^a \\
+            &amp;= {\bf 1}_a \left(
 
             \left(
             \bm{\hat{y}} -\bar{\bm{v}} \odot \bm{\hat{y}}
@@ -673,27 +675,27 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             \right) \odot
 
             d\bm{z}_{L+1}
-            \right) \\
+            \right)^a \\
 
-            &amp;= {\bf 1}^T \left(
+            &amp;= {\bf 1}_a \left(
 
             \left(
             \bm{\hat{y}} -\bar{\bm{v}} \right) \odot
 
             d\bm{z}_{L+1}
-            \right) \\
+            \right)^a \\
             \implies DS
             (\bm{z}_{L+1})
             &amp;= \bm{h}
             \mapsto
-            {\bf 1}^T \left(
+            {\bf 1}_a \left(
 
             \left(
             \bm{\hat{y}} -\bar{\bm{v}} \right) \odot
 
             \bm{h}
 
-            \right) \\
+            \right)^a \\
             &amp;= \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle
 
             \end{align*}
@@ -717,7 +719,7 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             the case of a categorical learning task, then tensorizing gives
 
             $$
-            {\bf \Delta}(\bar{\bm{v}}, \hat{\bf y}) = -{\bf 1}^T \left(\Bbb{X} \odot \log(\hat{\bf y}) \right){\bf 1}
+            {\bf \Delta}(\bar{\bm{v}}, \hat{\bf y}) = -{\bf 1}_{ab} \left(\Bbb{X} \odot \log(\hat{\bf y}) \right)^{ab}
             $$
             where $\Bbb{X} \in \Bbb{V}^{\otimes 2}$ is the one hot tensor of $\bar{\bm{v}}$ defined by
             $$
@@ -728,9 +730,10 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             \begin{align*}
             d \log(\hat{\bf y}) &amp;= \hat{\bf y}^{-1} \odot d \hat{\bf y} \\
             \implies d (\Bbb{X} \odot \log(\hat{\bf y})) &amp;= \Bbb{X} \odot \hat{\bf y}^{-1} \odot d \hat{\bf y} \\
-            \implies d {\bf \Delta} (\bar{\bm{v}}, \hat{\bf y}) &amp;= -{\bf 1}^T \left(\Bbb{X} \odot \hat{\bf y}^{-1}
+            \implies d {\bf \Delta} (\bar{\bm{v}}, \hat{\bf y}) &amp;= -{\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf
+            y}^{-1}
             \odot
-            d \hat{\bf y} \right){\bf 1}
+            d \hat{\bf y} \right)^{ab}
             \\
 
             \end{align*}
@@ -738,19 +741,22 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             $$
             Tensorizing the softmax activation gives
             $$
-            \hat{\bf y} = F_{L+1}({\bf z}_{L+1}) = \text{Diag} ((\exp({\bf z}_{L+1}) {\bf 1})^{-1})\exp({\bf z}_{L+1})
+            \hat{\bf y} = F_{L+1}({\bf z}_{L+1}) = \text{Diag} ((\exp({\bf z}_{L+1})^{ab} {\bf 1}_b)^{-1})\exp({\bf
+            z}_{L+1})
             $$
             Perturb ${\bf z}_{L+1}$ by $d{\bf z}_{L+1}$, then letting $E = \exp({\bf z}_{L+1})$
             $$
             \begin{align*}
             d E &amp;= E \odot d{\bf z}_{L+1} \\
-            \implies d (E {\bf 1}) &amp;= (E \odot d {\bf z}_{L+1}){\bf 1} \\
-            \implies d (E {\bf 1})^{-1} &amp;= - (E{\bf 1})^{-2} \odot ((E \odot d {\bf z}_{L+1}){\bf 1}) \\
+            \implies d (E {\bf 1}) &amp;= (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \\
+            \implies d (E {\bf 1})^{-1} &amp;= - (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b)
+            \\
 
-            \implies d \hat{\bf y} &amp;= d (\text{Diag}((E{\bf 1})^{-1}))E +
-            \text{Diag}((E{\bf 1})^{-1})d E \\
-            &amp;= \text{Diag}(- (E{\bf 1})^{-2} \odot ((E \odot d {\bf z}_{L+1}){\bf 1}))E + \text{Diag}((E{\bf
-            1})^{-1})(E
+            \implies d \hat{\bf y} &amp;= d (\text{Diag}((E^{ab}{\bf 1}_b)^{-1}))E +
+            \text{Diag}((E^{ab}{\bf 1}_b)^{-1})d E \\
+            &amp;= \text{Diag}(- (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b))E +
+            \text{Diag}((E^{ab}{\bf
+            1}_b)^{-1})(E
             \odot d {\bf z}_{L+1})
             \end{align*}
             $$
@@ -758,7 +764,7 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             concerning diagonal matrices and the $\odot $ operator:
             <ol style="list-style: decimal; list-style-position: inside;">
                 <li>
-                    $DA = (d{\bf 1}^T) \odot A$
+                    $DA = (d^{a} \otimes {\bf 1}_{b}) \odot A$
                 </li>
                 <li>
                     $D(A \odot B) = (DA) \odot B$
@@ -767,43 +773,48 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
                     $CD = \text{Diag}(c \odot d)$
                 </li>
             </ol>
-            Noting that $\hat{\bf y} = \text{Diag}((E{\bf 1})^{-1})E = \text{Diag}(E{\bf 1})^{-1}E \implies E =
-            \text{Diag}(E{\bf 1}) \hat{\bf
+            Noting that $\hat{\bf y} = \text{Diag}((E^{ab}{\bf 1}_b)^{-1})E = \text{Diag}(E^{ab}{\bf 1}_b)^{-1}E
+            \implies E =
+            \text{Diag}(E^{ab}{\bf 1}_b) \hat{\bf
             y}$
             $$
             \begin{align*}
-            d \hat{\bf y} &amp;= -\text{Diag}( (E{\bf 1})^{-2})\text{Diag}((E \odot d {\bf z}_{L+1}){\bf
-            1})\text{Diag}(E{\bf
-            1})
+            d \hat{\bf y} &amp;= -\text{Diag}( (E^{ab}{\bf 1}_b)^{-2})\text{Diag}((E \odot d {\bf z}_{L+1})^{ab}{\bf
+            1}_b)\text{Diag}(E^{ab}{\bf
+            1}_b)
             \hat{\bf
             y} +
-            (\text{Diag}((E{\bf
-            1})^{-1}
+            (\text{Diag}((E^{ab}{\bf
+            1}_b)^{-1}
             )E)
             \odot
             d {\bf z}_{L+1}\\
-            &amp;=-\text{Diag}( (E{\bf 1})^{-1})\text{Diag}( (E \odot d {\bf z}_{L+1}){\bf 1})
+            &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})\text{Diag}( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b)
             \hat{\bf
             y} + \hat{\bf y}
             \odot
             d {\bf z}_{L+1} \\
-            &amp;=-\text{Diag}( (E{\bf 1})^{-1})(( (E \odot d {\bf z}_{L+1}){\bf 1} {\bf 1}^T)\odot
+            &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})(( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+            1}^c)\odot
             \hat{\bf
             y}) + \hat{\bf y}
             \odot
             d {\bf z}_{L+1} \\
-            &amp;=-(\text{Diag}( (E{\bf 1})^{-1})(E \odot d {\bf z}_{L+1}){\bf 1} {\bf 1}^T)\odot
+            &amp;=-(\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})(E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+            1}^c)\odot
             \hat{\bf
             y} + \hat{\bf y}
             \odot
             d {\bf z}_{L+1} \\
 
-            &amp;=-(((\text{Diag}( (E{\bf 1})^{-1})E) \odot d {\bf z}_{L+1}){\bf 1} {\bf 1}^T)\odot
+            &amp;=-(((\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})E) \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+            1}^c)\odot
             \hat{\bf
             y} + \hat{\bf y}
             \odot
             d {\bf z}_{L+1} \\
-            &amp;=-((\hat{\bf y} \odot d {\bf z}_{L+1}){\bf 1} {\bf 1}^T)\odot
+            &amp;=-((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+            1}^c)\odot
             \hat{\bf
             y} + \hat{\bf y}
             \odot
@@ -817,31 +828,36 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             & d {\bf \Delta}(\bm{\bar{v}},\hat{\bf y}) \\
             &amp;= d {\bf \Delta}(\bm{\bar{v}},
             F_{L+1}({\bf z}_{L+1}) ) = d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
-            &amp;= -{\bf 1}^T \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
-            d \hat{\bf y} \right){\bf 1} \\
+            &amp;= -{\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
+            d \hat{\bf y} \right)^{ab} \\
 
-            &amp;= {\bf 1}^T \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
-            (((\hat{\bf y} \odot d {\bf z}_{L+1}){\bf 1} {\bf 1}^T)\odot
+            &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
+            (((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+            1}^c)\odot
             \hat{\bf
             y} - \hat{\bf y}
             \odot
-            d {\bf z}_{L+1} ) \right){\bf 1} \\
+            d {\bf z}_{L+1} ) \right)^{ab} \\
 
-            &amp;= {\bf 1}^T \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1}){\bf 1} {\bf 1}^T) - \Bbb{X} \odot
+            &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+            1}^c) - \Bbb{X}
+            \odot
             d
-            {\bf z}_{L+1} \right){\bf 1} \\
-            &amp;= {\bf 1}^T \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1}){\bf 1} {\bf 1}^T)\right) {\bf 1} -
-            {\bf 1}^T \left( \Bbb{X} \odot d
-            {\bf z}_{L+1} \right){\bf 1} \\
-            &amp;= {\bf 1}^T \left(\hat{\bf y} \odot d {\bf z}_{L+1} \right) {\bf 1} -
-            {\bf 1}^T \left( \Bbb{X} \odot d
-            {\bf z}_{L+1} \right){\bf 1} \\
-            &amp;= {\bf 1}^T \left((\hat{\bf y} - \Bbb{X}) \odot d {\bf z}_{L+1} \right) {\bf 1}
+            {\bf z}_{L+1} \right)^{ab} \\
+            &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+            1}^c)\right)^{ab}-
+            {\bf 1}_{ab} \left( \Bbb{X} \odot d
+            {\bf z}_{L+1} \right)^{ab} \\
+            &amp;= {\bf 1}_{ab} \left(\hat{\bf y} \odot d {\bf z}_{L+1} \right)^{ab} - {\bf 1}_{ab}\left(
+            \Bbb{X} \odot d
+            {\bf z}_{L+1} \right)^{ab} \\
+            &amp;= {\bf 1}_{ab} \left((\hat{\bf y} - \Bbb{X}) \odot d {\bf z}_{L+1} \right)^{ab}
 
             \end{align*}
             $$
 
-            where the second to last line makes use of the identity $(\Bbb{X} \odot (A {\bf 1 1}^T)){\bf 1} = A{\bf 1} $
+            where the second to last line makes use of the identity ${\bf 1}_{ab}(\Bbb{X} \odot (A^{ab} {\bf 1}_b
+            \otimes {\bf 1}^c))^{ab} = {\bf 1}_{ab} A^{ab} $
             for any
             $A$ and 1-hot
             $\Bbb{X}$.
@@ -849,10 +865,9 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
 
             $$
             \begin{align*}
-            DS({\bf z}_{L+1}) &amp;= {\bf h} \mapsto {\bf 1}^T \left((\hat{\bf y} - \Bbb{X}) \odot {\bf
+            DS({\bf z}_{L+1}) &amp;= {\bf h} \mapsto {\bf 1}_{ab} \left((\hat{\bf y} - \Bbb{X}) \odot {\bf
             h}
-            \right)
-            {\bf 1}
+            \right)^{ab}
             \\
             &amp;= \langle \cdot,{\bf \hat{y}} -\Bbb{X} \rangle
 
@@ -873,18 +888,16 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             regression task, then
             tensorizing gives
             $$
-            {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = {\bf 1}^T(\bm{\bar{v}}-\hat{\bm{y}})^2{\bf 1}
+            {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = {\bf 1}_a((\bm{\bar{v}}-\hat{\bm{y}})^2)^a
             $$
             Perturbing $\hat{\bm{y}}$ by $d\hat{\bm{y}}$ gives
             $$
             \begin{align*}
-            d{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= {\bf 1}^T(-2(\bm{\bar{v}}-\hat{\bm{y}}) \odot
-            d\hat{\bm{y}}){\bf
-            1} \\
-            &amp;= -2{\bf 1}^T((\bm{\bar{v}}-\hat{\bm{y}}) \odot d\hat{\bm{y}}){\bf 1} \\
+            d{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= {\bf 1}_a(-2(\bm{\bar{v}}-\hat{\bm{y}}) \odot
+            d\hat{\bm{y}})^a \\
+            &amp;= -2{\bf 1}_a((\bm{\bar{v}}-\hat{\bm{y}}) \odot d\hat{\bm{y}})^{a} \\
             \implies D_2{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto -2{\bf
-            1}^T((\bm{\bar{v}}-\hat{\bm{y}}) \odot h){\bf
-            1} \\
+            1}_a((\bm{\bar{v}}-\hat{\bm{y}}) \odot h)^{a} \\
             &amp;= 2\langle \cdot, \hat{\bm{y}}- \bm{\bar{v}}
             \rangle
 
@@ -941,7 +954,7 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
     $$$$
     \begin{align}
 
-    \implies \begin{cases} \\
+    \implies \begin{cases}
     \partial_{W_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
     &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
     \circ
@@ -1156,7 +1169,7 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
     &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e^i \otimes e^q \\
     \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e_i \otimes e_q \\
     &amp;= (\xi_z^{\dagger})^{p,q} (y_{l-1}^T)^{i,p} \otimes e_i \otimes e_q \\
-    &amp;= g_{bc}({\bf y}_{l-1}^T)^{ab}(\bm{\xi}_z^{\dagger})^{bc} \\
+    &amp;= g_{bc}({\bf y}_{l-1}^T)^{ab}(\bm{\xi}_z^{\dagger})^{cd} \\
     \\
     \bm{\delta}_b &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
     \theta)
@@ -1211,3 +1224,320 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
 
     <h2 class="text-3xl my-8" style="font-family: var(--font-playfair);"> 2. Convolutional Neural Networks
     </h2>
+    The machinery used to formalize FNNs is even more applicable to convolutional neural networks (CNNs). Lets start
+    with the key operation; define the operator $*^n_m$ between two tensors $Y,
+    W$
+    where $W \in \Bbb{W}$ and $Y$ has contiguous slots from consecutive factors in $\Bbb{W}$ as
+
+    $$
+    Y *^n_{m} W = \sum_{\alpha \in \Bbb{Z}^{|m|}}Y_{ \mathcal{A}b_1 \ldots b_n}
+    T(W; sgn(m)\cdot\alpha)^{\mathcal{C}b_1\ldots b_n} \otimes e_{\alpha}
+    $$
+
+    for $|m| \leq n$ and, using $\mathcal{I}$ to index all but the last $m$ slots and $\mathcal{J}$ to index the last
+    $|m|$ slots
+    $$
+    T(W;\alpha) = W^{\mathcal{I},\mathcal{J}-\alpha} e_{\mathcal{I}}\otimes e_{\mathcal{J}} = W^{\mathcal{I},
+    \mathcal{J}}
+    e_{\mathcal{I}}\otimes e_{\mathcal{J}+\alpha}
+    $$
+    is the translation operator over the last $|m|=\text{len}(\alpha)$ slots. $\mathcal{A},\mathcal{C}$ are abstract
+    multiindices. Now let $m \in \Bbb{N}$ and $$R_m(W)^{\mathcal{I},\mathcal{J}} =
+    W^{\mathcal{I},-\mathcal{J}}$$ be the tensor flipped at the last $m$ slots.
+    Define a few operators
+    $$
+    \begin{align*}
+    &amp;Y \rtimes^n_m W &amp;&amp;= Y *^n_m W \\
+    &amp;Y \bar{\rtimes}^n_m W &amp;&amp;= Y *^n_m R_m(W) \\
+
+    &amp;Y \ltimes^n_m W &amp;&amp;= Y *^n_{-m} W \\
+
+    &amp;Y \bar{\ltimes}^n_m W &amp;&amp;= Y *^n_{-m} R_m(W) \end{align*}
+    $$
+    Let $y_{l-1}^c, W_{l}^c \in \Bbb{V}^{\otimes 4}, b_{l}^c \in \Bbb{V}$.
+    <div class="border-2 bg-emerald-100 p-10 my-4 rounded-md">
+
+        The convolutional layer is defined for $l=1\ldots L_c$ as the map
+        $$
+        y_{l-1}^c \mapsto \mathcal{L}^c_l(y_{l-1}^c;W_l^c, b_l^c) = F^c_l \circ \Gamma^c_l(y_{l-1}^c, W_l^c, b_l^c) $$
+
+        where $$
+        \Gamma^c_l(Y, W, b)
+        =Y \rtimes^3_2 W + \bm{1}^{a} \otimes b \otimes
+        \bm{1}^{bc}
+        $$
+        We will call the neuron $k$ at layer $l$ the function
+        $$
+        y_{l-1}^c \mapsto \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{[k]}, (b_l^c)^{[k]}) =
+        F^c_l
+        \circ
+        \Gamma^c_l(y_{l-1}^c, (W_l^c)^{[ k ]}, (b_l^c)^{[ k ]})
+        $$
+
+        Note that $$ \sum_k \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{[k]}, (b_l^c)^{[k]}) =
+        \mathcal{L}^c_l(y_{l-1}^c;W_l^c, b_l^c)$$
+        The <span class="font-bold">flattening layer </span> changes the dimension of $y^c_{L_c}$ so that $y_0 =
+        y^c_{L_c+1}
+        \in \Bbb{V}^{\otimes 2}$ as follows:
+        Let $T \in \Bbb{V}^{\otimes n}$ for some $n$. Define
+        $$
+        \alpha_{m} = \min \{ \alpha | e_{\alpha} \in \text{supp}(T) \} \\
+        \alpha_{M} = \max \{ \alpha | e_{\alpha} \in \text{supp}(T) \} \\
+        d_i = (\alpha_M)_i - (\alpha_m)_i + 1$$ for $i=1\ldots n$, and $\beta = (\beta_1 \ldots \beta_n)$ such
+        that
+        $$
+        \beta_j = \begin{cases}
+        \prod_{i=j+1}^n d_i & i &lt; n \\
+        1 & i = n
+        \end{cases}
+        $$
+        Let $|\alpha| = \sum_i \alpha_i$. Then define
+
+        $$\gamma(T) = \sum_{\alpha} T^{\alpha} e_{|\beta \cdot (\alpha-\alpha_m)|+1}$$
+        The flattening layer is the map
+        $$
+        y^c_{L_c} \mapsto \Gamma^c_{L_c}(y^c_{L_c}) = \sum_i \gamma((y^c_{L_c})^{\rangle i \langle}) \otimes e_i
+        $$
+    </div>
+
+    <h2 class="text-2xl my-4">Backpropogation</h2>
+    We will use the same setup to find the derivatives as in the FNN section. Let, for $l=L_c\ldots 1$
+    $$
+    \begin{align*}
+    U_l^c(\cdot, \theta) :&amp;=
+    S \circ \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ \ldots \circ \Gamma_{1}(\cdot, \theta_{1}) \circ
+    \Gamma^c_{L_c+1}
+    \circ \ldots \circ \Gamma^c_{l+1}(\cdot; \theta^c_{l+1}) \\
+    \implies \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    &amp;= \left(
+    U_l^c(\cdot, \theta) \circ F_l^c \circ \Gamma_l^c(\cdot, \theta_l^c) \circ \ldots \circ \mathcal{L}_0
+    \right)(\bar{\bf x})
+    \end{align*}
+    $$$$
+    \begin{align}
+
+    \implies \begin{cases}
+    \partial_{W_l^c} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    &amp;= \partial_{1} U_l^c({\bf y}_l^c, \theta) \circ DF_l^c({\bf z}_l^c)
+    \circ
+    \partial_{2}\Gamma_l^c({\bf
+    y}_{l-1}^c,
+    \theta_l^c) \\
+    \partial_{b_l^c} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+    &amp;= \partial_{1} U_l^c({\bf y}_l^c, \theta) \circ DF_l^c({\bf z}_l^c)
+    \circ
+    \partial_{3}\Gamma_l^c({\bf
+    y}_{l-1}^c,
+    \theta_l^c) \end{cases}
+
+
+    \end{align}
+    $$
+    where
+    $$
+    \begin{align}
+    U_{l}^c(\cdot, \theta) &amp;= \begin{cases}
+    S \circ \Gamma_{L+1}^c(\cdot, \theta_{L+1}^c) & l=L_c \\
+    U_{l+1}^c(\cdot, \theta) \circ F_{l+1}^c \circ \Gamma_{l+1}^c(\cdot, \theta_{l+1}^c) & l&lt;L_c \end{cases} \\
+    \implies
+    \partial_{1} U_l^c({\bf y}_l^c, \theta) &amp;=\begin{cases}
+    DS({\bf z}_{L_c+1}^c) \circ \partial_1
+    \Gamma_{L+1}^c({\bf y}_{L_c}^c, \theta_{L+1}^c) & l=L_c\\
+    \partial_{1} U_{l+1}^c({\bf y}_{l+1}^c, \theta) \circ
+    DF_{l+1}({\bf z}_{l+1}^c) \circ \partial_1 \Gamma_{l+1}^c({\bf y}_l^c, \theta_{l+1}^c) & l&lt;L_c \end{cases}
+    \end{align} $$
+    We compute the needed partials:
+    <ul style="list-style-type: disc">
+        <li>$DF^c_l({\bf z}^c_l) $: Same as for FNN's:
+            $$
+            \begin{align*}
+            DF^c_l({\bf z}^c_l) &amp;= {\bf h} \mapsto F^{c}_l{}'({\bf z}^c_l) \odot {\bf h} \\
+            \implies \phi(DF^c_l({\bf z}^c_l)) &amp;= f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes e^{ijmn}
+            \end{align*}
+
+            $$
+        </li>
+        <li>
+            $
+            \partial_{1}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            W_l^c, b_l^c) $: Perturb $y^c_{l-1}$.
+            $$
+            \begin{align*}
+            \partial_{1}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            W_l^c, b_l^c)&amp;= dy^c_{l-1} \mapsto (dy^c_{l-1}) \rtimes^3_2 W^c_l \\
+            \implies \phi(\partial_{1}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            W_l^c, b_l^c)) &amp;= (e_{\alpha\beta\gamma\delta} \rtimes^3_2 W^c_l) \otimes e^{\alpha\beta\gamma\delta} \\
+            &amp;= (e_{\alpha\beta\gamma\delta})^i{}_{bcd} T(W^c_l; (s, r))^{jbcd} e_{ijsr} \otimes
+            e^{\alpha\beta\gamma\delta} \\
+
+            &amp;= T(W^c_l; (s, r))^{j\beta\gamma\delta} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta} \\
+            &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta}
+            \end{align*}
+            $$
+        </li>
+
+        <li>
+            $\partial_{2}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            W_l^c, b_l^c)$: Perturb $W^c_l$:
+            $$
+            \begin{align*}
+            \partial_{2}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            W_l^c, b_l^c) &amp;= dW^c_l \mapsto y^c_{l-1} \rtimes^3_2 dW^c_l \\
+            \implies \phi(\partial_{2}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            W_l^c, b_l^c)) &amp;= (y^c_{l-1} \rtimes^3_2 e_{\alpha\beta\gamma\delta}) \otimes e^{\alpha
+            \beta\gamma\delta} \\
+            &amp;= (y^c_{l-1})^i{}_{bcd} T(e_{\alpha\beta\gamma\delta}; (s, r))^{jbcd} e_{ijsr} \otimes
+            e^{\alpha\beta\gamma\delta} \\
+            &amp;= (y^c_{l-1})^i{}_{bcd} T(e_{\alpha\beta\gamma\delta}; (s, r))^{jbcd} e_{ijsr} \otimes
+            e^{\alpha\beta\gamma\delta} \\
+            &amp;= (y^c_{l-1})^i{}_{bcd} (e_{\alpha\beta(\gamma+s)(\delta+r)})^{jbcd} e_{ijsr} \otimes
+            e^{\alpha\beta\gamma\delta} \\
+            &amp;= (y^c_{l-1})^i{}_{\beta(\gamma+s)(\delta+r)}
+            e_{i\alpha sr}
+            \otimes
+            e^{\alpha\beta\gamma\delta} \\
+
+            \end{align*}
+            $$
+        </li>
+
+        <li>
+            $\partial_{3}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            W_l^c, b_l^c)$: Perturb $b^c_l$
+            $$
+            \begin{align*}
+            \partial_{3}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            W_l^c, b_l^c) &amp;= db^c_l \mapsto \bm{1}^{a} \otimes db^c_l \otimes \bm{1}^{bc} \\
+            \implies \phi(\partial_{3}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            W_l^c, b_l^c) ) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
+            e^{\alpha} \\
+
+
+            \end{align*}
+            $$
+        </li>
+    </ul>
+    <h2 class="text-2xl my-4">The Gradients</h2>
+    Define the following:
+    $$
+    \begin{align*}
+    {\bm{\xi}}^c_l{} &amp;=
+    \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta)) &amp;= ({\xi}^c_l{})_{tuvw} e^{tuvw}\\
+    {\bm{\xi}}_z &amp;= \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta) \circ DF^c_l{}({\bf z}^c_l{})) \\
+    {\bm{\delta}}_w &amp;= \phi(\partial_{W^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))) \\
+    {\bm{\delta}}_b &amp;= \phi(\partial_{b^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))\\
+    \bm{\epsilon}_w &amp;= \phi(\partial_{W^c_l{}}\Gamma^c_l{}({\bf
+    y}_{l-1},
+    \theta^c_l{})) &amp;= (y^c_{l-1})^i{}_{\beta(\gamma+s)(\delta+r)}
+    e_{i\alpha sr}
+    \otimes
+    e^{\alpha\beta\gamma\delta}\\
+    \bm{\epsilon}_b &amp;= \phi(\partial_{b^c_l{}}\Gamma^c_l{}({\bf
+    y}_{l-1},
+    \theta^c_l{})) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
+    e^{\alpha} \\
+    \bm{\epsilon}_z &amp;= \phi(DF^c_l{}({\bf z}^c_l{})) &amp; = f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes
+    e^{ijmn}
+    \\
+    \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma^c_l{}({\bf
+    y}_{l-1};
+    \theta^c_l{})) &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta}
+    \\
+
+    \end{align*}
+    $$
+    By the preceding work we can find the gradient tensors for each parameter. NOTE: all transpositions denote
+    permuting the first two slots.
+    $$
+    \begin{align*}
+
+    \bm{\delta}_w &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
+    \theta)
+    \circ DF^c_l{}({\bf z}^c_l{})
+    \circ
+    \partial_{W^c_l{}}\Gamma^c_l{}({\bf
+    y}_{l-1},
+    \theta^c_l{}) \right) \\
+    &amp;= (\bm{\xi}_z){}_{abcd}
+    (\bm{\epsilon}_w)^{abcd}{}_{efgh} \\
+    &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
+
+    e^{u\beta\gamma\delta}\\
+    \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
+    e_{u\beta\gamma\delta} \\
+    &amp;= (\xi^{\dagger}_z{}^T)^{utvw} (y^c_{l-1}{}^T)^{\beta t(\gamma+v)(\delta+w)}
+    e_{u\beta\gamma\delta} \\
+    &amp;= \bm{\xi}^T_z \ltimes^3_2 \bm{y}^c_{l-1}{}^T \\
+
+    &amp;\equiv (\bm{y}^c_{l-1}{}^T \rtimes^3_2 \bm{\xi}^T_z)^T \\
+
+    \bm{\delta}_b &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
+    \theta)
+    \circ DF^c_l{}({\bf z}^c_l{})
+    \circ
+    \partial_{b^c_l{}}\Gamma^c_l{}({\bf
+    y}_{l-1},
+    \theta^c_l{}) \right) \\
+    &amp;= (\bm{\xi}_z){}_{abcd}
+    (\bm{\epsilon}_b)^{abcd}{}_{e} \\
+    &amp;= \sum_{tvw} (\xi_z)_{tuvw} e^u
+    \\
+    \implies \bm{\delta}_b^{\dagger} &amp;= \sum_{tvw} (\xi_z)_{tuvw} e_u
+    \\
+    &amp;= \sum_{tvw} (\xi^{\dagger}_z)^{tuvw} e_u
+    \\
+    &amp;=\bm{1}_{acd}(\bm{\xi}^{\dagger}_z)^{abcd}
+    \\
+
+    \end{align*}
+
+    $$
+
+    where
+
+    $$
+    \begin{align*}
+    \bm{\xi}_z &amp;= (\bm{\xi}^c_l{})_{abcd}(\bm{\epsilon}_z)^{abcd}{}_{efgh}\\
+
+    &amp;= (\xi^c_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e^{tuvw} \\
+    \implies \bm{\xi}_z^{\dagger} &amp;= (\xi^c_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
+    &amp;= (\xi^c_l{}^{\dagger})^{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
+    &amp;= \bm{\xi}^c_l{}^{\dagger} \odot F^c_l{}'({\bf z}^c_l{}) \\
+    \end{align*}
+
+    $$
+
+    and
+
+    $$
+    \begin{align*}
+    \bm{\xi}^c_{l-1} &amp;= \phi(\partial_1 U^c_{l-1}({\bf y}^c_{l-1}, \theta)) = \phi(\partial_{1} U^c_{l}({\bf
+    y}^c_{l},
+    \theta)
+    \circ
+    DF^c_{l}({\bf z}^c_{l}) \circ \partial_1 \Gamma^c_{l}({\bf y}^c_{l-1}, \theta^c_l{}))\\
+    &amp;= (\bm{\xi}^c_l{})_{abcd} (\bm{\epsilon}_z)^{abcd}{}_{efgh} (\bm{\epsilon}^c_{l-1})^{efgh}{}_{wxyz}\\
+
+    &amp;= (\bm{\xi}_z)_{efgh} (\bm{\epsilon}^c_{l-1})^{efgh}{}_{wxyz}\\
+    &amp;= (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)} e^{t\beta \gamma \delta}
+    \\
+    \implies \bm{\xi}^c_{l-1}{}^{\dagger} &amp; = (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)} e_{t\beta \gamma
+    \delta}
+    \\
+    &amp; = (\xi^{\dagger}_z{})^{tuvw} (W^c_l{}^T)^{\beta u(\gamma-v)(\delta-w)} e_{t\beta \gamma
+    \delta} \\
+    &amp; =(\xi^{\dagger}_z{})^{tuvw} R_2(W^c_l{}^T)^{\beta u(v-\gamma)(w-\delta)} e_{t\beta \gamma \delta} \\
+    &amp; = \bm{\xi}^{\dagger}_z{} \bar{\rtimes}^3_2 W^c_l{}^T
+
+    \end{align*}
+
+    $$
