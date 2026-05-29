@@ -23,7 +23,7 @@
         "eslint": "^9",
         "eslint-config-next": "16.2.4",
         "rehype-document": "^7.0.3",
-        "rehype-easytex": "file:/home/markam/.install/rehype-easytex-1.0.0.tgz",
+        "rehype-easytex": "1.0.1",
         "rehype-katex": "^7.0.1",
         "rehype-mathjax": "^7.1.0",
         "rehype-parse": "^9.0.1",
