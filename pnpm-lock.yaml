@@ -43,8 +43,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       rehype-easytex:
-        specifier: file:/home/markam/.install/rehype-easytex-1.0.0.tgz
-        version: file:../../../.install/rehype-easytex-1.0.0.tgz
+        specifier: 1.0.1
+        version: 1.0.1
       rehype-katex:
         specifier: ^7.0.1
         version: 7.0.1
@@ -1947,9 +1947,8 @@ packages:
   rehype-document@7.0.3:
     resolution: {integrity: sha512-g5zq6i2FwWVBVdyVi0Jw/5MRvsHj3wuJCn+QeyOjm29QBpTG4r1iUElyH9GhfWx5fB27ZEApA53RdAiYGBb4zQ==}
 
-  rehype-easytex@file:../../../.install/rehype-easytex-1.0.0.tgz:
-    resolution: {integrity: sha512-DWzk5R8ZeUG6mJG7ZSKlC2KUcgaOfyvbx6VkuA/cFleQgniEFl7NX0+ouPgJQ9zwMSDW5gVl53oZL367wL5iyg==, tarball: file:../../../.install/rehype-easytex-1.0.0.tgz}
-    version: 1.0.0
+  rehype-easytex@1.0.1:
+    resolution: {integrity: sha512-XmoHWCJi7UyTwGqZCvBz8fWDI7/wkoYgPmMo4XVGIpUhf2bfm2wzqYKy2fluugzZZ5Xl1wVDp6ROrdeoPdUboQ==}
 
   rehype-katex@7.0.1:
     resolution: {integrity: sha512-OiM2wrZ/wuhKkigASodFoo8wimG3H12LWQaH8qSPVJn9apWKFSH3YOCtbKpBorTVw/eI7cuT21XBbvwEswbIOA==}
@@ -4499,7 +4498,7 @@ snapshots:
       unified: 11.0.5
       vfile: 6.0.3
 
-  rehype-easytex@file:../../../.install/rehype-easytex-1.0.0.tgz:
+  rehype-easytex@1.0.1:
     dependencies:
       unist-util-visit: 5.1.0
 
