@@ -216,7 +216,7 @@ Now we can find a suitable tensorial representation for $z$: <div>
             \Gamma_l(y_{l-1}, W_l, b_l)$$ where
             $$
             \begin{equation}
-            \Gamma_{l}({\bf S, T}, \bm{u}) = g_{bc}{\bf S}^{ab}{\bf T}^{cd}+ \sum_i e_i \otimes \bm{u}
+            \Gamma_{l}(S,T,U) = g_{bc}S^{ab}T^{cd}+ \sum_i e_i \otimes U
             \end{equation}
             $$
             We will call the <span class="font-bold">neuron</span> $k$ at layer $l$ the function $$
@@ -225,8 +225,8 @@ Now we can find a suitable tensorial representation for $z$: <div>
             e_j, (b_l)^k)
             $$ where
             $$
-            \gamma_{l}({\bf S}, \bm{t}, u) =
-            g_{bc}{\bf S}^{ab}\bm{t}^{c}+ u \sum_i e_i
+            \gamma_{l}(S,T, u) =
+            g_{bc}S^{ab}T^{c}+ u \sum_i e_i
             $$
             Note that
             $$
@@ -757,73 +757,78 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             $$
             Tensorizing the softmax activation gives
             $$
-            \hat{\bf y} = F_{L+1}({\bf z}_{L+1}) = \text{Diag} ((\exp({\bf z}_{L+1})^{ab} {\bf 1}_b)^{-1})\exp({\bf
-            z}_{L+1})
+            \hat{\bf y} = F_{L+1}({\bf z}_{L+1}) = \text{Diag}((\exp({\bf z}_{L+1})^{ab} {\bf
+            1}_b)^{-1})^{a}{}_b \exp({\bf
+            z}_{L+1})^{bc}
             $$
             Perturb ${\bf z}_{L+1}$ by $d{\bf z}_{L+1}$, then letting $E = \exp({\bf z}_{L+1})$
             $$
             \begin{align*}
             d E &amp;= E \odot d{\bf z}_{L+1} \\
-            \implies d (E {\bf 1}) &amp;= (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \\
-            \implies d (E {\bf 1})^{-1} &amp;= - (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b)
+            \implies d (E^{ab} {\bf 1}_b) &amp;= (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \\
+            \implies d (E^{ab} {\bf 1}_b)^{-1} &amp;= - (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf
+            z}_{L+1})^{ab}{\bf 1}_b)
             \\
 
-            \implies d \hat{\bf y} &amp;= d (\text{Diag}((E^{ab}{\bf 1}_b)^{-1}))E +
-            \text{Diag}((E^{ab}{\bf 1}_b)^{-1})d E \\
-            &amp;= \text{Diag}(- (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b))E +
+            \implies d \hat{\bf y} &amp;= d (\text{Diag}((E^{ab}{\bf 1}_b)^{-1}))^a{}_bE^{bc} +
+            \text{Diag}((E^{ab}{\bf 1}_b)^{-1})^a{}_bd E^{bc} \\
+            &amp;= \text{Diag}(- (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b))^a{}_bE^{bc} +
             \text{Diag}((E^{ab}{\bf
-            1}_b)^{-1})(E
-            \odot d {\bf z}_{L+1})
+            1}_b)^{-1})^a{}_b(E
+            \odot d {\bf z}_{L+1})^{bc}
             \end{align*}
             $$
             Let $A, B$ be arbitrary, and $C=\text{Diag}(c), D=\text{Diag}(d)$ be diagonal. We will use a few facts
-            concerning diagonal matrices and the $\odot $ operator:
+            concerning diagonal degree-2 tensors and the $\odot $ operator:
             <ol style="list-style: decimal; list-style-position: inside;">
                 <li>
-                    $DA = (d^{a} \otimes {\bf 1}_{b}) \odot A$
+                    $D^a{}_bA^{bc} = (d^{a} \otimes {\bf 1}_{b}) \odot A$
                 </li>
                 <li>
-                    $D(A \odot B) = (DA) \odot B$
+                    $D^a{}_b(A \odot B)^{bc} = (D^a{}_bA^{bc}) \odot B$
                 </li>
                 <li>
-                    $CD = \text{Diag}(c \odot d)$
+                    $C^a{}_bD^{bc} = \text{Diag}(c \odot d)$
                 </li>
             </ol>
-            Noting that $\hat{\bf y} = \text{Diag}((E^{ab}{\bf 1}_b)^{-1})E = \text{Diag}(E^{ab}{\bf 1}_b)^{-1}E
+            Noting that $\hat{\bf y} = \text{Diag}((E^{ab}{\bf 1}_b)^{-1})^a{}_bE^{bc} = (\text{Diag}(E^{ab}{\bf
+            1}_b)^{-1})^a{}_bE^{bc}
             \implies E =
-            \text{Diag}(E^{ab}{\bf 1}_b) \hat{\bf
-            y}$
+            \text{Diag}(E^{ab}{\bf 1}_b)^{a}{}_b \hat{\bf
+            y}^{bc}$
             $$
             \begin{align*}
-            d \hat{\bf y} &amp;= -\text{Diag}( (E^{ab}{\bf 1}_b)^{-2})\text{Diag}((E \odot d {\bf z}_{L+1})^{ab}{\bf
-            1}_b)\text{Diag}(E^{ab}{\bf
-            1}_b)
+            d \hat{\bf y} &amp;= -\text{Diag}( (E^{ab}{\bf 1}_b)^{-2})^a{}_b\text{Diag}((E \odot d {\bf
+            z}_{L+1})^{ab}{\bf
+            1}_b)^b{}_c\text{Diag}(E^{ab}{\bf
+            1}_b)^{c}{}_d
             \hat{\bf
-            y} +
+            y}^{de} +
             (\text{Diag}((E^{ab}{\bf
             1}_b)^{-1}
-            )E)
+            )^a{}_bE^{bc})
             \odot
             d {\bf z}_{L+1}\\
-            &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})\text{Diag}( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b)
+            &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b\text{Diag}( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b)^b{}_c
             \hat{\bf
-            y} + \hat{\bf y}
+            y}^{cd} + \hat{\bf y}
             \odot
             d {\bf z}_{L+1} \\
-            &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})(( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+            &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b(( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
             1}^c)\odot
             \hat{\bf
-            y}) + \hat{\bf y}
+            y})^{bc} + \hat{\bf y}
             \odot
             d {\bf z}_{L+1} \\
-            &amp;=-(\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})(E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
-            1}^c)\odot
+            &amp;=-(\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b(E \odot d {\bf z}_{L+1})^{bc}{\bf 1}_c \otimes {\bf
+            1}^d)\odot
             \hat{\bf
             y} + \hat{\bf y}
             \odot
             d {\bf z}_{L+1} \\
 
-            &amp;=-(((\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})E) \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+            &amp;=-(((\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_bE^{bc}) \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes
+            {\bf
             1}^c)\odot
             \hat{\bf
             y} + \hat{\bf y}
@@ -1169,7 +1174,9 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
 
     \end{align*}
     $$
-    By the preceding work we can find the gradient tensors for each parameter
+    By the preceding work we can find the gradient tensors for each parameter. Note that transposition is used to denote
+    permuting
+    the slots of 2-tensors.
     <div class="flex flex-row justify-between align-baseline">
         <div>
             $$
@@ -1587,3 +1594,7 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             </div>
         </div>
     </div>
+
+    I hope this was an informative read; the backpropgation procedure is derived so often in a way that sweeps important
+    concepts under the rug. Tensors are the natural objects for high dimensional data, so it's important to know how to
+    actually use them when they appear in ML.
