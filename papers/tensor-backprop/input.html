@@ -130,8 +130,8 @@ V
 \otimes V
 \end{align}
 $$
-We also need to transform the $C^{\infty}(\mathbb{R}, \mathbb{R})$ transform into one that acts on tensors, that is one
-from $C^{\infty}(V \otimes V, V \otimes V )$ by defining
+We also need to transform the $\mathbb{R} \to \mathbb{R}$ transform into
+a $\Bbb{V}^{\otimes 2} \to \Bbb{V}^{\otimes 2}$ transform that acts on tensors, by defining
 $$
 \begin{equation}
 y_l = F_l(z_l) = \sum_{i,k} f_l((z_l)^{i,k}) e_i \otimes e_k
@@ -139,12 +139,30 @@ y_l = F_l(z_l) = \sum_{i,k} f_l((z_l)^{i,k}) e_i \otimes e_k
 $$
 <h3 class="text-2xl" style="font-family: var(--font-playfair);">Contraction, Inner Products, Metric Tensors</h3>
 <br />
-The issue with (8) is that is kind of useless; we want to speak in a language of tensors and yet are using the
-coefficients of the layer features and parameters, instead of working with their tensor representations directly. Using
-basic linear algebra, one realizes that (8) can be formulated as a matrix product, where the inner product is over the
-space indexed by $j$. Using <span class="italic">tensors</span> however, we see (6) as the image of the metric tensor,
+The issue thus far is that we want to speak in a language of tensors and yet are using the
+coefficients of the layer features and parameters. Using
+basic linear algebra, one realizes that $z_l$ can be formulated as a matrix product, where the inner product is over the
+space indexed by $j$. Using <span class="italic">tensors</span> however, we see it as the image of the metric tensor,
 or, if one of the $j$ were lowered, as a contraction. Before jumping in, we need to agree on contraction notation; in
-(AIN) this is straighforward: if it had been the case that our tensors were of mixed $(1,1)$ rank, we could write
+(AIN) this is straighforward:
+
+<div class="bg-cyan-100 border-2 m-2 p-2 rounded-md">
+    Let $S^{\ldots a \ldots}_{\ldots b \ldots} = S^{\ldots i \ldots}_{\ldots j \ldots} \ldots \otimes e_{i} \otimes
+    \ldots \otimes e^j \otimes \ldots$ be arbitrary. Contraction along slots $a,b$ is defined as
+    $$
+    S^{\ldots i \ldots}_{\ldots j \ldots} e^j(e_i)\ldots \otimes \ldots \otimes \ldots =:S^{\ldots a \ldots}_{\ldots a
+    \ldots}
+    $$
+    In the case where $e^j(e_i) = \delta_{ij}$:
+    $$
+    S^{\ldots a \ldots}_{\ldots a
+    \ldots} = S^{\ldots i \ldots}_{\ldots i \ldots} \ldots \otimes \ldots \otimes \ldots
+
+    $$
+
+
+</div>
+If it had been the case that our tensors were of mixed $(1,1)$ rank, we could write
 $$
 \begin{equation}
 (z_l)^a{}_c = (y_{l-1})^a{}_b (W_l)^b{}_c + (b_l)^a{}_c
@@ -165,21 +183,19 @@ $$\begin{align} g_{ab} = g_{i,j} e^i \otimes e^j =
 Now we can define what it means to contract against the metric $g$
 <div class="bg-cyan-100 border-2 m-2 rounded-md">
     $$
-    g_{ab} S^{\ldots a \ldots} T^{\ldots b \ldots} = g_{ij} e^i(e_{\alpha}) e^j(e_{\beta}) S^{\mathcal{I}}
-    T^{\mathcal{J}} e_{\mathcal{I} \setminus
-    \mathcal{I}_a}\otimes e_{\mathcal{J} \setminus \mathcal{J}_b} $$
-</div>
-where $\alpha, \beta$ index slots $a, b$ resp. Similarly
-<div class="bg-cyan-100 border-2 m-2 rounded-md">
+    g_{ab} S^{\ldots a \ldots}_{\ldots \phantom{x} \ldots} T^{\ldots b \ldots}_{\ldots \phantom{x} \ldots} = S^{\ldots
+    \phantom{x}
+    \ldots}_{\ldots a
+    \ldots}T^{\ldots a \ldots}_{\ldots \phantom{x}
+    \ldots} \\
+    g^{ab} S_{\ldots a \ldots}^{\ldots \phantom{x} \ldots} T_{\ldots b \ldots}^{\ldots \phantom{x} \ldots} = S_{\ldots
+    \phantom{x} \ldots}^{\ldots a
+    \ldots}T_{\ldots a \ldots}^{\ldots \phantom{x} \ldots}
     $$
-    g^{ab} S_{\ldots a \ldots} T_{\ldots b \ldots} = g^{ij}e^{\alpha} (e_i) e^{\beta}(e_j) S_{\mathcal{I}}
-    T_{\mathcal{J}} e^{\mathcal{I} \setminus
-    \mathcal{I}_a}\otimes e^{\mathcal{J} \setminus \mathcal{J}_b} $$
 </div>
 
 
-Now we can find a suitable tensorial representation for (8) in terms of tensors, not coefficients.
-<div>
+Now we can find a suitable tensorial representation for $z$: <div>
     $$
     z_l = (y_{l-1})^{i,j}(W_l)^{j,k}e_i \otimes e_k + (b_l)^{k} e_i \otimes e_k= g_{bc}(y_{l-1})^{ab}(W_l)^{cd} +
     \sum_i e_i \otimes b_l
@@ -1154,105 +1170,113 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
     \end{align*}
     $$
     By the preceding work we can find the gradient tensors for each parameter
-    $$
-    \begin{align*}
+    <div class="flex flex-row justify-between align-baseline">
+        <div>
+            $$
+            \begin{align*}
 
-    \bm{\delta}_w &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
-    \theta)
-    \circ DF_l({\bf z}_l)
-    \circ
-    \partial_{W_l}\Gamma_l({\bf
-    y}_{l-1},
-    \theta_l) \right) \\
-    &amp;= (\bm{\xi}_z){}_{ab}
-    (\bm{\epsilon}_w)^{ab}{}_{cd} \\
-    &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e^i \otimes e^q \\
-    \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e_i \otimes e_q \\
-    &amp;= (\xi_z^{\dagger})^{p,q} (y_{l-1}^T)^{i,p} \otimes e_i \otimes e_q \\
-    &amp;= g_{bc}({\bf y}_{l-1}^T)^{ab}(\bm{\xi}_z^{\dagger})^{cd} \\
-    \\
-    \bm{\delta}_b &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
-    \theta)
-    \circ DF_l({\bf z}_l)
-    \circ
-    \partial_{b_l}\Gamma_l({\bf
-    y}_{l-1},
-    \theta_l) \right) \\
-    &amp;= (\bm{\xi}_z){}_{ab}
-    (\bm{\epsilon}_b)^{ab}{}_{c} \\
-    &amp;= \sum_p (\xi_z)_{p,q} e^q \\
-    \implies \bm{\delta}_b^{\dagger} &amp;= \sum_p (\xi_z)_{p,q} e_q \\
-    &amp;= \sum_p (\xi_z^{\dagger})^{p,q} e_q \\
-    &amp;= {\bm{1}}_{a}(\bm{\xi}_z^{\dagger})^{ab} \\
+            \bm{\delta}_w &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
+            \theta)
+            \circ DF_l({\bf z}_l)
+            \circ
+            \partial_{W_l}\Gamma_l({\bf
+            y}_{l-1},
+            \theta_l) \right) \\
+            &amp;= (\bm{\xi}_z){}_{ab}
+            (\bm{\epsilon}_w)^{ab}{}_{cd} \\
+            &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e^i \otimes e^q \\
+            \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e_i \otimes e_q \\
+            &amp;= (\xi_z^{\dagger})^{p,q} (y_{l-1}^T)^{i,p} \otimes e_i \otimes e_q \\
+            &amp;= g_{bc}({\bf y}_{l-1}^T)^{ab}(\bm{\xi}_z^{\dagger})^{cd}
+            \end{align*}
+            $$
+        </div>
+        <div>
+            $$
+            \begin{align*}
+            \bm{\delta}_b &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
+            \theta)
+            \circ DF_l({\bf z}_l)
+            \circ
+            \partial_{b_l}\Gamma_l({\bf
+            y}_{l-1},
+            \theta_l) \right) \\
+            &amp;= (\bm{\xi}_z){}_{ab}
+            (\bm{\epsilon}_b)^{ab}{}_{c} \\
+            &amp;= \sum_p (\xi_z)_{p,q} e^q \\
+            \implies \bm{\delta}_b^{\dagger} &amp;= \sum_p (\xi_z)_{p,q} e_q \\
+            &amp;= \sum_p (\xi_z^{\dagger})^{p,q} e_q \\
+            &amp;= {\bm{1}}_{a}(\bm{\xi}_z^{\dagger})^{ab} \\
 
-    \end{align*}
+            \end{align*}
 
-    $$
-
+            $$
+        </div>
+    </div>
     where
+    <div class="flex flex-row justify-between align-baseline">
+        <div>
+            $$
+            \begin{align*}
+            \bm{\xi}_z &amp;= (\bm{\xi}_l)_{ab}(\bm{\epsilon}_z)^{ab}{}_{cd}\\
 
-    $$
-    \begin{align*}
-    \bm{\xi}_z &amp;= (\bm{\xi}_l)_{ab}(\bm{\epsilon}_z)^{ab}{}_{cd}\\
+            &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e^i \otimes e^j \\
+            \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
+            &amp;= (\xi_l^{\dagger})^{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
+            &amp;= \bm{\xi}_l^{\dagger} \odot F_l'({\bf z}_l) \\
+            \end{align*}
 
-    &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e^i \otimes e^j \\
-    \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
-    &amp;= (\xi_l^{\dagger})^{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
-    &amp;= \bm{\xi}_l^{\dagger} \odot F_l'({\bf z}_l) \\
-    \end{align*}
+            $$
+        </div>
+        <div>
+            $$
+            \begin{align*}
+            \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U_{l-1}({\bf y}_{l-1}, \theta)) = \phi(\partial_{1} U_{l}({\bf y}_{l},
+            \theta)
+            \circ
+            DF_{l}({\bf z}_{l}) \circ \partial_1 \Gamma_{l}({\bf y}_{l-1}, \theta_l))\\
+            &amp;= (\bm{\xi}_l)_{ab} (\bm{\epsilon}_z)^{ab}{}_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
 
-    $$
+            &amp;= (\bm{\xi}_z)_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
+            &amp;= (\xi_z)_{p,q} (W_l)^{j, q} e^p \otimes e^j \\
+            \implies \bm{\xi}_{l-1}^{\dagger} &amp; = (\xi_l)_{p,q} (W_l)^{j, q} e_p \otimes e_j \\
+            &amp; = (\xi_l^{\dagger})^{p,q} (W_l^T)^{q, j} e_p \otimes e_j \\
+            &amp; = g_{bc}(\bm{\xi_l}^{\dagger})^{ab} (W_l^T)^{cd}
+            \end{align*}
 
-    and
-
-    $$
-    \begin{align*}
-    \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U_{l-1}({\bf y}_{l-1}, \theta)) = \phi(\partial_{1} U_{l}({\bf y}_{l}, \theta)
-    \circ
-    DF_{l}({\bf z}_{l}) \circ \partial_1 \Gamma_{l}({\bf y}_{l-1}, \theta_l))\\
-    &amp;= (\bm{\xi}_l)_{ab} (\bm{\epsilon}_z)^{ab}{}_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
-
-    &amp;= (\bm{\xi}_z)_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
-    &amp;= (\xi_z)_{p,q} (W_l)^{j, q} e^p \otimes e^j \\
-    \implies \bm{\xi}_{l-1}^{\dagger} &amp; = (\xi_l)_{p,q} (W_l)^{j, q} e_p \otimes e_j \\
-    &amp; = (\xi_l^{\dagger})^{p,q} (W_l^T)^{q, j} e_p \otimes e_j \\
-    &amp; = g_{bc}(\bm{\xi_l}^{\dagger})^{ab} (W_l^T)^{cd}
-    \end{align*}
-
-    $$
-
+            $$
+        </div>
+    </div>
 
     <h2 class="text-3xl my-8" style="font-family: var(--font-playfair);"> 2. Convolutional Neural Networks
     </h2>
     The machinery used to formalize FNNs is even more applicable to convolutional neural networks (CNNs). Lets start
-    with the key operation; define the operator $*^n_m$ between two tensors $Y,
-    W$
-    where $W \in \Bbb{W}$ and $Y$ has contiguous slots from consecutive factors in $\Bbb{W}$ as
-
+    with the key operation; define the operator
     $$
-    Y *^n_{m} W = \sum_{\alpha \in \Bbb{Z}^{|m|}}Y_{ \mathcal{A}b_1 \ldots b_n}
-    T(W; sgn(m)\cdot\alpha)^{\mathcal{C}b_1\ldots b_n} \otimes e_{\alpha}
+    Y^{\mathcal{A}b_1\ldots b_n} *^n_{m} W^{\mathcal{C}b_1 \ldots b_n} = \sum_{\alpha \in \Bbb{Z}^{|m|}}Y_{
+    \mathcal{A}b_1 \ldots b_n}
+    \tau(W; sgn(m)\cdot\alpha)^{\mathcal{C}b_1\ldots b_n} \otimes e_{\alpha}
     $$
 
     for $|m| \leq n$ and, using $\mathcal{I}$ to index all but the last $m$ slots and $\mathcal{J}$ to index the last
     $|m|$ slots
     $$
-    T(W;\alpha) = W^{\mathcal{I},\mathcal{J}-\alpha} e_{\mathcal{I}}\otimes e_{\mathcal{J}} = W^{\mathcal{I},
+    \tau(W;\alpha) = W^{\mathcal{I},\mathcal{J}-\alpha} e_{\mathcal{I}}\otimes e_{\mathcal{J}} = W^{\mathcal{I},
     \mathcal{J}}
     e_{\mathcal{I}}\otimes e_{\mathcal{J}+\alpha}
     $$
     is the translation operator over the last $|m|=\text{len}(\alpha)$ slots. $\mathcal{A},\mathcal{C}$ are abstract
-    multiindices. Now let $m \in \Bbb{N}$ and $$R_m(W)^{\mathcal{I},\mathcal{J}} =
+    multiindices. Now let $m \in \Bbb{N}$ and $$\chi_m(W)^{\mathcal{I},\mathcal{J}} =
     W^{\mathcal{I},-\mathcal{J}}$$ be the tensor flipped at the last $m$ slots.
     Define a few operators
     $$
     \begin{align*}
-    &amp;Y \rtimes^n_m W &amp;&amp;= Y *^n_m W \\
-    &amp;Y \bar{\rtimes}^n_m W &amp;&amp;= Y *^n_m R_m(W) \\
+    &amp;Y \rtimes W = Y *^3_2 W \\
+    &amp;Y \bar{\rtimes} W = Y *^3_2 \chi_2(W) \\
 
-    &amp;Y \ltimes^n_m W &amp;&amp;= Y *^n_{-m} W \\
+    &amp;Y \ltimes W = Y *^3_{-2} W \\
 
-    &amp;Y \bar{\ltimes}^n_m W &amp;&amp;= Y *^n_{-m} R_m(W) \end{align*}
+    &amp;Y \bar{\ltimes} W = Y *^3_{-2} \chi_2(W) \end{align*}
     $$
     Let $y_{l-1}^c, W_{l}^c \in \Bbb{V}^{\otimes 4}, b_{l}^c \in \Bbb{V}$.
     <div class="border-2 bg-emerald-100 p-10 my-4 rounded-md">
@@ -1263,7 +1287,7 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
 
         where $$
         \Gamma^c_l(Y, W, b)
-        =Y \rtimes^3_2 W + \bm{1}^{a} \otimes b \otimes
+        =Y \rtimes W + \bm{1}^{a} \otimes b \otimes
         \bm{1}^{bc}
         $$
         We will call the neuron $k$ at layer $l$ the function
@@ -1366,14 +1390,14 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             \begin{align*}
             \partial_{1}\Gamma_l^c({\bf
             y}_{l-1}^c,
-            W_l^c, b_l^c)&amp;= dy^c_{l-1} \mapsto (dy^c_{l-1}) \rtimes^3_2 W^c_l \\
+            W_l^c, b_l^c)&amp;= dy^c_{l-1} \mapsto (dy^c_{l-1}) \rtimes W^c_l \\
             \implies \phi(\partial_{1}\Gamma_l^c({\bf
             y}_{l-1}^c,
-            W_l^c, b_l^c)) &amp;= (e_{\alpha\beta\gamma\delta} \rtimes^3_2 W^c_l) \otimes e^{\alpha\beta\gamma\delta} \\
-            &amp;= (e_{\alpha\beta\gamma\delta})^i{}_{bcd} T(W^c_l; (s, r))^{jbcd} e_{ijsr} \otimes
+            W_l^c, b_l^c)) &amp;= (e_{\alpha\beta\gamma\delta} \rtimes W^c_l) \otimes e^{\alpha\beta\gamma\delta} \\
+            &amp;= (e_{\alpha\beta\gamma\delta})^{ituv} \tau(W^c_l; (s, r))^{jtuv} e_{ijsr} \otimes
             e^{\alpha\beta\gamma\delta} \\
 
-            &amp;= T(W^c_l; (s, r))^{j\beta\gamma\delta} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta} \\
+            &amp;= \tau(W^c_l; (s, r))^{j\beta\gamma\delta} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta} \\
             &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta}
             \end{align*}
             $$
@@ -1387,18 +1411,18 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
             \begin{align*}
             \partial_{2}\Gamma_l^c({\bf
             y}_{l-1}^c,
-            W_l^c, b_l^c) &amp;= dW^c_l \mapsto y^c_{l-1} \rtimes^3_2 dW^c_l \\
+            W_l^c, b_l^c) &amp;= dW^c_l \mapsto y^c_{l-1} \rtimes dW^c_l \\
             \implies \phi(\partial_{2}\Gamma_l^c({\bf
             y}_{l-1}^c,
-            W_l^c, b_l^c)) &amp;= (y^c_{l-1} \rtimes^3_2 e_{\alpha\beta\gamma\delta}) \otimes e^{\alpha
+            W_l^c, b_l^c)) &amp;= (y^c_{l-1} \rtimes e_{\alpha\beta\gamma\delta}) \otimes e^{\alpha
             \beta\gamma\delta} \\
-            &amp;= (y^c_{l-1})^i{}_{bcd} T(e_{\alpha\beta\gamma\delta}; (s, r))^{jbcd} e_{ijsr} \otimes
+            &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
             e^{\alpha\beta\gamma\delta} \\
-            &amp;= (y^c_{l-1})^i{}_{bcd} T(e_{\alpha\beta\gamma\delta}; (s, r))^{jbcd} e_{ijsr} \otimes
+            &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
             e^{\alpha\beta\gamma\delta} \\
-            &amp;= (y^c_{l-1})^i{}_{bcd} (e_{\alpha\beta(\gamma+s)(\delta+r)})^{jbcd} e_{ijsr} \otimes
+            &amp;= (y^c_{l-1})^{ituv} (e_{\alpha\beta(\gamma+s)(\delta+r)})^{jtuv} e_{ijsr} \otimes
             e^{\alpha\beta\gamma\delta} \\
-            &amp;= (y^c_{l-1})^i{}_{\beta(\gamma+s)(\delta+r)}
+            &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
             e_{i\alpha sr}
             \otimes
             e^{\alpha\beta\gamma\delta} \\
@@ -1427,117 +1451,139 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
         </li>
     </ul>
     <h2 class="text-2xl my-4">The Gradients</h2>
-    Define the following:
-    $$
-    \begin{align*}
-    {\bm{\xi}}^c_l{} &amp;=
-    \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta)) &amp;= ({\xi}^c_l{})_{tuvw} e^{tuvw}\\
-    {\bm{\xi}}_z &amp;= \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta) \circ DF^c_l{}({\bf z}^c_l{})) \\
-    {\bm{\delta}}_w &amp;= \phi(\partial_{W^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))) \\
-    {\bm{\delta}}_b &amp;= \phi(\partial_{b^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))\\
-    \bm{\epsilon}_w &amp;= \phi(\partial_{W^c_l{}}\Gamma^c_l{}({\bf
-    y}_{l-1},
-    \theta^c_l{})) &amp;= (y^c_{l-1})^i{}_{\beta(\gamma+s)(\delta+r)}
-    e_{i\alpha sr}
-    \otimes
-    e^{\alpha\beta\gamma\delta}\\
-    \bm{\epsilon}_b &amp;= \phi(\partial_{b^c_l{}}\Gamma^c_l{}({\bf
-    y}_{l-1},
-    \theta^c_l{})) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
-    e^{\alpha} \\
-    \bm{\epsilon}_z &amp;= \phi(DF^c_l{}({\bf z}^c_l{})) &amp; = f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes
-    e^{ijmn}
-    \\
-    \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma^c_l{}({\bf
-    y}_{l-1};
-    \theta^c_l{})) &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta}
-    \\
+    <div style="width: 100%;">
+        Define the following:
+        $$
+        \begin{align*}
+        {\bm{\xi}}_l{} &amp;=
+        \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta)) &amp;= ({\xi}^c_l{})_{tuvw} e^{tuvw}\\
+        {\bm{\xi}}_z &amp;= \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta) \circ DF^c_l{}({\bf z}^c_l{})) \\
+        {\bm{\delta}}_w &amp;= \phi(\partial_{W^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))) \\
+        {\bm{\delta}}_b &amp;= \phi(\partial_{b^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))\\
+        \bm{\epsilon}_w &amp;= \phi(\partial_{W^c_l{}}\Gamma^c_l{}({\bf
+        y}_{l-1},
+        \theta^c_l{})) &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
+        e_{i\alpha sr}
+        \otimes
+        e^{\alpha\beta\gamma\delta}\\
+        \bm{\epsilon}_b &amp;= \phi(\partial_{b^c_l{}}\Gamma^c_l{}({\bf
+        y}_{l-1},
+        \theta^c_l{})) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
+        e^{\alpha} \\
+        \bm{\epsilon}_z &amp;= \phi(DF^c_l{}({\bf z}^c_l{})) &amp; = f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes
+        e^{ijmn}
+        \\
+        \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma^c_l{}({\bf
+        y}_{l-1};
+        \theta^c_l{})) &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma
+        \delta}
+        \\
 
-    \end{align*}
-    $$
-    By the preceding work we can find the gradient tensors for each parameter. NOTE: all transpositions denote
-    permuting the first two slots.
-    $$
-    \begin{align*}
+        \end{align*}
+        $$
+        By the preceding work we can find the gradient tensors for each parameter. NOTE: all transpositions denote
+        permuting the first two slots.
+        <div class="flex flex-row justify-between align-baseline">
+            <div>
+                $$
+                \begin{align*}
 
-    \bm{\delta}_w &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
-    \theta)
-    \circ DF^c_l{}({\bf z}^c_l{})
-    \circ
-    \partial_{W^c_l{}}\Gamma^c_l{}({\bf
-    y}_{l-1},
-    \theta^c_l{}) \right) \\
-    &amp;= (\bm{\xi}_z){}_{abcd}
-    (\bm{\epsilon}_w)^{abcd}{}_{efgh} \\
-    &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
+                \bm{\delta}_w &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
+                \theta)
+                \circ DF^c_l{}({\bf z}^c_l{})
+                \circ
+                \partial_{W^c_l{}}\Gamma^c_l{}({\bf
+                y}_{l-1},
+                \theta^c_l{}) \right) \\
+                &amp;= (\bm{\xi}_z){}_{abcd}
+                (\bm{\epsilon}_w)^{abcd}{}_{efgh} \\
+                &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
 
-    e^{u\beta\gamma\delta}\\
-    \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
-    e_{u\beta\gamma\delta} \\
-    &amp;= (\xi^{\dagger}_z{}^T)^{utvw} (y^c_{l-1}{}^T)^{\beta t(\gamma+v)(\delta+w)}
-    e_{u\beta\gamma\delta} \\
-    &amp;= \bm{\xi}^T_z \ltimes^3_2 \bm{y}^c_{l-1}{}^T \\
+                e^{u\beta\gamma\delta}\\
+                \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
+                e_{u\beta\gamma\delta} \\
+                &amp;= (\xi^{\dagger}_z{}^T)^{utvw} (y^c_{l-1}{}^T)^{\beta t(\gamma+v)(\delta+w)}
+                e_{u\beta\gamma\delta} \\
+                &amp;= \bm{\xi}^T_z \ltimes {\bf y}^c_{l-1}{}^T \\
 
-    &amp;\equiv (\bm{y}^c_{l-1}{}^T \rtimes^3_2 \bm{\xi}^T_z)^T \\
+                &amp;\equiv ({\bf y}^c_{l-1}{}^T \rtimes \bm{\xi}^T_z)^T \\
+                \end{align*}
+                $$
+            </div>
+            <div>
+                $$
+                \begin{align*}
+                \bm{\delta}_b &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
+                \theta)
+                \circ DF^c_l{}({\bf z}^c_l{})
+                \circ
+                \partial_{b^c_l{}}\Gamma^c_l{}({\bf
+                y}_{l-1},
+                \theta^c_l{}) \right) \\
+                &amp;= (\bm{\xi}_z){}_{abcd}
+                (\bm{\epsilon}_b)^{abcd}{}_{e} \\
+                &amp;= \sum_{tvw} (\xi_z)_{tuvw} e^u
+                \\
+                \implies \bm{\delta}_b^{\dagger} &amp;= \sum_{tvw} (\xi_z)_{tuvw} e_u
+                \\
+                &amp;= \sum_{tvw} (\xi^{\dagger}_z)^{tuvw} e_u
+                \\
+                &amp;=\bm{1}_{acd}(\bm{\xi}^{\dagger}_z)^{abcd}
+                \\
 
-    \bm{\delta}_b &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
-    \theta)
-    \circ DF^c_l{}({\bf z}^c_l{})
-    \circ
-    \partial_{b^c_l{}}\Gamma^c_l{}({\bf
-    y}_{l-1},
-    \theta^c_l{}) \right) \\
-    &amp;= (\bm{\xi}_z){}_{abcd}
-    (\bm{\epsilon}_b)^{abcd}{}_{e} \\
-    &amp;= \sum_{tvw} (\xi_z)_{tuvw} e^u
-    \\
-    \implies \bm{\delta}_b^{\dagger} &amp;= \sum_{tvw} (\xi_z)_{tuvw} e_u
-    \\
-    &amp;= \sum_{tvw} (\xi^{\dagger}_z)^{tuvw} e_u
-    \\
-    &amp;=\bm{1}_{acd}(\bm{\xi}^{\dagger}_z)^{abcd}
-    \\
+                \end{align*}
 
-    \end{align*}
+                $$
+            </div>
+        </div>
 
-    $$
+        where
 
-    where
+        <div class="flex flex-row justify-between align-baseline">
+            <div>
+                $$
+                \begin{align*}
+                \bm{\xi}_z &amp;= (\bm{\xi}_l{})_{abcd}(\bm{\epsilon}_z)^{abcd}{}_{efgh}\\
 
-    $$
-    \begin{align*}
-    \bm{\xi}_z &amp;= (\bm{\xi}^c_l{})_{abcd}(\bm{\epsilon}_z)^{abcd}{}_{efgh}\\
+                &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e^{tuvw} \\
+                \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
+                &amp;= (\xi_l{}^{\dagger})^{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
+                &amp;= \bm{\xi}_l{}^{\dagger} \odot F^c_l{}'({\bf z}^c_l{}) \\
+                \end{align*}
 
-    &amp;= (\xi^c_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e^{tuvw} \\
-    \implies \bm{\xi}_z^{\dagger} &amp;= (\xi^c_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
-    &amp;= (\xi^c_l{}^{\dagger})^{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
-    &amp;= \bm{\xi}^c_l{}^{\dagger} \odot F^c_l{}'({\bf z}^c_l{}) \\
-    \end{align*}
+                $$
 
-    $$
+            </div>
+            <div>
+                $$
+                \begin{align*}
+                \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U^c_{l-1}({\bf y}^c_{l-1}, \theta)) = \phi(\partial_{1}
+                U^c_{l}({\bf
+                y}^c_{l},
+                \theta)
+                \circ
+                DF^c_{l}({\bf z}^c_{l}) \circ \partial_1 \Gamma^c_{l}({\bf y}^c_{l-1}, \theta^c_l{}))\\
+                &amp;= (\bm{\xi}_l{})_{abcd} (\bm{\epsilon}_z)^{abcd}{}_{efgh}
+                (\bm{\epsilon}_{l-1})^{efgh}{}_{wxyz}\\
 
-    and
+                &amp;= (\bm{\xi}_z)_{efgh} (\bm{\epsilon}_{l-1})^{efgh}{}_{wxyz}\\
+                &amp;= (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)} e^{t\beta \gamma \delta}
+                \\
+                \implies \bm{\xi}_{l-1}{}^{\dagger} &amp; = (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)}
+                e_{t\beta
+                \gamma
+                \delta}
+                \\
+                &amp; = (\xi^{\dagger}_z{})^{tuvw} (W^c_l{}^T)^{\beta u(\gamma-v)(\delta-w)} e_{t\beta \gamma
+                \delta} \\
+                &amp; =(\xi^{\dagger}_z{})^{tuvw} \chi_2(W^c_l{}^T)^{\beta u(v-\gamma)(w-\delta)} e_{t\beta \gamma
+                \delta}
+                \\
+                &amp; = \bm{\xi}^{\dagger}_z{} \bar{\rtimes} W^c_l{}^T
 
-    $$
-    \begin{align*}
-    \bm{\xi}^c_{l-1} &amp;= \phi(\partial_1 U^c_{l-1}({\bf y}^c_{l-1}, \theta)) = \phi(\partial_{1} U^c_{l}({\bf
-    y}^c_{l},
-    \theta)
-    \circ
-    DF^c_{l}({\bf z}^c_{l}) \circ \partial_1 \Gamma^c_{l}({\bf y}^c_{l-1}, \theta^c_l{}))\\
-    &amp;= (\bm{\xi}^c_l{})_{abcd} (\bm{\epsilon}_z)^{abcd}{}_{efgh} (\bm{\epsilon}^c_{l-1})^{efgh}{}_{wxyz}\\
+                \end{align*}
 
-    &amp;= (\bm{\xi}_z)_{efgh} (\bm{\epsilon}^c_{l-1})^{efgh}{}_{wxyz}\\
-    &amp;= (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)} e^{t\beta \gamma \delta}
-    \\
-    \implies \bm{\xi}^c_{l-1}{}^{\dagger} &amp; = (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)} e_{t\beta \gamma
-    \delta}
-    \\
-    &amp; = (\xi^{\dagger}_z{})^{tuvw} (W^c_l{}^T)^{\beta u(\gamma-v)(\delta-w)} e_{t\beta \gamma
-    \delta} \\
-    &amp; =(\xi^{\dagger}_z{})^{tuvw} R_2(W^c_l{}^T)^{\beta u(v-\gamma)(w-\delta)} e_{t\beta \gamma \delta} \\
-    &amp; = \bm{\xi}^{\dagger}_z{} \bar{\rtimes}^3_2 W^c_l{}^T
-
-    \end{align*}
-
-    $$
+                $$
+            </div>
+        </div>
+    </div>
