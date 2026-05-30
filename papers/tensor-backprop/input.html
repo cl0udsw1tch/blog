@@ -262,62 +262,77 @@ Now we can find a suitable tensorial representation for $z$: <div>
     </ul>
 </div>
 <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss, Empirical Risk</h3>
-We have so far the ability to compute the output of our parameterized model $y_{L+1} = \mathcal{F}(x;\theta)$.
-<br />
-<br />
-Let $X,Y$
-be the random variables for input features and labels, over the spaces $\mathcal{X} = \mathbb{V}, \mathcal{Y} =
-\mathbb{R}$.
-Let $$X,Y \sim \mathcal{P}(X,Y) $$ with pdf $p_{X,Y}(x,y)$. Let $X_i,Y_i$ be the ith feature and label random variables,
-and assume
-$$X_i, Y_i \sim_{i.i.d} \mathcal{P}(X,Y)$$
-Define
-a
-<span class="font-bold">loss function</span> $\mathbb{R} \times \mathbb{V} \to \mathbb{R}:$
-$$ w, \hat{w} \mapsto \Delta(w, \hat{w}) $$
 
-Define
-$$
-\begin{align*}
-T^{[i]} &amp;= \sum_{\alpha} T^{i,\alpha} e_i \otimes e_{\alpha} \\
-T^{\rangle i \langle} &amp;= \sum_{\alpha} T^{i,\alpha} e_{\alpha} \\
-T^{\langle i \rangle}& = \sum_{\alpha} T^{\alpha} e_i \otimes e_{\alpha} = e_i \otimes T
-\end{align*}
-$$
-For a batch model $h$ (one defined over $\mathbb{V}^{\otimes 2}$ like ours), the <span
-    class="font-bold italic">loss</span> at a
-point $(x,y) \in \mathbb{V} \times \mathbb{R}$ is
-$$
-l(x, y,h) = \Delta(y, h(x^{\langle \mu \rangle})^{\rangle \mu \langle})
-$$
-The <span class="font-bold">risk</span> is the expected value of the loss over $X \times Y$
-$$
-R(h) = \mathbb{E}_{X,Y}(l(x,y,h)) = \int l(x,y,h) p_{X,Y}(x,y) dxdy
-$$ which is intractable, so the <span class="font-bold">empirical risk</span> over a sample $\bm{d}=(
-\bm{x},
-\bm{y})$
-is used instead, which, as data size
-grows, converges to the risk by the LLN:
-$$
-\begin{equation}
-\hat{R}(\bm{d}, h) = \frac{1}{I}\sum_i
-l({\bf x}^{\rangle i \langle},y^i,h) = \frac{1}{I}\sum_i l(\bm{x}^{\rangle i \langle},\bm{y}^{\rangle i \langle},h)
-\to
-\mathbb{E}_{X,Y}(l(x,y,h))
+<div>
+    We have so far the ability to compute the output of our parameterized model $y_{L+1} = \mathcal{F}(x;\theta)$.
+    <br />
+    <br />
+    Let $X,Y$
+    be the random variables for input features and labels, over the spaces $\mathcal{X}, \mathcal{Y} $.
+    Let $$X,Y \sim \mathcal{P}(X,Y) $$ with pdf $p_{X,Y}(x,y)$. Let $X_i,Y_i$ be the ith feature and label random
+    variables,
+    and assume
+    $$X_i, Y_i \sim_{i.i.d} \mathcal{P}(X,Y)$$
+    Define
+    a
+    <span class="font-bold">loss function</span> $\mathbb{R} \times \mathbb{V} \to \mathbb{R}:$
+    $$ w, \hat{w} \mapsto \Delta(w, \hat{w}) $$
 
-\end{equation}
-$$as $I\to\infty$.
-<span class="font-bold">Empirical Risk Minimization</span> chooses a model space, in this case, $\mathcal{H} =
-\{\mathcal{F}(\cdot;\theta) \}_{\theta}$ and finds
+    Define
+    $$
+    \begin{align*}
+    T^{[i]} &amp;= \sum_{\alpha} T^{i,\alpha} e_i \otimes e_{\alpha} \\
+    T^{\rangle i \langle} &amp;= \sum_{\alpha} T^{i,\alpha} e_{\alpha} \\
+    T^{\langle i \rangle}& = \sum_{\alpha} T^{\alpha} e_i \otimes e_{\alpha} = e_i \otimes T
+    \end{align*}
+    $$
+    For a batch model $h$ (one defined over $\mathbb{V}^{\otimes 2}$ like ours), the <span
+        class="font-bold italic">loss</span> at a
+    point $(x,y) \in \mathbb{V} \times \mathbb{R}$ is
+    $$
+    l(x, y,h) = \Delta(y, h(x^{\langle \mu \rangle})^{\rangle \mu \langle})
+    $$
+    The <span class="font-bold">risk</span> is the expected value of the loss over $\mathcal{X} \times \mathcal{Y}$
+    $$
+    R(h) = \mathbb{E}_{X,Y}(l(x,y,h)) = \int l(x,y,h) p_{X,Y}(x,y) dxdy
+    $$ which is intractable, so the <span class="font-bold">empirical risk</span> over a sample $\bm{d}=(
+    \bm{x},
+    \bm{y})$
+    is used instead, which, as data size
+    grows, converges to the risk by the LLN:
+    $$
+    \begin{equation}
+    \hat{R}(\bm{d}, h) = \frac{1}{I}\sum_i l(x_i,y_i,h)
+    \to
+    \mathbb{E}_{X,Y}(l(x,y,h))
+
+    \end{equation}
+    $$as $I\to\infty$.
+    <span class="font-bold">Empirical Risk Minimization</span> chooses a model space $\mathcal{H}$ and finds
+    $$
+    \argmin_{h \in \mathcal{H}}\hat{R}(\bm{d}, h)$$
+</div>
+<div class="my-10 py-5 border-y-1 border-y-emerald-400">
+    For our purposes, $\mathcal{X}=\Bbb{V}, \mathcal{Y}=\Bbb{R}$.
+    Our loss is defined as
+
+    $$
+    l(\bm{x}, v, \mathcal{F}(\cdot; \theta)) = \Delta(v, \mathcal{F}(\bm{x}^{\langle \mu \rangle}; \theta)^{\rangle \mu
+    \langle})
+    $$
+    and for a sample ${\bf d} = ({\bf x}, \bm{v})$
+    $$
+    \hat{R}({\bf d}, \mathcal{F}(\cdot; \theta)) = \frac{1}{I}\sum_i l({\bf x}^{\rangle i \langle}, v^i,
+    \mathcal{F}(\cdot;
+    \theta))
+    \to \Bbb{E}_{X, Y}(l(\bm{x}, v, \mathcal{F}(\cdot; \theta)))
+    $$
+</div>
+
+So given our sample $\bar{\bf{d}} =
+(\bar{\bf x}, \bar{\bm{v}})$ we find
 $$
-\argmin_{h \in \mathcal{H}}\hat{R}(\bm{d}, h) = \mathcal{F}(\cdot;\theta^*), \theta^* = \argmin_{\theta}\hat{R}({\bm
-d},
-\mathcal{F}(\cdot ;
-\theta))
-$$
-so given our sample $\bar{\bm{d}} = (\bar{\bm{x}}, \bar{\bm{v}})$ we find
-$$
-\argmin_{\theta} \hat{R}(\bar{\bm{d}}, \mathcal{F}(\cdot ; \theta)) = \argmin_{\theta}\frac{1}{I}\sum_i l(\bar{\bf
+\argmin_{\theta} \hat{R}(\bar{\bf d}, \mathcal{F}(\cdot ; \theta)) = \argmin_{\theta}\frac{1}{I}\sum_i l(\bar{\bf
 x}^{\rangle i \langle},\bar{v}^i, \mathcal{F}(\cdot; \theta)) \\
 = \argmin_{\theta}\frac{1}{I}\sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{\bf x}^{\rangle i \langle \langle i \rangle};
 \theta)^{\rangle i \langle })
@@ -342,20 +357,26 @@ $p_{X,Y}(x,y;\theta) = p_0(y;\mathcal{F}(x;\theta))p_X(x)$ for some $\theta$.
 The sample distribution for the random vector ${\bf D}= ({\bf X}, {\bf Y})$ is then given by the density
 $$
 p_{{\bf D}}(\bm{d};\theta)=_{i.i.d} \prod_i p(x_i, y_i;\theta) = \prod_i
-p_0(y_i;\mathcal{F}(x_i^{\langle \mu \rangle};\theta)^{\rangle \mu \langle})p_X(x_i) \\
-= \prod_i
-p_0(y_i;\mathcal{F}({\bf x}^{[i]};\theta)^{\rangle i \langle})p_X({\bf x}^{\rangle i \langle})
-$$
+p_0(y_i;\mathcal{F}(x_i^{\langle \mu \rangle};\theta)^{\rangle \mu \langle})p_X(x_i)$$
 
+
+<div class="my-10 py-5 border-y-1 border-y-emerald-400">
+
+    With our $\mathcal{X} = \Bbb{V}, \mathcal{Y} = \Bbb{R}$ and ${\bf d} = {\bf x}, \bm{y}$
+    $$
+    p_{\bf D} ({\bf d}; \theta)= \prod_i
+    p_0(y_i;\mathcal{F}({\bf x}^{[i]};\theta)^{\rangle i \langle})p_X({\bf x}^{\rangle i \langle})
+    $$
+</div>
 The likelihood is
 $$
-\mathbb{L}(\theta; {\bf \bar{\bm d}}) = p_{\bf D}({\bf \bar{\bm d}}; \theta) = \prod_i
+\mathbb{L}(\theta; {\bf \bar{d}}) = p_{\bf D}({\bf \bar{\bf d}}; \theta) = \prod_i
 p_0(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]};\theta)^{\rangle i \langle})p_X(\bar{\bf x}^{\rangle i \langle})
 
 $$
 Taking the negative log gives
 $$
--\log(\mathbb{L}(\theta; \bar{\bm d})) = -\sum_i \log(p_X(\bar{\bf x}^{\rangle i \langle})) - \sum_i
+-\log(\mathbb{L}(\theta; {\bf \bar{d}})) = -\sum_i \log(p_X(\bar{\bf x}^{\rangle i \langle})) - \sum_i
 \log(p_0(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]};
 \theta)^{\rangle i \langle}))
 $$
@@ -369,35 +390,34 @@ $$
 $$
 If we set $$\Delta(a, b) := -\log(p_0(a;b)) $$
 
-then
-
-
-
-$$ (18) = \argmin_{\theta}\left(\sum_i \Delta(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]}; \theta)^{\rangle i
+we then have
+$$ \argmin_{\theta}\left(\sum_i \Delta(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]}; \theta)^{\rangle i
 \langle})\right) = \argmin_{\theta}\left(\sum_i l(\bar{\bf x}^{\rangle i \langle}, \bar{v}^i, \mathcal{F}(\cdot;\theta))
 \right)
 \\
 
-=\argmin_{\theta} I \hat{R}(\bar{\bm d},\mathcal{F}(\cdot; \theta)) =\argmin_{\theta}
-\hat{R}(\bar{\bm d},\mathcal{F}(\cdot; \theta))$$
+=\argmin_{\theta} I \hat{R}({\bf \bar{d}},\mathcal{F}(\cdot; \theta)) =\argmin_{\theta}
+\hat{R}(\bar{\bf d},\mathcal{F}(\cdot; \theta))$$
 
 
 
 so maximizing the likelihood assuming class $\mathscr{P}$ will also minimize the empirical risk with this loss. By our
 assumption on the data and $\mathscr{P}$,
-$$(Y|X=x) \sim \mathcal{P}(Y|X=x; \theta) $$ with $$p_{Y|X=x}(y|x;\theta)=p_0(y;\mathcal{F}(x^{\rangle \mu
+$$(Y|X=\bm{x}) \sim \mathcal{P}(Y|X=\bm{x}; \theta) $$ with
+$$p_{Y|X=\bm{x}}(y|\bm{x};\theta)=p_0(y;\mathcal{F}(\bm{x}^{\rangle
+\mu
 \langle};\theta)^{\langle \mu \rangle})$$
-$$\implies (Y|X=x) \sim \mathcal{P}_0(Y;\mathcal{F}(x^{\rangle \mu \langle};\theta)^{\langle \mu \rangle})$$
+$$\implies (Y|X=\bm{x}) \sim \mathcal{P}_0(Y;\mathcal{F}(\bm{x}^{\rangle \mu \langle};\theta)^{\langle \mu \rangle})$$
 
 for some apriori chosen $\mathcal{P}_0$ with density $p_0$. We now investigate
 suitable choices for
-$\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
+$\mathcal{P}_0$ by the nature of the random variable $(Y|X=\bm{x})$:
 <ul style="list-style: disc; margin-top: 10px;">
     <li class="bg-blue-100 border-2 m-2 p-5 rounded-md">
-        If $(Y|X=x) \in \{0,1\}$ in the case of a binary learning task, then $$\mathcal{P}_0(Y;\hat{y})
+        If $(Y|X=\bm{x}) \in \{0,1\}$ in the case of a binary learning task, then $$\mathcal{P}_0(Y;\hat{y})
         =
         \textbf{Bernoulli}(Y;\hat{y})$$ where $\hat{y} =
-        \mathcal{F}(x^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$,
+        \mathcal{F}(\bm{x}^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$,
         is a suitable choice (although actually derived from the axioms
         of probability) with
         $$p_0(y;\hat{y}) =
@@ -432,9 +452,10 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
         is required.
     </li>
     <li class="bg-blue-100 border-2 m-2 p-5 rounded-md">
-        If $(Y|X=x) \in S \subset \mathbb{Z} : \lvert S \rvert &lt; \infty$ more broadly, in the case of categorical
+        If $(Y|X=\bm{x}) \in S \subset \mathbb{Z} : \lvert S \rvert &lt; \infty$ more broadly, in the case of
+        categorical
         learning, then $$ \mathcal{P}_0(Y;{\hat{\bm y}})=\textbf{Categorical}(Y;{\hat{\bm y}}) $$ where ${\hat{\bm
-        y}}=\mathcal{F}(x^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$, is a suitable choice (although
+        y}}=\mathcal{F}(\bm{x}^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$, is a suitable choice (although
         actually derived from the axioms of probability) with $$p_0(y;{\hat{\bm y}})=\prod_c (\bm{\it
         \hat{y}}^c)^{[y=c]}$$ $$\implies \Delta(v, {\hat{\bm y}})=-\log(p_0(v, {\hat{\bm y}}))=-\sum_c
         [v=c]\log(\hat{y}^c) $$ that is, the <span class="font-bold">
@@ -470,16 +491,16 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
         e_j
         $$
         At layer $L+1$, there is only one neuron, given by
-        $$\mathcal{N}_{L+1, 1} = \mathcal{L}_{L+1}$$ with
+        $$\mathcal{N}_{L+1, 1} \otimes e_1 = \mathcal{L}_{L+1}$$ with
         $$\text{supp}^b ((W_{L+1})^{ab}) \subset \{e_c\}_{c\leq C} $$
         so that $(a)$ is satisfied.
     </li>
 
     <li class="bg-blue-100 border-2 m-2 p-5 rounded-md">
-        If $(Y|X=x) \in \mathbb{R}$ in the case of a regression, then $$
+        If $(Y|X=\bm{x}) \in \mathbb{R}$ in the case of a regression, then $$
         \mathcal{P}_0(Y;\hat{y})=\mathcal{N}(Y;\mu=\hat{y},\sigma^2=1) $$
         where $\hat{y} =
-        \mathcal{F}(x^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$,
+        \mathcal{F}(\bm{x}^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$,
 
         is a suitable choice with $$p_0(y;\hat{y})=\frac{1}{\sqrt{2\pi}} \exp\left({-\frac{(y-\hat{y})^2}{2}}\right)$$
         $$\implies \Delta(v, \hat{y})= -\log(p_0(v, \hat{y})) =-\log(\frac{1}{\sqrt{2\pi}}) +
@@ -1299,13 +1320,14 @@ $\mathcal{P}_0$ by the nature of the random variable $(Y|X=x)$:
         $$
         We will call the neuron $k$ at layer $l$ the function
         $$
-        y_{l-1}^c \mapsto \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{[k]}, (b_l^c)^{[k]}) =
+        y_{l-1}^c \mapsto \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k \langle}) =
         F^c_l
         \circ
-        \Gamma^c_l(y_{l-1}^c, (W_l^c)^{[ k ]}, (b_l^c)^{[ k ]})
+        \Gamma^c_l(y_{l-1}^c, (W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k \langle})
         $$
 
-        Note that $$ \sum_k \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{[k]}, (b_l^c)^{[k]}) =
+        Note that $$ \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k \langle})^{\rangle i
+        \langle \langle k \rangle \langle i \rangle} =
         \mathcal{L}^c_l(y_{l-1}^c;W_l^c, b_l^c)$$
         The <span class="font-bold">flattening layer </span> changes the dimension of $y^c_{L_c}$ so that $y_0 =
         y^c_{L_c+1}
