@@ -25,6 +25,8 @@ const lato = Lato({
     subsets: ["latin"],
     weight: ['400']
 });
+
+
 export const metadata: Metadata = {
     title: "Math and AI blog by Nurein Umeya.",
     description: "Machine Learning, AI, Engineering, Computer Science...",
@@ -46,6 +48,7 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+
     return (
         <html
             lang="en"

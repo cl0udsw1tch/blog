@@ -3,6 +3,7 @@
 :root {
     --background: white;
     --foreground: black;
+    --foo: #F12340
 }
 
 @theme inline {

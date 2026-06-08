@@ -1,0 +1,247 @@
+<div style="--divider-color: #00d294">
+    <h1 class="text-7xl my-20" style="text-align:center; font-family: var(--font-playfair);">Tensors</h1>
+
+    <div class="py-8 my-8" style="">
+        Tensors are often thought of as multidimensional arrays, especially in programming with NumPy and general
+        Machine
+        Learning tasks. The reader may also be aware of their usage in physics (general relativity) and engineering. In
+        this
+        article we explore the motivation for creating and using tensors in a way that reintroduces structure often
+        glossed
+        over in introductory examples.
+    </div>
+    <div>
+
+        <div style="border-top: 1px solid var(--divider-color); border-bottom: 1px solid var(--divider-color);"
+            class="py-8">
+            <h2 class="text-2xl  mb-8" style="text-align:center; font-family: var(--font-playfair); ">
+                The
+                MQ (Multilinear
+                Question)</h1>
+                <div>
+                    We start with a question: for vector spaces $V, W, Y$, can a multilinear map $f \in \text{Mul}(V
+                    \times
+                    W, Y)$
+                    be identified as a linear
+                    map $T_f \in \text{Hom}(X, W)$ for some $X$? Actually better yet, since $X$
+                    is $\it
+                    produced$ from $V, W$ we can rephrase our question as this: $\newline$
+                    Is there such a $\it product$, lets call $\otimes$, such that any $f \in \text{Mul}(V \times W, Y)$
+                    can be
+                    identified as some unique linear map
+                    $T_f \in
+                    \text{Hom}(V \otimes W, Y)?$ $\newline$ </div>
+        </div>
+
+        <div class="py-8">
+            It turns out, the answer is yes. We offer one such construction of $V \otimes W$. Before doing that however,
+            lets try and simulate how a student might approach this problem.
+        </div>
+
+        <div class="py-8">
+            <h2 class="pb-8 text-2xl" style=" font-family: var(--font-playfair);">
+                An approach
+
+            </h2>
+            An ambitious student might try and see if there is some relation imposable on $V \times W$ that respects the
+            relations given by multilinear maps. For example, we know for any bilinear $f$ that
+            $$
+            f(\lambda v, w) = \lambda f(v,w) \\
+            f(v_1+v_2, w) = f(v_1, w) + f(v_2, w)
+            $$ and similarly for the second slot. One might think to take the quotient $X = V \otimes W := V
+            \times W / S$ where
+            $$S = span(\{\lambda (v, w) - (\lambda v, w) \}
+            \bigcup \{\lambda (v, w) - (v, \lambda w) \} \\
+            \bigcup \{(v_1 + v_2, w) - (v_1, w) -
+            (v_2,
+            w) \}
+            \bigcup \{ (v, w_1+w_2) - (v, w_1) -
+            (v,
+            w_2) \})$$ Then on lets say vectors of the first form
+            $$
+            T_f(\lambda [(v, w)]) = \lambda f(v, w) = T([(\lambda v, w)]) = f(\lambda v, w)$$
+            Unfortunately, this doesn't work, since we simultaneously have, by the vector space operations on quotients
+            $$
+            T_f(\lambda [(v, w)]) = T_f([\lambda (v, w)]) = T_f([(\lambda v, \lambda w)]) = f(\lambda v, \lambda w) =
+            \lambda^2 f(v, w)
+            $$ which is a contradiction if $\lambda \neq 1$.
+        </div>
+
+        <div class="py-8">
+            <h2 class="pb-8 text-2xl" style=" font-family: var(--font-playfair);">
+                An even more ambitious approach
+
+            </h2>
+            The student now thinks "perhaps we've quotiented out too much" and ops to do something bold: He forgets the
+            structure on $V \times W$ by using the forgetful functor $\mathscr{U}$ and now has a set of pairs
+            $$ S = \mathscr{U}(V \times W) = \{(v,w) | v \in V, w \in W\} $$ with no vector space structure. Then he
+            figures he $\it may$ need to use a quotient later, so makes a vector space from $S$ as follows:
+            $$X = ((S/\sim), \oplus, \odot)$$ This will always be possible to make into a vector space as long as the
+            cardinality of $S/\sim$
+            is $\mathfrak{c}$, so why not. Now all that remains is to show that there are such $\sim, \oplus, \odot$
+            that makes $X$ the product $V \otimes W$ we want, or show that when assuming there are such, a contradiction
+            arises. <br /><br />
+            Unfortunately, a contradiction arises.
+            <br /><br />
+
+            Assume for every bilinear map $f: V \times W \to Y$, $\exists !T_f: X \to Y : T_f([v,w]) = f(v,w)$. Even
+            though we've relaxed the definition of $X$ so much that now there is a relation and 2 operations we
+            have the
+            luxury to define however we want, it's still not enough to generate linear maps from bilinear ones. To see
+            this, recall that the image of any linear map must be a subspace of its codomain. This is not the case for
+            bilinear maps.
+
+            As an example, take the bilinear map
+            $$
+            f: \reals^n \times \reals^n \to \mathcal{M}_{n \times n} \\
+            v, w \mapsto vw^T
+            $$
+            That is, $f$ sends vectors in $\reals^n, n &gt; 1$ to matrices via the outer product. But notice for any $v,
+            w$
+            $$
+            f(v,w) = vw^T = \begin{bmatrix}
+            | & \ldots & | \\
+            w_1 v & \ldots & w_n v \\
+            | & \ldots & |
+            \end{bmatrix}
+            $$
+            This is clearly rank 1, all the columns are linearly dependent! The situation worsens, suppose $v, w = e_1,
+            e_1$, then
+            $$f(e_1, e_1) = \begin{bmatrix}
+            1 & 0 & \ldots \\
+            0 & 0 & \\
+            \vdots & & 0
+            \end{bmatrix}$$ but also
+            $$
+            f(e_2, e_2) = \begin{bmatrix}
+            0 & 0 & \ldots \\
+            0 & 1 & \\
+            \vdots & & 0
+            \end{bmatrix}
+            $$
+            so adding them together gives a rank 2 matrix!
+            More generally, for $i,j,k,l$ where $i \neq k, j\neq l$, $f(e_i, e_j) + f(e_k, e_l)$ is going to give a
+            rank 2 matrix. So this means
+            $Im(T_f) \subseteq I= \{M \in \mathcal{M}_{n \times n} | rank(M) \leq 1\}$ but linear combinations of $M \in
+            Im(T_f)$ lie outside of $I$, so $Im(T_f)$ is clearly not a vector subspace. Thus $T_f$ isn't a linear map,
+            contradicting our claim.
+        </div>
+
+        <div class="py-8">
+            <h2 class="pb-8 text-2xl" style=" font-family: var(--font-playfair);">
+                Something larger
+
+            </h2>
+            All is not lost, the student has gained $\mathscr{wisdom}$. He realizes that the key issue with his *even
+            more ambitious approach* is that elements in $X$ are, even though the quotient is a set quotient and not a
+            vector space quotient, still just elements of the form $[v,w]$. Sure they may be equivalence classes of a
+            more flexible nature, but if
+            every linear combination of vectors collapses to a single element, then the image of $T_f$ on that vector is
+            still going to be rank 1, for the example $f$ from earlier. It would be nice if they didn't just collapse to
+            a single element, because then, we could say
+            $$ T_f([(e_1, e_1)] + [(e_2, e_2)] \neq T([(v, w)])$$ for any $[(v, w)] \in X$. That is to say, the only
+            way to calculate the above is to use lineary of $T_f$ to split it to the sum on both vectors. This avoids
+            the contradiction where the image on that sum is both rank 1 and rank 2. This is exactly what a $
+            \text{\bf formal
+            sum/linear combination}$ does. It gives you sums that are
+            irreduceable
+            to single elements. Many authors will define the formal combination by simply stating
+            "let $\sum a_i [v_i, w_i] $ be a formal linear combination where $v_i, w_i \in V \times W$". That is, they
+            define these new objects $[v_i, w_i]$ in a $\text{\bf free space}$, where elements dont reduce when they are
+            added or multiplied against a scalar. Do not mistake me, they do ${\it
+            add/scale}$, it's just that the "pure"
+            single
+            elements
+            dont reduce with other pure elements and scalars into another pure element. You may also see
+            $\varepsilon_{v,w}$ instead
+            of $[v,w]$ which I prefer, since it doesn't conflict with the equivalence class representative notation.
+            Formally, let $\mathcal{B}$ be the formal symbol set over the underlying set $V \times W$
+            $$
+            \mathcal{B} = \{\varepsilon_{v, w} | v \in V, w \in W\}
+            $$ As a reminder, this is just a set of independent elements, there is no structure yet and no way to
+            combine them. Now let $F$ be the free space spanned by $\mathcal{B}$
+            $$
+            F = span(\mathcal{B})
+            $$
+            where addition and scalar multiplication are given as "formal" operations, that is
+            $$c \varepsilon_{v, w} \\
+            \varepsilon_{v_1, w_1} + \varepsilon_{v_2, w_2}
+            $$ dont reduce. Yea, I don't like this either, but it's what you'll often see/hear people say. Let's
+            actually be formal. It's not even slightly difficult to formalize this because we have another domain where
+            addition and scalar multiplication are defined, the function domain.
+
+            <div class="border-2 my-8 border-dashed border-orange-200 p-4">
+                <h3 class="my-4 pb-4 text-xl" style=" font-family: var(--font-playfair);">
+                    Intermezzo: The Free Space
+
+                </h3>
+
+                Let $F^{V \times W}$ be the functional space over $V \times W$, that is
+                $$
+                F^{V \times W} = \{f: V \times W \to \reals \}
+                $$
+                There's a special subset
+                $$
+                \mathcal{B} = \{ \varepsilon_{v,w}: (p,q)\mapsto \delta_{p,v}\delta_{q,w}\} \subset F^{V \times W}
+                $$
+                where $\delta_{-,-}$ is the dirac delta. So these $\varepsilon$ just pick out each element in $V \times
+                W$,
+                kind of like the $\varepsilon$ from earlier. Now let
+                $$
+                F^{(V \times W)} = span(\mathcal{B})
+                $$
+                where addition and scalar multiplication are as you'd expect for functions: pointwise. They aren't some
+                formal nonesense anymore (unless you consider the entirety of math formal nonsense). What we have now is
+                identical (up to isomorphism) to the free space from earlier, and this is also called the free space
+                over $V
+                \times W$. Importantly, while these functions do combine to functions in $F^{(V \times W)}$, they
+                absolutely
+                do NOT combine to functions in $\mathcal{B}$, since no function in $\mathcal{B}$ picks out more than one
+                $(v, w)$. Thus, if we want to use $\varepsilon$ to represent the sum of let's say $\varepsilon_{v_1,
+                w_1} +
+                c\varepsilon_{v_2, w_2}$, we have to leave it as just that, there is no such $\varepsilon_{v_3, w_3}$
+                giving
+                the required sum. This is exactly the syntax we need to "build something larger".
+
+            </div>
+
+            Okay we have a free space, and I hope we agree that the one given in the intermezzo is ideal. $\it Now$ we
+            can quotient out a set defined by the relations given by bilinear maps. That is, let
+            $$
+            S = span(\{\lambda \varepsilon_{v, w} - \varepsilon_{\lambda v, w} \} \bigcup \{\lambda \varepsilon_{v, w} -
+            \varepsilon_{ v, \lambda w} \} \\
+            \bigcup
+            \{\varepsilon_{v_1 + v_2, w} - \varepsilon_{v_1, w} - \varepsilon_{v_2,
+            w} \} \bigcup \{\varepsilon_{v, w_1 + w_2} - \varepsilon_{v, w_1} - \varepsilon_{v,
+            w_2} \}) \subset F^{(V \times W)}
+            $$
+            and define, for one last time, our beloved $X$:
+            $$X = F^{(V \times W)} / S $$
+            Finally, we can show that this space is large enough so that bilinear maps can be represented as linear maps
+            without conflicts in the image. A word on notation: elements of $X = V \otimes W$ are $[\sum c_i e_{v_i,
+            w_i}]$ for a
+            finite number of nonzero $c_i$. Denote
+
+            $$
+            v \otimes w = [e_{v, w}] $$ so if ${\bf x} \in V \otimes W $ then $$ {\bf x} = [\sum c_i e_{v_i,
+            w_i}] = \sum c_i
+            [e_{v_i,
+            w_i}] = \sum c_i v_i \otimes
+            w_i
+
+            $$Let $f: V \times W \to Y$ be an arbitrary bilinear map. Define
+            $$T_f(v \otimes w) = f(v, w) $$ but now, since our space contains many linearly independent $v_i \otimes w_i
+            = [\varepsilon_{v_i, w_i}]$ that obviously can't reduce, we are going to need a way to define $T_f$ on the
+            entire $V \otimes W$, not just on "pure" elements $v \otimes w$. There is actually only one thing we can do;
+            linearly extend:
+            $$
+            T_f(\sum c_i v_i \otimes w_i) = \sum c_i T_f(v_i \otimes w_i)
+            $$ which is enforced by linearity regardless. So, $T_f$ is linear by construction. And also by construction
+            it agrees with our bilinear map $f$ on the domain of $f$ (from the perspective of the linear function, on
+            pure elements). We don't need to check that the image is a
+            subspace, or be nervous
+            about any other contradictions, since earlier we didn't construct a linear function from a bilinear one, we
+            assumed it existed, but here the construction is explicit.
+        </div>
+
+    </div>

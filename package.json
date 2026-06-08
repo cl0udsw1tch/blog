@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "pnpm concurrently \"node --watch --watch-path=./papers --watch-path=./tex-pipeline.js ./html-html-texpipeline.js \" \"next dev\"",
+        "dev": "pnpm concurrently \"node --watch --watch-path=./papers --watch-path=./tex_unified.js ./tex_unified.js \" \"next dev\"",
         "build": "node ./tex-pipeline.js & next build",
         "start": "next start",
         "lint": "eslint"
