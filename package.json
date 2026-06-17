@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "pnpm concurrently \"node --watch --watch-path=./data --watch-path=./data/tex_unified.js ./data/tex_unified.js \" \"next dev\"",
-        "build": "node ./tex-pipeline.js & next build",
+        "build": "next build",
         "start": "next start",
         "lint": "eslint"
     },
