@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { PaperMeta } from "@/papers/papers";
 
-export default function PaperCard({ paper }) {
+export default function PaperCard({ paper }: { paper: PaperMeta }) {
     return (
         <Link href={`/${paper.slug}`} className="paper-card">
             <div className="paper-meta">

@@ -1,4 +1,4 @@
-import { PaperMeta } from "@/data/papers";
+import { PaperMeta } from "@/papers/papers";
 import PaperCard from "./PaperCard";
 
 export default function PaperList({
