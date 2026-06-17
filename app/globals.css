@@ -4,7 +4,6 @@
     --background: white;
     --foreground: black;
     --foo: #F12340;
-    counter-reset: theorem corollary;
 }
 
 @theme inline {
@@ -27,92 +26,161 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.h2 {
+
+.hero {
+    padding: 5rem 0 3rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: #475569;
+    max-width: 600px;
+}
+
+.hero-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.button {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: #0f172a;
+    color: white;
+    text-decoration: none;
+}
+
+.button.secondary {
+    background: transparent;
+    border: 1px solid #cbd5e1;
+    color: #0f172a;
+}
+
+.intro {
+    margin: 4rem 0;
+    max-width: 700px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1rem;
+}
+
+.paper-category-group {
+    margin-bottom: 2rem;
+}
+
+.category-title {
+    margin: 1.5rem 0 0.75rem;
+    font-size: 1.2rem;
+    color: #0f172a;
+}
+
+.category-list {
+    display: grid;
+    gap: 1rem;
+}
+
+
+
+.paper-content {
+
+    counter-reset: theorem corollary;
     font-family: var(--font-playfair);
-}
 
-.theorem {
-    background-color: #f0f7f9;
-    border-left: 4px solid #d97706;
-    border-radius: 4px;
-    padding: 16px 20px;
-    margin: 20px 0;
-    font-family: serif;
-    /* Classic mathematical typography */
-}
+    .h2 {}
 
-.theorem-title::before {
-    counter-increment: theorem;
-    content: "Theorem " counter(theorem) " ";
-    font-weight: bold;
-    color: #1e81b0;
-}
+    .theorem {
+        background-color: #f0f7f9;
+        border-left: 4px solid #d97706;
+        border-radius: 4px;
+        padding: 16px 20px;
+        margin: 20px 0;
+        /* Classic mathematical typography */
+    }
 
-.theorem-content {
-    margin-top: 8px;
-    margin-bottom: 0;
-    font-style: italic;
-}
+    .theorem-title::before {
+        counter-increment: theorem;
+        content: "Theorem " counter(theorem) " ";
+        font-weight: bold;
+        color: #1e81b0;
+    }
 
-/* --- Proof Block --- */
-.proof {
-    position: relative;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-left: 4px solid #a9a9a9;
-    border-radius: 4px;
-    padding: 16px 36px 16px 20px;
-    /* Extra right padding for QED symbol */
-    margin: 20px 0;
-    font-family: serif;
-}
+    .theorem-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+        font-style: italic;
+    }
 
-.proof-title {
-    font-weight: bold;
-    color: #555555;
-}
+    /* --- Proof Block --- */
+    .proof {
+        position: relative;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-left: 4px solid #a9a9a9;
+        border-radius: 4px;
+        padding: 16px 36px 16px 20px;
+        /* Extra right padding for QED symbol */
+        margin: 20px 0;
 
-.proof-content {
-    margin-top: 8px;
-    margin-bottom: 0;
-}
+    }
 
-/* --- QED (End of Proof) Symbol --- */
-.qed {
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    color: #333333;
-}
+    .proof-title {
+        font-weight: bold;
+        color: #555555;
+    }
 
-.corollary {
-    background-color: #fdfaf6;
-    border-left: 4px solid #845ef7;
-    border-radius: 4px;
-    padding: 16px 20px;
-    margin: 20px 0;
-    font-family: serif;
-    /* Classic mathematical typography */
-}
+    .proof-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+    }
 
-.corollary-title::before {
-    counter-increment: corollary;
-    content: "Corollary " counter(corollary) " ";
-    font-weight: bold;
-    color: #7048e8;
-}
+    /* --- QED (End of Proof) Symbol --- */
+    .qed {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        color: #333333;
+    }
 
-.corollary-content {
-    margin-top: 8px;
-    margin-bottom: 0;
-    font-style: italic;
-}
+    .corollary {
+        background-color: #fdfaf6;
+        border-left: 4px solid #845ef7;
+        border-radius: 4px;
+        padding: 16px 20px;
+        margin: 20px 0;
 
-.quote {
-    margin: 20px 0;
-    padding: 10px 20px;
-    border-left: 5px solid #007bff;
-    background-color: #f8f9fa;
-    font-style: italic;
+        /* Classic mathematical typography */
+    }
+
+    .corollary-title::before {
+        counter-increment: corollary;
+        content: "Corollary " counter(corollary) " ";
+        font-weight: bold;
+        color: #7048e8;
+    }
+
+    .corollary-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+        font-style: italic;
+    }
+
+    .quote {
+        margin: 20px 0;
+        padding: 10px 20px;
+        border-left: 5px solid #007bff;
+        background-color: #f8f9fa;
+        font-style: italic;
+
+    }
 
 }
