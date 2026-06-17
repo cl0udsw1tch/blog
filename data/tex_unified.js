@@ -12,7 +12,7 @@ import path from 'path'
 import fs, { existsSync } from "node:fs"
 import { exists } from "node:fs"
 
-const paper = process.env.npm_config_paper;
+const paper = process.env.npm_config_paper || process.argv[2];
 
 if (!paper) {
     console.log("TEX-PIPELINE: Not rendering paper.")

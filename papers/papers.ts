@@ -20,7 +20,7 @@ export const papers: PaperMeta[] = [
     },
     {
         slug: "tensors-I",
-        title: "Tensors-I: Construction",
+        title: "Tensors I: Construction",
         date: "2026-06-10",
         category: "Math",
         description: "",

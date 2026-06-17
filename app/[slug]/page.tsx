@@ -16,13 +16,33 @@ export default async function PaperPage({
         notFound();
     }
 
+    if (paper.type === "pdf") {
+
+        return (
+            <main style={{ height: '100%' }}>
+                <h1>{paper.title}</h1>
+
+                <div className="paper-meta">
+                    <span>{paper.category}</span> · <span>{paper.date}</span>
+                </div>
+                <iframe
+                    src={`/papers/${paper.file}`}
+                    className="pdf-viewer"
+                    style={{ width: '80vw', height: '80%' }}
+                />
+
+            </main>
+        );
+    }
+
+
     const filePath = path.join(
         process.cwd(),
         "papers",
         paper.file
     );
 
-    const html = paper.type === "html" ? <article className="paper-content" dangerouslySetInnerHTML={{ __html: fs.readFileSync(filePath, "utf8") }} /> : <iframe src={filePath} />;
+    const html = fs.readFileSync(filePath, "utf8");
 
 
     return (
@@ -33,7 +53,6 @@ export default async function PaperPage({
                 <span>{paper.category}</span> · <span>{paper.date}</span>
             </div>
 
-            {html}
-        </main>
+            <article className="paper-content" dangerouslySetInnerHTML={{ __html: html }} />        </main>
     );
 }

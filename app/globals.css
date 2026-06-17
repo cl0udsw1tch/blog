@@ -24,6 +24,10 @@ body {
     background: var(--background);
     color: var(--foreground);
     font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
 }
 
 
@@ -90,9 +94,46 @@ body {
 }
 
 
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hero {
+    padding: 3rem 0;
+}
+
+.paper-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.paper-card {
+    display: block;
+    padding: 1.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    background: white;
+}
+
+.paper-card:hover {
+    border-color: #94a3b8;
+}
+
+.paper-meta {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
 
 .paper-content {
-
+    margin-top: 2rem;
+    line-height: 1.7;
     counter-reset: theorem corollary;
     font-family: var(--font-playfair);
 
