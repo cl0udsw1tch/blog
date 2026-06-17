@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const papers = [
+    { name: "Tensors II", route: "/tensors_pt2" },
     { name: "Tensors", route: "/tensors" },
     { name: 'Backpropogation using Tensors', route: "/tensor-backprop" },
     { name: "A Steady State Incompressible Fluid Flow Solver using the SIMPLE method", route: "/fluid-flow-solver" },
