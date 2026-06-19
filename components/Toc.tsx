@@ -78,6 +78,7 @@ export function TocTree({ toc, activeId }: Props) {
                 return (
                     <div
                         key={item.id}
+
                     >
                         <a
                             href={`#${item.id}`}
@@ -92,12 +93,12 @@ export function TocTree({ toc, activeId }: Props) {
 
                             }}
                             style={{
-                                fontWeight: isActive ? 600 : 400,
+                                textDecorationLine: isActive ? "underline" : "none",
                                 color: isActive ? "#000" : "#555",
-                                textDecoration: "none",
                                 width: '100%',
-                                fontSize: '1rem',
-                                marginLeft: item.depth * 10
+                                fontSize: item.depth <= 1 ? '1rem' : '0.8rem',
+                                marginLeft: item.depth * 10,
+                                maxWidth: '30vw'
 
                             }}
                         >

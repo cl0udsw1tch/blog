@@ -199,7 +199,9 @@ main.paper {
             height: 100%;
             margin-right: 50px;
 
-
+            section {
+                scroll-margin-top: 50px;
+            }
 
 
             .theorem {

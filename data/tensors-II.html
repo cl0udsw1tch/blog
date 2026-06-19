@@ -41,8 +41,8 @@
         "common maps", to
         distinguish them from "universal maps" which are restricted to be the bilinear ones aforementioned.
 
-        <section id="theorem1" data-title="Theorem 1">
-            <div class="theorem" data-title="Theorem 1">
+        <section id="thm-common-maps-I" data-title="Thm: Common Maps I">
+            <div class="theorem">
                 <div class="theorem-title">
                 </div>
 
@@ -117,7 +117,7 @@
         theorem
         is
         true as well.
-        <section id='theorem2' data-title="Theorem 2">
+        <section id='thm-common-maps-II' data-title="Thm: Common Maps II">
             <div class="theorem">
                 <div class="theorem-title">
 
@@ -228,7 +228,7 @@
         maps have a bilinear "component" with respect to the direct sum. The actual reason is given by the following
         claim
 
-        <section id="theorem3" data-title="Theorem 3">
+        <section id="thm-universals-natural-isomorphisms" data-title="Thm: Universality = Natural Isomorphism">
             <div class="theorem">
                 <div class="theorem-title">
                 </div>
@@ -302,7 +302,7 @@
         homomorphisms, and vice-versa. One might further ask, since we can pick different constructions for
         universal maps, just how "different" are two universal $(U,u)$? Not very.
 
-        <section id="theorem4" data-title="Theorem 4">
+        <section id="thm-unique-unique-iso" data-title="Thm: Universal Pairs are unique up to unique isomorphism">
             <div class="theorem">
                 <div class="theorem-title">
                     Universal bilinear pairs $(U,u)$ are unique up to unique isomorphism.
@@ -360,7 +360,8 @@
             </div>
         </section>
         The reverse is true too.
-        <div>
+        <section id="thm-natural-isomorphisms-make-universals"
+            data-title="Thm: Natural Isomorphisms make new universal pairs">
             <div class="theorem">
                 <div class="theorem-title">
 
@@ -393,13 +394,15 @@
                     QED
                 </div>
             </div>
-        </div>
-        <div class="corollary">
-            <div class="corollary-title">
-                If $(U, u)$ is a universal pair for bilinear maps, all automorphisms $a$ on $U$ give new
-                universal morphisms $a \circ u$.
-            </div>
-        </div>
+            <section id="thm-automorphisms-make-universals" data-title="Cor: Automorphisms make new universal pairs"
+                class="corollary">
+                <div class="corollary-title">
+                    If $(U, u)$ is a universal pair for bilinear maps, all automorphisms $a$ on $U$ give new
+                    universal morphisms $a \circ u$.
+                </div>
+            </section>
+
+        </section>
         This means, for example (with everything over $\reals$), the autmorphism $a: V \otimes W \to V
         \otimes
         W$
@@ -449,7 +452,8 @@
         will
         write $(M_1^i,
         m_1^i) = (M[V_1 \ldots V_i], m[V_1 \ldots V_i])$ and use $B,b$ when there are only two spaces in the domain.
-        <div>
+        <section id="thm-bilinear-extension"
+            data-title="Thm: Bilinear universals generate higher multilinear universals">
             <div class="theorem">
                 <div class="theorem-title">
                 </div>
@@ -540,7 +544,7 @@
                     QED
                 </div>
             </div>
-            <div>
+            <section id="cor-bilinear-associativity" data-title="Cor: Bilinear Associativity">
                 <div class="corollary">
                     <div class="corollary-title"> The universal bilinear pair is associative.
                         That is
@@ -557,45 +561,46 @@
 
                 </div>
 
-            </div>
-            It's at this point where it would be wise to see an example to consolidate what we've been discussing.
-            Associativity for example means
-            $$
-            \phi: V_1 \times V_2 \times V_3 \to (V_1 \otimes V_2) \otimes V_3 \\
-            v_1,v_2,v_3 \mapsto (v_1 \otimes v_2) \otimes v_3
-            $$
-            and
-            $$
+            </section>
+        </section>
+        It's at this point where it would be wise to see an example to consolidate what we've been discussing.
+        Associativity for example means
+        $$
+        \phi: V_1 \times V_2 \times V_3 \to (V_1 \otimes V_2) \otimes V_3 \\
+        v_1,v_2,v_3 \mapsto (v_1 \otimes v_2) \otimes v_3
+        $$
+        and
+        $$
 
-            \psi: V_1 \times V_2 \times V_3 \to V_1 \otimes (V_2 \otimes V_3) \\
-            v_1,v_2,v_3 \mapsto v_1 \otimes (v_2 \otimes v_3)
+        \psi: V_1 \times V_2 \times V_3 \to V_1 \otimes (V_2 \otimes V_3) \\
+        v_1,v_2,v_3 \mapsto v_1 \otimes (v_2 \otimes v_3)
 
-            $$ are unique up to unique isomorphism, and both morphisms are universal for trilinear functions on $V_1
-            \times V_2 \times V_3$. The theorem as a whole shows that the bilinear universal $\otimes$ can generate
-            morphisms that are universal for multilinear maps of any degree we choose, so for example, if we want a
-            universal morphism for $5$-linear functions on $V_1 \times \ldots \times V_5$, and we had $\otimes,
-            \psi$ as
-            $2$ and $3$-linear
-            universals over $V_1 \times V_2$ and $V_3 \times V_4 \times V_5$ respectively then
-            $$
-            \omega: (V_1 \otimes V_2) \times (V_3 \otimes V_4 \otimes V_5) \to (V_1 \otimes V_2) \otimes (V_3
-            \otimes
-            (V_4 \otimes V_5)) \\
-            v_1\ldots v_5 \mapsto (v_1 \otimes v_2) \otimes (v_3 \otimes (v_4 \otimes v_5))
-            $$
-            is such a $5$-linear universal. All such $1\leq i\leq j = 5-i$ are valid with the theorem, and all
-            produce
-            $5$-linear universals over $V_1 \ldots V_5)$; the parenthesis placement changes the universal pair only
-            up
-            to unique isomorphism, so all can be removed. Thus $n$-repeated use of $\otimes$ is taken to denote
-            $\text{\it
-            the}$ (up
-            to unique isomorphism)
-            universal map or space for $n$-linear maps and for example we can write $\omega$ as
-            $$
-            \omega(v_1 \ldots v_5) = v_1 \otimes \ldots \otimes v_5
-            $$
-        </div>
+        $$ are unique up to unique isomorphism, and both morphisms are universal for trilinear functions on $V_1
+        \times V_2 \times V_3$. The theorem as a whole shows that the bilinear universal $\otimes$ can generate
+        morphisms that are universal for multilinear maps of any degree we choose, so for example, if we want a
+        universal morphism for $5$-linear functions on $V_1 \times \ldots \times V_5$, and we had $\otimes,
+        \psi$ as
+        $2$ and $3$-linear
+        universals over $V_1 \times V_2$ and $V_3 \times V_4 \times V_5$ respectively then
+        $$
+        \omega: (V_1 \otimes V_2) \times (V_3 \otimes V_4 \otimes V_5) \to (V_1 \otimes V_2) \otimes (V_3
+        \otimes
+        (V_4 \otimes V_5)) \\
+        v_1\ldots v_5 \mapsto (v_1 \otimes v_2) \otimes (v_3 \otimes (v_4 \otimes v_5))
+        $$
+        is such a $5$-linear universal. All such $1\leq i\leq j = 5-i$ are valid with the theorem, and all
+        produce
+        $5$-linear universals over $V_1 \ldots V_5)$; the parenthesis placement changes the universal pair only
+        up
+        to unique isomorphism, so all can be removed. Thus $n$-repeated use of $\otimes$ is taken to denote
+        $\text{\it
+        the}$ (up
+        to unique isomorphism)
+        universal map or space for $n$-linear maps and for example we can write $\omega$ as
+        $$
+        \omega(v_1 \ldots v_5) = v_1 \otimes \ldots \otimes v_5
+        $$
+
 
 
     </section>
@@ -604,7 +609,8 @@
         <h2 class="h2 text-2xl my-8">
             The Multilinear Generalization (and a bit of practical exposition)
         </h2>
-        I could end the article here, but there's a consequence of our construction that needs addressing. Let's say
+        I could end the article here, but there's a consequence of our construction that needs addressing. Let's
+        say
         you
         have 5 spaces $V_1 \ldots V_5$ and a universal morphism $\phi$ for $5$-linear maps over their product,
         something
@@ -613,11 +619,13 @@
         \phi: v_1 \ldots v_5 \mapsto (v_1 \otimes (v_2 \otimes (v_3 \otimes v_4))) \otimes v_5 \\
         $$
         This requires 4 separate applications of the universal bilinear map, and is an $O(4)$ operation.
-        That's all fine and well, but what if you discover that the $V_i$ are actually $M[W_{a_i} \ldots W_{b_i}]$
+        That's all fine and well, but what if you discover that the $V_i$ are actually $M[W_{a_i} \ldots
+        W_{b_i}]$
         universal spaces over
         $W_{a_i}
         \ldots W_{b_i}$ with universal morphism $p_i = m[W_{a_i} \ldots W_{b_i}]$ and you know that $v_i =
-        p_i(w_{a_i} \ldots w_{b_i})$. After substitution, you ask yourself, "do I get a $c$-linear morphism over the
+        p_i(w_{a_i} \ldots w_{b_i})$. After substitution, you ask yourself, "do I get a $c$-linear morphism over
+        the
         $W$
         spaces, where $c =
         \sum c_i =
@@ -631,7 +639,8 @@
         V_5 &amp;= M[W_{11}, W_{12}]
         \end{align*}
         $$
-        We can absolutely derive the $c$-linear morphism; simply start with the inner parentheses and move outward.
+        We can absolutely derive the $c$-linear morphism; simply start with the inner parentheses and move
+        outward.
         We
         know $$
         \begin{align*}
@@ -663,7 +672,8 @@
 
         $$
         and continuing until we show $p_1(w_1, w_2) \ldots p_5(w_{11}, w_{12}) \mapsto m[W_1 \ldots W_{12}](w_1
-        \ldots w_{12})$ under $\phi$. We would like to not have to execute this procedure to prove similar claims
+        \ldots w_{12})$ under $\phi$. We would like to not have to execute this procedure to prove similar
+        claims
         each
         time. What if instead of $\phi$ being over $V_1 \times \ldots \times V_5$ it was over $V_1 \times \ldots
         \times
@@ -674,16 +684,19 @@
 
         We solve this issue with the following theorem.
 
-        <div>
+        <section id="thm-multilinear-universals-generate-multilinear-universals"
+            data-title="Thm: Multilinear Universals generate Multilinear Universals">
             <div class="theorem">
                 <div class="theorem-title">
                 </div>
-                Mutlilinear universal maps generate multilinear universal maps with degree equal to the sum of the
+                Mutlilinear universal maps generate multilinear universal maps with degree equal to the sum of
+                the
                 degrees of the component maps. That is, if $$(P_i, p_i) = (M[V_{a_i} \ldots V_{b_i}], m[V_{a_i}
                 \ldots
                 V_{b_i}])$$ are universal
                 pairs for
-                $c_i$-linear maps over $V_{a_i} \ldots V_{b_i}$ for $i = 1 \ldots n$, where $c_i = b_i-a_i+1$, and
+                $c_i$-linear maps over $V_{a_i} \ldots V_{b_i}$ for $i = 1 \ldots n$, where $c_i = b_i-a_i+1$,
+                and
                 if
                 $$(P, p) = (M[P_1 \ldots P_n], m[P_1 \ldots P_n])$$ is a
                 universal
@@ -698,11 +711,13 @@
                 <div class="proof-title">
                     Proof
                 </div>
-                We proceed by induction on $n$. The base case $n=2$ is given by the previous theorem with $p$ being
+                We proceed by induction on $n$. The base case $n=2$ is given by the previous theorem with $p$
+                being
                 the
                 bilinear universal. So
                 suppose the
-                claim holds for $n-1$. Let $t: V_{a_1} \ldots V_{b_n} \to Y$ be an arbitrary $c$-linear function.
+                claim holds for $n-1$. Let $t: V_{a_1} \ldots V_{b_n} \to Y$ be an arbitrary $c$-linear
+                function.
                 Define
                 $$
                 t_{v_{a_n} \ldots v_{b_n}}(v_{a_1} \ldots v_{b_{n-1}}) := t(v_{a_1} \ldots v_{b_n})
@@ -729,7 +744,8 @@
                 \ldots p_{n-1}(v_{a_{n-1}} \ldots v_{b_{n-1}}))}(p_n(v_{a_n} \ldots v_{b_n}))
                 $$
                 for some unique $ h_{\tilde{p}(p_1(v_{a_1} \ldots v_{b_1})
-                \ldots p_{n-1}(v_{a_{n-1}} \ldots v_{b_{n-1}}))} \in \text{Hom}(P_n, Y)$. Define $H(x, y) = h_x(y)$,
+                \ldots p_{n-1}(v_{a_{n-1}} \ldots v_{b_{n-1}}))} \in \text{Hom}(P_n, Y)$. Define $H(x, y) =
+                h_x(y)$,
                 then
                 $$
                 t(v_{a_1} \ldots v_{b_{n}}) = H(\tilde{p}(p_1(v_{a_1} \ldots v_{b_1})
@@ -754,28 +770,33 @@
                     QED
                 </div>
             </div>
-
-            I hope that wasn't too hairy; the proof isn't particularly complicated it's just that there are alot of
-            different variables everywhere. But the utility should not be lost on the reader. Going back to
-            the earlier task, if
-            $$
-            \phi(v_1 \ldots v_5) = (v_1 \otimes (v_2 \otimes (v_3 \otimes v_4))) \otimes v_5
-            $$ is a universal 5-linear morphism from $\prod V_i$, and if later you figure out that each $v_i =
-            p_i(w_{a_i} \ldots w_{b_i}) = m[W_{a_i}
-            \ldots W_{b_i}](w_{a_i} \ldots w_{b_i})$ is the result of some universal multilinear morphism from some
-            other product of spaces, then you can simply substitute these expressions into the above and obtain a
-            multilinear morphism on all the $W_{a_1} \ldots W_{b_5}$
-            $$
-            w_{a_1} \ldots w_{b_5} \mapsto \phi(p_1(w_{a_1}\ldots w_{b_1}) \ldots p_5(w_{a_5}\ldots w_{b_5})) \\=
-            \left(\left(\bigotimes_{j=a_1}^{b_1} w_{j}\right) \otimes \left(\left(\bigotimes_{j=a_2}^{b_2}
-            w_{j}\right)\otimes
-            \left(\left(\bigotimes_{j=a_3}^{b_3} w_{j}\right)\otimes \left(\bigotimes_{j=a_4}^{b_4}
-            w_{j}\right)\right)\right)\right) \otimes
-            \left(\bigotimes_{j=a_5}^{b_5} w_{j}\right)
-            $$
-            and conclude using the above theorem that the above map is indeed a multilinear universal morphism on
-            the
-            arguments.
+        </section>
+        I hope that wasn't too hairy; the proof isn't particularly complicated it's just that there are alot
+        of
+        different variables everywhere. But the utility should not be lost on the reader. Going back to
+        the earlier task, if
+        $$
+        \phi(v_1 \ldots v_5) = (v_1 \otimes (v_2 \otimes (v_3 \otimes v_4))) \otimes v_5
+        $$ is a universal 5-linear morphism from $\prod V_i$, and if later you figure out that each $v_i =
+        p_i(w_{a_i} \ldots w_{b_i}) = m[W_{a_i}
+        \ldots W_{b_i}](w_{a_i} \ldots w_{b_i})$ is the result of some universal multilinear morphism from
+        some
+        other product of spaces, then you can simply substitute these expressions into the above and obtain
+        a
+        multilinear morphism on all the $W_{a_1} \ldots W_{b_5}$
+        $$
+        w_{a_1} \ldots w_{b_5} \mapsto \phi(p_1(w_{a_1}\ldots w_{b_1}) \ldots p_5(w_{a_5}\ldots w_{b_5}))
+        \\=
+        \left(\left(\bigotimes_{j=a_1}^{b_1} w_{j}\right) \otimes \left(\left(\bigotimes_{j=a_2}^{b_2}
+        w_{j}\right)\otimes
+        \left(\left(\bigotimes_{j=a_3}^{b_3} w_{j}\right)\otimes \left(\bigotimes_{j=a_4}^{b_4}
+        w_{j}\right)\right)\right)\right) \otimes
+        \left(\bigotimes_{j=a_5}^{b_5} w_{j}\right)
+        $$
+        and conclude using the above theorem that the above map is indeed a multilinear universal morphism
+        on
+        the
+        arguments.
         </div>
 
     </section>

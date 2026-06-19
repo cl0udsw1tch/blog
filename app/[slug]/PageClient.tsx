@@ -17,7 +17,7 @@ export default function PageClient({ html, paper }: { html: string, paper: Paper
 
 
     function getActiveSection(): string {
-        const threshold = 50;
+        const threshold = 200;
 
         let active = sectionsY[0]?.id ?? "";
 
@@ -39,18 +39,27 @@ export default function PageClient({ html, paper }: { html: string, paper: Paper
         const tocData = flattenToc(buildToc(contentRef.current));
         setToc(tocData);
 
-        const timer = setTimeout(() => {
+        const calcSectionY = () => {
             const sections = Array.from(
                 contentRef.current?.querySelectorAll(
                     "section[id]"
                 ) ?? []
             ) as HTMLElement[];
-            const ys = sections.map(s => ({ id: s.id, y: s.getBoundingClientRect().top }))
+            const ys = sections.map(s => ({ id: s.id, y: s.getBoundingClientRect().top + window.scrollY }))
             setSectionsY(ys)
-        }, 2000)
+
+        }
+
+
+
+        window.addEventListener("resize", calcSectionY)
+        const ro = new ResizeObserver(calcSectionY);
+        ro.observe(contentRef.current);
 
         return () => {
-            clearTimeout(timer)
+
+            window.removeEventListener('resize', calcSectionY)
+            ro.disconnect()
         }
 
     }, [html])
