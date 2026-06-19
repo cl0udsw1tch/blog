@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { papers } from "@/papers/papers";
 import fs from "fs";
 import path from "path";
+import PageClient from "./PageClient";
 
 export default async function PaperPage({
     params,
@@ -46,13 +47,10 @@ export default async function PaperPage({
 
 
     return (
-        <main className="container">
-            <h1>{paper.title}</h1>
+        <main className="paper">
 
-            <div className="paper-meta">
-                <span>{paper.category}</span> · <span>{paper.date}</span>
-            </div>
 
-            <article className="paper-content" dangerouslySetInnerHTML={{ __html: html }} />        </main>
+            <PageClient html={html} paper={paper} />
+        </main>
     );
 }

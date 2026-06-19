@@ -1,17 +1,18 @@
-<div style="--divider-color: #00d294">
-    <h1 class="text-7xl my-20" style="text-align:center; font-family: var(--font-playfair);">Tensors II: <br />
+<section id="title" data-title="Tensors II:  Universality" style="--divider-color: #00d294">
+    <h1 class="text-7xl my-20" style="text-align:center; font-family: var(--font-playfair);"
+        id="Tensors-II-Universality" data-title="Tensors II:  Universality">Tensors II: <br />
         Universality
     </h1>
 
     <div class="py-8 my-8" style="">
-        The last article dealt with the <a class="text-rose-600" href="/tensors">tensor product construction </a>, now
+        The last article dealt with the <a class="text-rose-600" href="/tensors-I">tensor product construction </a>, now
         it's time to see what this construction is good for, and how to use only what we care about the construction and
         forget about the unimportant details. We then extend the theory to larger multilinear maps $f: V_1 \otimes
         \ldots
         \otimes V_k \to Y$.
     </div>
-    <div>
-        <h2 class="py-8 text-2xl">
+    <section id="universality" data-title="Universality of the Tensor Product">
+        <h2 class="py-8 text-2xl" data-title="Universality of the Tensor Product">
             Universality of the Tensor Product
 
         </h2>
@@ -30,150 +31,168 @@
             \to Y$."
 
         </blockquote>
-    </div>
-    If $(U, u \in \text{Bil}(V \times W, U))$ satisfies the UP, we say $u$ is "universal" for bilinear maps.
-    One may ask, can we find $\tilde{U}, \tilde{u}$ where $\tilde{u}$ is not in $\text{Bil}(V \times W, \tilde{U})$ but
-    more broadly is a map $V
-    \times W \to \tilde{U}$ that also satisfies the
-    UP? Technically, yes, but there is always a bilinear map hidden somewhere. First, let's call such $\tilde{u}$
-    "common maps", to
-    distinguish them from "universal maps" which are restricted to be the bilinear ones aforementioned.
 
-    <div>
-        <div class="theorem">
-            <div class="theorem-title">
+        If $(U, u \in \text{Bil}(V \times W, U))$ satisfies the UP, we say $u$ is "universal" for bilinear maps.
+        One may ask, can we find $\tilde{U}, \tilde{u}$ where $\tilde{u}$ is not in $\text{Bil}(V \times W, \tilde{U})$
+        but
+        more broadly is a map $V
+        \times W \to \tilde{U}$ that also satisfies the
+        UP? Technically, yes, but there is always a bilinear map hidden somewhere. First, let's call such $\tilde{u}$
+        "common maps", to
+        distinguish them from "universal maps" which are restricted to be the bilinear ones aforementioned.
+
+        <section id="theorem1" data-title="Theorem 1">
+            <div class="theorem" data-title="Theorem 1">
+                <div class="theorem-title">
+                </div>
+
+                Let $(\tilde{U}, \tilde{u}: V \times W \to \tilde{U})$ be such that $\tilde{u}$ is a common map for
+                bilinear
+                maps $V \times W \to Y$. That is,
+                $$\forall p \in \text{Bil}(V \times W, Y), \exists ! \tilde{f} \in \text{Hom}(\tilde{U}, Y) \mid p =
+                \tilde{f}
+                \circ \tilde{u} $$
+
+                Then $\tilde{u}(v,w) = z_{u(v,
+                w)} \oplus k$ for the universal bilinear map $u \in \text{Bil}(V
+                \times
+                W, U)$ where $u = \pi_K \circ \tilde{u}$, and
+
+                $$\begin{align*} U = \tilde{U} / K \\
+                \pi_K: \tilde{U} \to \tilde{U} / K \\
+                x \mapsto [x] \\
+                K = \bigcap_{\tilde{f} \circ \tilde{u} \in
+                \text{Bil}(V \times W, Y)} Ker(\tilde{f})
+                \end{align*}
+                $$
+                and $z_{u(v,
+                w)}$ is a fixed representative for each coset $u(v, w)$.
             </div>
 
-            Let $(\tilde{U}, \tilde{u}: V \times W \to \tilde{U})$ be such that $\tilde{u}$ is a common map for bilinear
-            maps $V \times W \to Y$. That is,
-            $$\forall p \in \text{Bil}(V \times W, Y), \exists ! \tilde{f} \in \text{Hom}(\tilde{U}, Y) \mid p =
-            \tilde{f}
-            \circ \tilde{u} $$
+            <div class="proof">
+                <div class="proof-title">Proof</div>
+                Suppose the hypothesis. Let $S := \{c(v, w) - (cv, w), \ldots\}
+                $ be the bilinear relations kernel.
+                Firstly,
+                $$
+                \bigcap_{p \in \text{Bil}(V \times W, Y)} ker(p) = S
+                $$
+                Notice
+                $$
+                \begin{align*}
+                (v,w) \in S \implies p(v,w) = \tilde{f} \circ \tilde{u} (v,w) = 0 \implies \tilde{u}(v,w) \in
+                ker(\tilde{f})\\
+                \implies \tilde{u}(S) \subset ker(\tilde{f}) \implies \tilde{u}(S) \subset K
 
-            Then $\tilde{u}(v,w) = z_{u(v,
-            w)} \oplus k$ for the universal bilinear map $u \in \text{Bil}(V
-            \times
-            W, U)$ where $u = \pi_K \circ \tilde{u}$, and
+                \end{align*}$$
+                By the first isomorphism theorem, there is a unique and linear $f$ for each $\tilde{f}$ such that
+                $\tilde{f}
+                = f \circ
+                \pi_K$. Thus
+                $$
+                p = f \circ \pi_K \circ \tilde{u}
+                $$ But now notice
 
-            $$\begin{align*} U = \tilde{U} / K \\
-            \pi_K: \tilde{U} \to \tilde{U} / K \\
-            x \mapsto [x] \\
-            K = \bigcap_{\tilde{f} \circ \tilde{u} \in
-            \text{Bil}(V \times W, Y)} Ker(\tilde{f})
-            \end{align*}
-            $$
-            and $z_{u(v,
-            w)}$ is a fixed representative for each coset $u(v, w)$.
-        </div>
-
-        <div class="proof">
-            <div class="proof-title">Proof</div>
-            Suppose the hypothesis. Let $S := \{c(v, w) - (cv, w), \ldots\}
-            $ be the bilinear relations kernel.
-            Firstly,
-            $$
-            \bigcap_{p \in \text{Bil}(V \times W, Y)} ker(p) = S
-            $$
-            Notice
-            $$
-            \begin{align*}
-            (v,w) \in S \implies p(v,w) = \tilde{f} \circ \tilde{u} (v,w) = 0 \implies \tilde{u}(v,w) \in
-            ker(\tilde{f})\\
-            \implies \tilde{u}(S) \subset ker(\tilde{f}) \implies \tilde{u}(S) \subset K
-
-            \end{align*}$$
-            By the first isomorphism theorem, there is a unique and linear $f$ for each $\tilde{f}$ such that $\tilde{f}
-            = f \circ
-            \pi_K$. Thus
-            $$
-            p = f \circ \pi_K \circ \tilde{u}
-            $$ But now notice
-
-            $$(v,w) \in S \implies \pi_K \circ \tilde{u}(v,w) = \pi_K (\tilde{u}(v,w)) \in \pi_K(\tilde{u}(S)) \subset
-            \pi_K(K) \\
-            \implies \pi_K \circ \tilde{u}(v,w) = [0]
-            \\
-            \implies u:=\pi_K \circ \tilde{u} \in \text{Bil}(V \times W, U := \tilde{U} / K)
-            $$
-            and since $f$ was unique for the unique $\tilde{f}$, we have that $(U=\tilde{U}/K, u=\pi_K \circ \tilde{u})$
-            satisfies the UP for bilinear maps. Also $$u(v,w) = \tilde{u}(v,w) + K \implies \tilde{u}(v,w) = z_{u(v,
-            w)} \oplus k$$
-            <div class="qed">
-                QED
+                $$(v,w) \in S \implies \pi_K \circ \tilde{u}(v,w) = \pi_K (\tilde{u}(v,w)) \in \pi_K(\tilde{u}(S))
+                \subset
+                \pi_K(K) \\
+                \implies \pi_K \circ \tilde{u}(v,w) = [0]
+                \\
+                \implies u:=\pi_K \circ \tilde{u} \in \text{Bil}(V \times W, U := \tilde{U} / K)
+                $$
+                and since $f$ was unique for the unique $\tilde{f}$, we have that $(U=\tilde{U}/K, u=\pi_K \circ
+                \tilde{u})$
+                satisfies the UP for bilinear maps. Also $$u(v,w) = \tilde{u}(v,w) + K \implies \tilde{u}(v,w) = z_{u(v,
+                w)} \oplus k$$
+                <div class="qed">
+                    QED
+                </div>
             </div>
-        </div>
-    </div>
-    This motivates restricting universal morphisms $u$ to $\text{Bil}(V \times W, Y)$ instead of more broadly
-    considering arbitrary maps $V \times W \to Y$, since even if we did that, we would just be writing a direct sum of a
-    universal morphism with the kernel of all the induced linear maps. The opposite implication of the above theorem is
-    true as well.
-    <div>
-        <div class="theorem">
-            <div class="theorem-title">
+        </section>
+        This motivates restricting universal morphisms $u$ to $\text{Bil}(V \times W, Y)$ instead of more broadly
+        considering arbitrary maps $V \times W \to Y$, since even if we did that, we would just be writing a direct
+        sum
+        of a
+        universal morphism with the kernel of all the induced linear maps. The opposite implication of the above
+        theorem
+        is
+        true as well.
+        <section id='theorem2' data-title="Theorem 2">
+            <div class="theorem">
+                <div class="theorem-title">
+
+                </div>
+
+                Let $u \in \text{Bil}(V \times W, U)$ be any universal morphism for bilinear maps. That is
+                $$
+                \forall p \in \text{Bil}(V \times W, Y), \exists ! f \in \text{Hom}(U, Y) \mid p = f \circ u
+                $$
+                Let $K$ be any vector subspace and define
+                $$
+                \begin{align*}
+                \tilde{U} = U \oplus K \\
+                \tilde{u}: V \times W \to \tilde{U}, \quad v,w \mapsto u(v, w) \oplus k_{v,w}
+                \end{align*}
+                $$
+                where $k_{v,w} \in K$. Then $\tilde{u}$ is a common morphism for bilinear maps, that is
+                $$
+                \forall p \in \text{Bil}(V \times W, Y), \exists ! f \in \text{Hom}(\tilde{U}, Y) \mid p = \tilde{f}
+                \circ
+                \tilde{U}
+
+                $$
 
             </div>
-
-            Let $u \in \text{Bil}(V \times W, U)$ be any universal morphism for bilinear maps. That is
-            $$
-            \forall p \in \text{Bil}(V \times W, Y), \exists ! f \in \text{Hom}(U, Y) \mid p = f \circ u
-            $$
-            Let $K$ be any vector subspace and define
-            $$
-            \begin{align*}
-            \tilde{U} = U \oplus K \\
-            \tilde{u}: V \times W \to \tilde{U}, \quad v,w \mapsto u(v, w) \oplus k_{v,w}
-            \end{align*}
-            $$
-            where $k_{v,w} \in K$. Then $\tilde{u}$ is a common morphism for bilinear maps, that is
-            $$
-            \forall p \in \text{Bil}(V \times W, Y), \exists ! f \in \text{Hom}(\tilde{U}, Y) \mid p = \tilde{f} \circ
-            \tilde{U}
-
-            $$
-
-        </div>
-        <div class="proof">
-            <div class="proof-title">
-                Proof
+            <div class="proof">
+                <div class="proof-title">
+                    Proof
+                </div>
+                Suppose the hypothesis.
+                $$
+                \begin{align*}
+                \tilde{u}(v, w) = u(v,w) \oplus k_{v,w} \\
+                \text{Consider } \pi_{\{0_U\} \oplus K}: \tilde{U} \to \tilde{U} / (\{0_U\} \oplus K), \quad
+                \tilde{u}(v, w)
+                \mapsto \tilde{u}(v,
+                w) +
+                (0_U \oplus K) \\
+                = u(v, w) \oplus k_{v, w} + (0_U \oplus K) \\
+                = u(v, w) \oplus 0_K + (0_U \oplus K) \\
+                = [u(v, w) \oplus 0_K]\\
+                \text{and } \varphi: \tilde{U} / (\{0_U\} \oplus K) \to U, \quad [u(v, w) \oplus 0_K] \mapsto u(v,w)
+                \end{align*}
+                $$
+                Notice $u = \varphi \circ \pi_{\{0_U\} \oplus K} \circ \tilde{u}$. By hypothesis, for any $p
+                \in \text{Bil}(V\times W, Y)$ we can find a unique $f \in \text{Hom}(U, Y)$ such that
+                $$
+                p = f \circ u = f \circ \varphi \circ \pi_{\{0_U\} \oplus K} \circ \tilde{u} = (f \circ \varphi
+                \circ
+                \pi_{\{0_U\} \oplus K} ) \circ \tilde{u}
+                $$ so defining $\tilde{f} = (f \circ \varphi \circ
+                \pi_{\{0_U\} \oplus K} )$ we have a unique linear $\tilde{f}$ for each $p$ satisfying the UP for
+                $\tilde{u}$, so $\tilde{u}$ is a common morphism for bilinear maps.
+                <div class="qed">
+                    QED
+                </div>
             </div>
-            Suppose the hypothesis.
-            $$
-            \begin{align*}
-            \tilde{u}(v, w) = u(v,w) \oplus k_{v,w} \\
-            \text{Consider } \pi_{\{0_U\} \oplus K}: \tilde{U} \to \tilde{U} / (\{0_U\} \oplus K), \quad \tilde{u}(v, w)
-            \mapsto \tilde{u}(v,
-            w) +
-            (0_U \oplus K) \\
-            = u(v, w) \oplus k_{v, w} + (0_U \oplus K) \\
-            = u(v, w) \oplus 0_K + (0_U \oplus K) \\
-            = [u(v, w) \oplus 0_K]\\
-            \text{and } \varphi: \tilde{U} / (\{0_U\} \oplus K) \to U, \quad [u(v, w) \oplus 0_K] \mapsto u(v,w)
-            \end{align*}
-            $$
-            Notice $u = \varphi \circ \pi_{\{0_U\} \oplus K} \circ \tilde{u}$. By hypothesis, for any $p
-            \in \text{Bil}(V\times W, Y)$ we can find a unique $f \in \text{Hom}(U, Y)$ such that
-            $$
-            p = f \circ u = f \circ \varphi \circ \pi_{\{0_U\} \oplus K} \circ \tilde{u} = (f \circ \varphi \circ
-            \pi_{\{0_U\} \oplus K} ) \circ \tilde{u}
-            $$ so defining $\tilde{f} = (f \circ \varphi \circ
-            \pi_{\{0_U\} \oplus K} )$ we have a unique linear $\tilde{f}$ for each $p$ satisfying the UP for
-            $\tilde{u}$, so $\tilde{u}$ is a common morphism for bilinear maps.
-            <div class="qed">
-                QED
-            </div>
-        </div>
+        </section>
         Let's look at a contrived example. Let $V = \reals^3, W = \reals^{2 \times 2}$. Let $a =
         \begin{bmatrix}1&amp;0&amp;1&amp;0&amp;0
         \end{bmatrix}^T, b = \begin{bmatrix}0&amp;0&amp;0&amp;1&amp;0
         \end{bmatrix}^T$ and take $K = \text{span}\{a, b
-        \} \subset \reals^5$. Consider $U = V \otimes W, u(v,w) = v \otimes w$, and define $\tilde{U} = U \oplus K$,
+        \} \subset \reals^5$. Consider $U = V \otimes W, u(v,w) = v \otimes w$, and define $\tilde{U} = U \oplus
+        K$,
         with
         $$\tilde{u}: V \times W \to Y \\
-        (v, w) \mapsto u(v, w) \oplus k_{v,w} = v \otimes w \oplus \begin{bmatrix} ||v|| &amp; 0 &amp; ||v|| &amp;
+        (v, w) \mapsto u(v, w) \oplus k_{v,w} = v \otimes w \oplus \begin{bmatrix} ||v|| &amp; 0 &amp; ||v||
+        &amp;
         \det(w) &amp; 0
         \end{bmatrix}^T$$ Notice $k_{v,w}$ is indeed in $K$.
-        Let $p \in \text{Bil}(V \times W, Y)$ be arbitrary. Then there exists a unique $f \in \text{Hom}(V \times W, Y)
-        \mid p = f \circ u$. Now let $\tilde{f}= f \circ \varphi \circ \pi_{\{0_U\} \oplus K}$, then $p = \tilde{f}
+        Let $p \in \text{Bil}(V \times W, Y)$ be arbitrary. Then there exists a unique $f \in \text{Hom}(V
+        \times W,
+        Y)
+        \mid p = f \circ u$. Now let $\tilde{f}= f \circ \varphi \circ \pi_{\{0_U\} \oplus K}$, then $p =
+        \tilde{f}
         \circ \tilde{u}$ so $u$ is common. Denote $\tilde{x}
         = x \oplus k \in U \oplus K$
         $$
@@ -182,43 +201,52 @@
         = f(\varphi([x + 0_K])) \\
         = f(x)
         $$
-        so $\tilde{f}(x \oplus k) = f(x)$, that is, linear maps corresponding to bilinear ones factoring through common
-        maps are just the linear maps induced by the universal bilinear map restricted to $U$. Using pair notation
+        so $\tilde{f}(x \oplus k) = f(x)$, that is, linear maps corresponding to bilinear ones factoring through
+        common
+        maps are just the linear maps induced by the universal bilinear map restricted to $U$. Using pair
+        notation
         $$
         \tilde{f}: V \otimes W \oplus K \to Y \\
         \tilde{f}(v\otimes w, k) = f(v \otimes w)
-        $$ is the unique linear map for $p$ such that $p = \tilde{f}\circ \tilde{u}$. The nasty non-bilinear part of
-        $\tilde{u}$ does not matter as it can be easily quotiented out as long as it lives in a subspace that direct
+        $$ is the unique linear map for $p$ such that $p = \tilde{f}\circ \tilde{u}$. The nasty non-bilinear
+        part of
+        $\tilde{u}$ does not matter as it can be easily quotiented out as long as it lives in a subspace that
+        direct
         sums
         with $U$.
-    </div>
+    </section>
 
-    <div class="py-8">
+    <section id='identification' data-title="Universal Identification" class="py-8">
         <h2 class="text-2xl h2 py-8">
             A nice identification
         </h2>
 
-        Alright, the actual reason for demanding universal morphisms for bilinear maps be bilinear is a bit deeper, but
-        actually simpler. I just wanted to motivate it in a different direction by showing even non bilinear "common"
+        Alright, the actual reason for demanding universal morphisms for bilinear maps be bilinear is a bit deeper,
+        but
+        actually simpler. I just wanted to motivate it in a different direction by showing even non bilinear
+        "common"
         maps have a bilinear "component" with respect to the direct sum. The actual reason is given by the following
         claim
 
-        <div>
+        <section id="theorem3" data-title="Theorem 3">
             <div class="theorem">
                 <div class="theorem-title">
                 </div>
                 $$\exists (U, u) \text{ universal } \iff \text{Bil}(V \times W, Y)
                 \cong
-                \text{Hom}(U, Y) \text{ naturally } $$ That is, universal morphisms for bilinear maps, which themselves
+                \text{Hom}(U, Y) \text{ naturally } $$ That is, universal morphisms for bilinear maps, which
+                themselves
                 are bilinear by
                 definition, imply and are implied by the equivalency between bilinear
-                maps and linear ones on $U$. Thus we care way more about unversal morphisms than common ones so that we
+                maps and linear ones on $U$. Thus we care way more about unversal morphisms than common ones so that
+                we
                 can simultaneously show this identification.
                 As well, the term "naturally" means the isomorphisms respect linear morphisms between any two $X,Y
                 $ in the following sense:
                 if $\eta_{X}: \text{Bil}(V \times
                 W, X) \to \text{Hom}(U, X)$ and $\eta_Y: \text{Bil}(V \times W, Y) \to \text{Hom}(U, Y)$ are both
-                isomorphisms, then the family $\{\eta_{-}\}$ is called <span class="font-bold">natural</span> if for any
+                isomorphisms, then the family $\{\eta_{-}\}$ is called <span class="font-bold">natural</span> if for
+                any
                 $l \in \text{Hom}(
                 X, Y)$ we have
                 $$ \eta_Y(l \circ p) = l \circ \eta_{X}(p)
@@ -228,14 +256,17 @@
                 <div class="proof-title">
                     Proof
                 </div>
-                $(\implies)$ Let $(U, u)$ is a universal for bilinear maps. Then $u \in \text{Bil}(V \times W, U)$. Now
+                $(\implies)$ Let $(U, u)$ is a universal for bilinear maps. Then $u \in \text{Bil}(V \times W, U)$.
+                Now
                 notice the map
                 $$\eta_Y: \text{Bil}(V \times W, Y) \to \text{Hom}(U, Y) \\
                 f \circ u \mapsto f $$ is an isomorphism. To see this, notice it's invertibility. The definition and
                 injectivity is
-                implied by the UP of $u$, since all bilinear maps have the form $f \circ u$. Surjectivity follows since
+                implied by the UP of $u$, since all bilinear maps have the form $f \circ u$. Surjectivity follows
+                since
                 given any linear $f$, $f \circ u$ is bilinear. Thus $\eta_Y$ is our isomorphism, and
-                $$\eta_U(I_U \circ u) = I_U \implies u = \eta_U^{-1}(I_U) $$ where $I_U(x) = x$ is the identity on $U$.
+                $$\eta_U(I_U \circ u) = I_U \implies u = \eta_U^{-1}(I_U) $$ where $I_U(x) = x$ is the identity on
+                $U$.
 
                 Naturally
                 follows since for any $p \in \text{Bil}(V \times W, X)$ there
@@ -265,126 +296,135 @@
                 <div class="qed">
                     QED
                 </div>
-
             </div>
-            So universal bilinear maps are a way to construct a natural isomorphism between bilinear maps and
-            homomorphisms, and vice-versa. One might further ask, since we can pick different constructions for
-            universal maps, just how "different" are two universal $(U,u)$? Not very.
+        </section>
+        So universal bilinear maps are a way to construct a natural isomorphism between bilinear maps and
+        homomorphisms, and vice-versa. One might further ask, since we can pick different constructions for
+        universal maps, just how "different" are two universal $(U,u)$? Not very.
 
-            <div>
-                <div class="theorem">
-                    <div class="theorem-title">
-                        Universal bilinear pairs $(U,u)$ are unique up to unique isomorphism.
-                    </div>
-                    That is, if $(U, u)$ and $(\tilde{U}, \tilde{u})$ are both universal pairs for bilinear maps, then
-                    there is a unique isomorphism $\zeta: U \to \tilde{U}$ such that
-                    $$
-                    \zeta \circ u = \tilde{u}
-                    $$
+        <section id="theorem4" data-title="Theorem 4">
+            <div class="theorem">
+                <div class="theorem-title">
+                    Universal bilinear pairs $(U,u)$ are unique up to unique isomorphism.
                 </div>
-                <div class="proof">
-                    Assume the hypothesis, for any $Y$ we have
-                    $$
-                    \forall p \in \text{Bil}(V \times W, Y), \exists ! f \in \text{Hom}(U, Y) \mid p = f \circ u \\
-                    \forall p \in \text{Bil}(V \times W, Y), \exists ! \tilde{f} \in \text{Hom}(\tilde{U}, Y) \mid p =
-                    \tilde{f} \circ
-                    \tilde{u} \\
-
-                    $$
-                    $\tilde{u} \in \text{Bil}(V \times W, \tilde{U})$ so by the unversality of $(U, u)$, there exists a
-                    unique $\zeta \in \text{Hom}(U, \tilde{U}) $ such that
-                    $$
-                    \tilde{u} = \zeta \circ u
-                    $$ The uniqueness of $\zeta$ means this is our only candidate morphism. To show $\zeta$ is an
-                    isomorphism, note that $u \in \text{Bil}(V \times W, U)$ so by the unversality of $(\tilde{U},
-                    \tilde{u})$, there exists a
-                    unique $\gamma \in \text{Hom}(\tilde{U}, U) $ such that
-                    $$
-                    u = \gamma \circ \tilde{u}
-                    $$ so
-                    $$
-                    \tilde{u} = \zeta \circ (\gamma \circ \tilde{u}) = (\zeta \circ \gamma) \circ \tilde{u} \\
-                    u = \gamma \circ (\zeta \circ u) = (\gamma \circ \zeta) \circ u
-
-                    $$
-                    Since $\tilde{u} \in \text{Bil}(V \times W, \tilde{U})$, and by the universality of $\tilde{u}$,
-                    $\zeta \circ \gamma$ must be the unique morphism in $\text{Hom}(\tilde{U}, \tilde{U})$ satisfying
-                    $\tilde{u} = (-) \circ \tilde{u} $, however we also know that
-                    $$
-                    \tilde{u} = I_{\tilde{U}} \circ \tilde{u}
-                    $$
-                    so by uniqueness $\zeta \circ \gamma = I_{\tilde{U}}$. Similarly, since $u \in \text{Bil}(V \times
-                    W, U)$ and by the universality of $u$ it follows $\gamma
-                    \circ \zeta = I_U$. Thus, $\gamma$ is the inverse of $\zeta$ and $\zeta$ is an isomorphism.
-
-                    <div class="qed">
-
-                        QED
-                    </div>
-                </div>
-                The reverse is true too.
-                <div>
-                    <div class="theorem">
-                        <div class="theorem-title">
-
-                        </div>
-                        If $\zeta$ is any isomorphism from $U \to \tilde{U}$, and $(U, u)$ is a universal pair for
-                        bilinear maps, then
-                        $$
-                        \tilde{u} = \zeta \circ u
-                        $$
-                        is a universal morphism, that is, $(\tilde{U}, \tilde{u})$ is another universal pair.
-                    </div>
-                    <div class="proof">
-                        <div class="proof-title">
-
-                        </div>
-                        Suppose the hypothesis. Let $p \in \text{Bil}(V \times W, Y)$ be arbitrary. By universality of
-                        $u$
-                        $$
-                        \exists ! f \in \text{Hom}(U, Y) \mid p = f \circ u \\
-                        \implies p = f \circ \zeta^{-1} \circ \tilde{u}
-                        $$
-                        since $f$ is unique and $\zeta$ is an isomorphism, $\tilde{f} = f \circ \zeta^{-1}$ is the
-                        unique morphism
-                        in
-                        $\text{Hom}(\tilde{U}, Y)$ such that $p = \tilde{f} \circ \tilde{u}$. Thus,
-                        $\tilde{u} \in \text{Bil}(V \times W, \tilde{U})$ is a universal morphism for bilinear maps,
-                        with $(\tilde{U}, \tilde{u})$ the universal pair.
-                        <div class="qed">
-
-                        </div>
-                    </div>
-                </div>
-                <div class="corollary">
-                    <div class="corollary-title">
-                        If $(U, u)$ is a universal pair for bilinear maps, all automorphisms $a$ on $U$ give new
-                        universal morphisms $a \circ u$.
-                    </div>
-                </div>
-                This means, for example (with everything over $\reals$), the autmorphism $a: V \otimes W \to V \otimes
-                W$
-                defined by
+                That is, if $(U, u)$ and $(\tilde{U}, \tilde{u})$ are both universal pairs for bilinear maps,
+                then
+                there is a unique isomorphism $\zeta: U \to \tilde{U}$ such that
                 $$
-                v \otimes w \mapsto 2 v \otimes w$$
-                and linearly extended on $V \otimes W$ gives a new universal morphism $\tilde{u}(v, w) = 2 v \otimes
-                w$. This should be clear, since if $f$ was the unique linear map composed with $\otimes$ to
-                give some bilinear map, using this new univeral morphism means we just need to half $f$ to get the
-                corresponding morphism. If $a$ was more complicated, then we would invert it instead, which we can do
-                since it's an
-                automorphism.
-
+                \zeta \circ u = \tilde{u}
+                $$
             </div>
+            <div class="proof">
+                Assume the hypothesis, for any $Y$ we have
+                $$
+                \forall p \in \text{Bil}(V \times W, Y), \exists ! f \in \text{Hom}(U, Y) \mid p = f \circ u \\
+                \forall p \in \text{Bil}(V \times W, Y), \exists ! \tilde{f} \in \text{Hom}(\tilde{U}, Y) \mid p
+                =
+                \tilde{f} \circ
+                \tilde{u} \\
 
+                $$
+                $\tilde{u} \in \text{Bil}(V \times W, \tilde{U})$ so by the unversality of $(U, u)$, there
+                exists a
+                unique $\zeta \in \text{Hom}(U, \tilde{U}) $ such that
+                $$
+                \tilde{u} = \zeta \circ u
+                $$ The uniqueness of $\zeta$ means this is our only candidate morphism. To show $\zeta$ is an
+                isomorphism, note that $u \in \text{Bil}(V \times W, U)$ so by the unversality of $(\tilde{U},
+                \tilde{u})$, there exists a
+                unique $\gamma \in \text{Hom}(\tilde{U}, U) $ such that
+                $$
+                u = \gamma \circ \tilde{u}
+                $$ so
+                $$
+                \tilde{u} = \zeta \circ (\gamma \circ \tilde{u}) = (\zeta \circ \gamma) \circ \tilde{u} \\
+                u = \gamma \circ (\zeta \circ u) = (\gamma \circ \zeta) \circ u
 
-        </div>
+                $$
+                Since $\tilde{u} \in \text{Bil}(V \times W, \tilde{U})$, and by the universality of $\tilde{u}$,
+                $\zeta \circ \gamma$ must be the unique morphism in $\text{Hom}(\tilde{U}, \tilde{U})$
+                satisfying
+                $\tilde{u} = (-) \circ \tilde{u} $, however we also know that
+                $$
+                \tilde{u} = I_{\tilde{U}} \circ \tilde{u}
+                $$
+                so by uniqueness $\zeta \circ \gamma = I_{\tilde{U}}$. Similarly, since $u \in \text{Bil}(V
+                \times
+                W, U)$ and by the universality of $u$ it follows $\gamma
+                \circ \zeta = I_U$. Thus, $\gamma$ is the inverse of $\zeta$ and $\zeta$ is an isomorphism.
+
+                <div class="qed">
+
+                    QED
+                </div>
+            </div>
+        </section>
+        The reverse is true too.
         <div>
-            <h2 class="h2 text-2xl py-8">
-                Features and Generalizations</h2>
+            <div class="theorem">
+                <div class="theorem-title">
+
+                </div>
+                If $\zeta$ is any isomorphism from $U \to \tilde{U}$, and $(U, u)$ is a universal pair for
+                bilinear maps, then
+                $$
+                \tilde{u} = \zeta \circ u
+                $$
+                is a universal morphism, that is, $(\tilde{U}, \tilde{u})$ is another universal pair.
+            </div>
+            <div class="proof">
+                <div class="proof-title">
+
+                </div>
+                Suppose the hypothesis. Let $p \in \text{Bil}(V \times W, Y)$ be arbitrary. By universality
+                of
+                $u$
+                $$
+                \exists ! f \in \text{Hom}(U, Y) \mid p = f \circ u \\
+                \implies p = f \circ \zeta^{-1} \circ \tilde{u}
+                $$
+                since $f$ is unique and $\zeta$ is an isomorphism, $\tilde{f} = f \circ \zeta^{-1}$ is the
+                unique morphism
+                in
+                $\text{Hom}(\tilde{U}, Y)$ such that $p = \tilde{f} \circ \tilde{u}$. Thus,
+                $\tilde{u} \in \text{Bil}(V \times W, \tilde{U})$ is a universal morphism for bilinear maps,
+                with $(\tilde{U}, \tilde{u})$ the universal pair.
+                <div class="qed">
+                    QED
+                </div>
+            </div>
         </div>
-        Let's actually forget our free-space-quotient construction of the tensor product and use an arbitrary universal
-        morphism for bilinear maps from now on. Universality is all we'll need to use to further investigate the tensor
-        product; plus, since $(U, u)$ is unique up to unique isomorphism, all constructions are unique up to isomorphism
+        <div class="corollary">
+            <div class="corollary-title">
+                If $(U, u)$ is a universal pair for bilinear maps, all automorphisms $a$ on $U$ give new
+                universal morphisms $a \circ u$.
+            </div>
+        </div>
+        This means, for example (with everything over $\reals$), the autmorphism $a: V \otimes W \to V
+        \otimes
+        W$
+        defined by
+        $$
+        v \otimes w \mapsto 2 v \otimes w$$
+        and linearly extended on $V \otimes W$ gives a new universal morphism $\tilde{u}(v, w) = 2 v \otimes
+        w$. This should be clear, since if $f$ was the unique linear map composed with $\otimes$ to
+        give some bilinear map, using this new univeral morphism means we just need to half $f$ to get the
+        corresponding morphism. If $a$ was more complicated, then we would invert it instead, which we can
+        do
+        since it's an
+        automorphism.
+
+    </section>
+    <section id="bilinear-extension" data-title="Features and Generalizations">
+        <h2 class="h2 text-2xl py-8">
+            Features and Generalizations</h2>
+
+        Let's actually forget our free-space-quotient construction of the tensor product and use an arbitrary
+        universal
+        morphism for bilinear maps from now on. Universality is all we'll need to use to further investigate the
+        tensor
+        product; plus, since $(U, u)$ is unique up to unique isomorphism, all constructions are unique up to
+        isomorphism
         anyway. We need to redefine our notation; let $(U, u)$ be universal for bilinear maps over $V \times W$, and
         define
         $$
@@ -397,12 +437,16 @@
         </div>
         We now show a very important statement, that universal bilinear maps generate universal multilinear maps of
         higher degree. Firstly, since the domain for multilinear maps can now be an arbitrary number of spaces $V_1
-        \ldots V_n$ we need a way to denote them. We will call the [up to unique isomorphism] universal multilinear pair
-        $(M, m)[V_1 \ldots V_k] = (M[V_1 \ldots V_k], m[V_1 \ldots V_k])$ which is taken to be universal for multilinear
+        \ldots V_n$ we need a way to denote them. We will call the [up to unique isomorphism] universal multilinear
+        pair
+        $(M, m)[V_1 \ldots V_k] = (M[V_1 \ldots V_k], m[V_1 \ldots V_k])$ which is taken to be universal for
+        multilinear
         maps over $V_1 \ldots
-        V_k$ - the first object being the vector space and the second being the universal morphism. This pair is unique
+        V_k$ - the first object being the vector space and the second being the universal morphism. This pair is
+        unique
         up to unique isomorphism for $V_1 \ldots V_k$. We will use the special notation
-        $(B,b)[V_1, V_2] = (B[V_1,V_2], b[V_1, V_2]) = (M[V_1,V_2], m[V_1, V_2])$ for universal bilinear pairs. We will
+        $(B,b)[V_1, V_2] = (B[V_1,V_2], b[V_1, V_2]) = (M[V_1,V_2], m[V_1, V_2])$ for universal bilinear pairs. We
+        will
         write $(M_1^i,
         m_1^i) = (M[V_1 \ldots V_i], m[V_1 \ldots V_i])$ and use $B,b$ when there are only two spaces in the domain.
         <div>
@@ -411,7 +455,8 @@
                 </div>
                 Universal bilinear pairs generate universal multilinear pairs of higher degree. Formally,
                 $$
-                (B[M_1^i, M_{i+1}^{i+j}], b[M_1^i, M_{i+1}^{i+j}](m_1^i(-), m_{i+1}^{i+j}(-)) = (M[V_1 \ldots V_{i+j}],
+                (B[M_1^i, M_{i+1}^{i+j}], b[M_1^i, M_{i+1}^{i+j}](m_1^i(-), m_{i+1}^{i+j}(-)) = (M[V_1 \ldots
+                V_{i+j}],
                 m[V_1 \ldots
                 V_{i+j}])
                 $$ is universal for multilinear maps over $V_1 \ldots V_{i+j}$.
@@ -430,7 +475,8 @@
                 V_{i+j}$. Then
                 $$
                 r_{v_{i+1} \ldots v_{i+j}}(v_1 \ldots v_i) := t(v_1 \ldots v_{i+j})
-                $$ is a $i$-linear map over $V_1 \ldots V_i$, for which we have a universal mulitilinear map to uniquely
+                $$ is a $i$-linear map over $V_1 \ldots V_i$, for which we have a universal mulitilinear map to
+                uniquely
                 factor it
                 through by hypothesis. Then
                 $$
@@ -452,12 +498,14 @@
                 be
                 $j$-linear as well, over $V_{i+1} \ldots V_{i+j}$, so by universality of $m_{i+1}^{i+j}$,
                 $$
-                f_{v_{i+1} \ldots v_{i+j}}(x) = l_x(v_{i+1} \ldots v_{i+j}) = g_{x} \circ m_{i+1}^{i+j}(v_{i+1} \ldots
+                f_{v_{i+1} \ldots v_{i+j}}(x) = l_x(v_{i+1} \ldots v_{i+j}) = g_{x} \circ m_{i+1}^{i+j}(v_{i+1}
+                \ldots
                 v_{i+j})
                 $$ for some unique $g_x \in \text{Hom}(M_{i+1}^{i+j}, Y)$. Note that
                 $x \mapsto l_x$ being linear implies $x \mapsto g_x$ is linear as well. We now have,
                 $$
-                t(v_1 \ldots v_{i+j}) = f_{v_{i+1} \ldots v_{i+j}}(m_1^i(v_1 \ldots v_i)) = g_{m_1^i(v_1 \ldots v_i)}
+                t(v_1 \ldots v_{i+j}) = f_{v_{i+1} \ldots v_{i+j}}(m_1^i(v_1 \ldots v_i)) = g_{m_1^i(v_1 \ldots
+                v_i)}
                 \circ
                 m_{i+1}^{i+j}(v_{i+1} \ldots v_{i+j})
                 $$
@@ -525,16 +573,20 @@
             $$ are unique up to unique isomorphism, and both morphisms are universal for trilinear functions on $V_1
             \times V_2 \times V_3$. The theorem as a whole shows that the bilinear universal $\otimes$ can generate
             morphisms that are universal for multilinear maps of any degree we choose, so for example, if we want a
-            universal morphism for $5$-linear functions on $V_1 \times \ldots \times V_5$, and we had $\otimes, \psi$ as
+            universal morphism for $5$-linear functions on $V_1 \times \ldots \times V_5$, and we had $\otimes,
+            \psi$ as
             $2$ and $3$-linear
             universals over $V_1 \times V_2$ and $V_3 \times V_4 \times V_5$ respectively then
             $$
-            \omega: (V_1 \otimes V_2) \times (V_3 \otimes V_4 \otimes V_5) \to (V_1 \otimes V_2) \otimes (V_3 \otimes
+            \omega: (V_1 \otimes V_2) \times (V_3 \otimes V_4 \otimes V_5) \to (V_1 \otimes V_2) \otimes (V_3
+            \otimes
             (V_4 \otimes V_5)) \\
             v_1\ldots v_5 \mapsto (v_1 \otimes v_2) \otimes (v_3 \otimes (v_4 \otimes v_5))
             $$
-            is such a $5$-linear universal. All such $1\leq i\leq j = 5-i$ are valid with the theorem, and all produce
-            $5$-linear universals over $V_1 \ldots V_5)$; the parenthesis placement changes the universal pair only up
+            is such a $5$-linear universal. All such $1\leq i\leq j = 5-i$ are valid with the theorem, and all
+            produce
+            $5$-linear universals over $V_1 \ldots V_5)$; the parenthesis placement changes the universal pair only
+            up
             to unique isomorphism, so all can be removed. Thus $n$-repeated use of $\otimes$ is taken to denote
             $\text{\it
             the}$ (up
@@ -546,14 +598,16 @@
         </div>
 
 
-    </div>
+    </section>
 
-    <div>
+    <section id="multilinear" data-title="The Multilinear Generalization">
         <h2 class="h2 text-2xl my-8">
             The Multilinear Generalization (and a bit of practical exposition)
         </h2>
-        I could end the article here, but there's a consequence of our construction that needs addressing. Let's say you
-        have 5 spaces $V_1 \ldots V_5$ and a universal morphism $\phi$ for $5$-linear maps over their product, something
+        I could end the article here, but there's a consequence of our construction that needs addressing. Let's say
+        you
+        have 5 spaces $V_1 \ldots V_5$ and a universal morphism $\phi$ for $5$-linear maps over their product,
+        something
         like
         $$
         \phi: v_1 \ldots v_5 \mapsto (v_1 \otimes (v_2 \otimes (v_3 \otimes v_4))) \otimes v_5 \\
@@ -563,7 +617,8 @@
         universal spaces over
         $W_{a_i}
         \ldots W_{b_i}$ with universal morphism $p_i = m[W_{a_i} \ldots W_{b_i}]$ and you know that $v_i =
-        p_i(w_{a_i} \ldots w_{b_i})$. After substitution, you ask yourself, "do I get a $c$-linear morphism over the $W$
+        p_i(w_{a_i} \ldots w_{b_i})$. After substitution, you ask yourself, "do I get a $c$-linear morphism over the
+        $W$
         spaces, where $c =
         \sum c_i =
         \sum (b_i - a_i + 1)$?" Let's make this concrete, suppose
@@ -576,13 +631,15 @@
         V_5 &amp;= M[W_{11}, W_{12}]
         \end{align*}
         $$
-        We can absolutely derive the $c$-linear morphism; simply start with the inner parentheses and move outward. We
+        We can absolutely derive the $c$-linear morphism; simply start with the inner parentheses and move outward.
+        We
         know $$
         \begin{align*}
         V_3 \otimes V_4 = M[W_6 \ldots W_{10}]
         \\
         v_3 \otimes v_4 = p_3(w_6, w_7)
-        \otimes p_4(w_8,w_9,w_{10}) \\= m[W_6, W_7](w_6,w_7) \otimes m[W_8,W_9,W_{10}](w_8,w_9,w_{10}) \\ =m[W_6 \ldots
+        \otimes p_4(w_8,w_9,w_{10}) \\= m[W_6, W_7](w_6,w_7) \otimes m[W_8,W_9,W_{10}](w_8,w_9,w_{10}) \\ =m[W_6
+        \ldots
         W_{10}](w_6 \ldots w_{10})
         \end{align*}
         $$ by our theorem, since $\otimes$ is the
@@ -592,7 +649,8 @@
         $$
         \begin{align*}
         V_2 \otimes (V_3 \otimes V_4) = M[W_3,W_4,W_5]
-        \otimes M[W_6 \ldots W_{10}] = M[W_3 \ldots W_{10}] \\ v_2 \otimes (v_3 \otimes v_4) = p_2(w_3,w_4,w_5) \otimes
+        \otimes M[W_6 \ldots W_{10}] = M[W_3 \ldots W_{10}] \\ v_2 \otimes (v_3 \otimes v_4) = p_2(w_3,w_4,w_5)
+        \otimes
         m[W_6 \ldots
         W_{10}](w_6 \ldots w_{10}) \\
         = m[W_3, W_4, W_{5}](w_3,w_4,w_5) \otimes
@@ -605,8 +663,10 @@
 
         $$
         and continuing until we show $p_1(w_1, w_2) \ldots p_5(w_{11}, w_{12}) \mapsto m[W_1 \ldots W_{12}](w_1
-        \ldots w_{12})$ under $\phi$. We would like to not have to execute this procedure to prove similar claims each
-        time. What if instead of $\phi$ being over $V_1 \times \ldots \times V_5$ it was over $V_1 \times \ldots \times
+        \ldots w_{12})$ under $\phi$. We would like to not have to execute this procedure to prove similar claims
+        each
+        time. What if instead of $\phi$ being over $V_1 \times \ldots \times V_5$ it was over $V_1 \times \ldots
+        \times
         V_{200,000,000}$?
 
 
@@ -619,10 +679,12 @@
                 <div class="theorem-title">
                 </div>
                 Mutlilinear universal maps generate multilinear universal maps with degree equal to the sum of the
-                degrees of the component maps. That is, if $$(P_i, p_i) = (M[V_{a_i} \ldots V_{b_i}], m[V_{a_i} \ldots
+                degrees of the component maps. That is, if $$(P_i, p_i) = (M[V_{a_i} \ldots V_{b_i}], m[V_{a_i}
+                \ldots
                 V_{b_i}])$$ are universal
                 pairs for
-                $c_i$-linear maps over $V_{a_i} \ldots V_{b_i}$ for $i = 1 \ldots n$, where $c_i = b_i-a_i+1$, and if
+                $c_i$-linear maps over $V_{a_i} \ldots V_{b_i}$ for $i = 1 \ldots n$, where $c_i = b_i-a_i+1$, and
+                if
                 $$(P, p) = (M[P_1 \ldots P_n], m[P_1 \ldots P_n])$$ is a
                 universal
                 pair for $n$-linear functions over $\prod_{i=1}^n
@@ -636,10 +698,12 @@
                 <div class="proof-title">
                     Proof
                 </div>
-                We proceed by induction on $n$. The base case $n=2$ is given by the previous theorem with $p$ being the
+                We proceed by induction on $n$. The base case $n=2$ is given by the previous theorem with $p$ being
+                the
                 bilinear universal. So
                 suppose the
-                claim holds for $n-1$. Let $t: V_{a_1} \ldots V_{b_n} \to Y$ be an arbitrary $c$-linear function. Define
+                claim holds for $n-1$. Let $t: V_{a_1} \ldots V_{b_n} \to Y$ be an arbitrary $c$-linear function.
+                Define
                 $$
                 t_{v_{a_n} \ldots v_{b_n}}(v_{a_1} \ldots v_{b_{n-1}}) := t(v_{a_1} \ldots v_{b_n})
                 $$
@@ -709,10 +773,11 @@
             w_{j}\right)\right)\right)\right) \otimes
             \left(\bigotimes_{j=a_5}^{b_5} w_{j}\right)
             $$
-            and conclude using the above theorem that the above map is indeed a multilinear universal morphism on the
+            and conclude using the above theorem that the above map is indeed a multilinear universal morphism on
+            the
             arguments.
         </div>
 
-    </div>
+    </section>
 
-</div>
+</section>

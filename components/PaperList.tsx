@@ -15,7 +15,7 @@ export default function PaperList({
     }, {} as Record<string, PaperMeta[]>);
 
     return (
-        <div className="paper-list">
+        <div className="paper-list container">
             {Object.entries(grouped).map(([category, items]) => (
                 <section key={category} className="paper-category-group">
                     <h3 className="category-title">{category}</h3>
