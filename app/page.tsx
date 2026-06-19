@@ -1,14 +1,16 @@
 'use client'
 
-import PaperList from "@/components/PaperList";
+import List from "@/components/List";
 import { papers } from "@/papers/papers";
-import Link from "next/link";
+import { solutions } from "@/data/leetcode/solutions";
 import { useState } from "react";
+
+
 
 export default function Home() {
     const [visible, setVisible] = useState('landing')
     return (
-        <main className="container">
+        <main className="container" >
             {/* HERO SECTION */}
             <section className="hero">
                 <h1>The Contraction</h1>
@@ -18,22 +20,24 @@ export default function Home() {
                 </p>
 
                 <div className="hero-actions">
-                    <Link href="#papers" className="button" onClick={() => {
+                    <button className={"button" + (visible === 'landing' ? '' : ' secondary')} onClick={() => {
                         if (visible !== 'landing') {
                             setVisible('landing');
 
                         }
                     }}>
                         View Papers
-                    </Link>
+                    </button>
 
-                    <Link href="#about" className="button secondary">
+                    <button className={"button" + (visible === 'leetcode' ? '' : ' secondary')} onClick={() => {
+                        setVisible('leetcode')
+                    }}>
                         Leetcode
-                    </Link>
+                    </button>
                 </div>
             </section>
 
-            <section className="landing">
+            <section className='landing' style={{ display: visible === 'landing' ? '' : 'none' }}>
                 {/* INTRO / CONTEXT */}
                 <section className="intro">
                     <h2>About this site</h2>
@@ -50,15 +54,21 @@ export default function Home() {
                         <p>{papers.length} published</p>
                     </div>
 
-                    <PaperList papers={papers} />
+                    <List items={papers} />
                 </section>
 
 
             </section>
 
-            <section className="leetcode">
+            <section className="leetcode" style={{ display: visible === 'leetcode' ? '' : 'none' }}>
+                <div className="section-header">
+                    <h2>All Solutions</h2>
+                    <p>{solutions.length} published</p>
+                </div>
+
+                <List items={solutions} />
 
             </section>
-        </main>
+        </main >
     );
 }

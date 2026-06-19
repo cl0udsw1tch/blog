@@ -35,6 +35,7 @@ body {
 main.container {
     padding: 50px;
 
+
     .hero {
         padding: 5rem 0 3rem;
     }
@@ -82,17 +83,17 @@ main.container {
         margin-bottom: 1rem;
     }
 
-    .paper-category-group {
+    .list-category-group {
         margin-bottom: 2rem;
     }
 
-    .category-title {
+    .list-category-title {
         margin: 1.5rem 0 0.75rem;
         font-size: 1.2rem;
         color: #0f172a;
     }
 
-    .category-list {
+    .list-category-list {
         display: grid;
         gap: 1rem;
     }
@@ -103,12 +104,12 @@ main.container {
         padding: 3rem 0;
     }
 
-    .paper-list {
+    .list {
         display: grid;
         gap: 1rem;
     }
 
-    .paper-card {
+    .list-item-card {
         display: block;
         padding: 1.25rem;
         border: 1px solid #e2e8f0;
@@ -118,7 +119,7 @@ main.container {
         background: white;
     }
 
-    .paper-card:hover {
+    .list-item-card:hover {
         border-color: #94a3b8;
     }
 
@@ -126,7 +127,7 @@ main.container {
 
 }
 
-.paper-meta {
+.meta {
     display: flex;
     gap: 0.5rem;
     font-size: 0.85rem;

@@ -4,14 +4,9 @@ import fs from "fs";
 import path from "path";
 import PageClient from "./PageClient";
 
-export default async function PaperPage({
-    params,
-}: {
-    params: Promise<{ slug: string }>;
-}) {
-    const { slug } = await params;
+export default async function PaperPage({ page }: { page: string }) {
 
-    const paper = papers.find((p) => p.slug === slug);
+    const paper = papers.find((p) => p.slug === page);
 
     if (!paper) {
         notFound();
@@ -47,10 +42,8 @@ export default async function PaperPage({
 
 
     return (
-        <main className="paper">
 
+        <PageClient html={html} paper={paper} />
 
-            <PageClient html={html} paper={paper} />
-        </main>
     );
 }

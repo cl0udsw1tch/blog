@@ -57,7 +57,7 @@ export default function RootLayout({
             <head>
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
             </head>
-            <body className="min-h-full min-w-full w-full h-full flex flex-col justify-between items-center">
+            <body className="min-h-full min-w-full w-full h-full flex flex-col justify-start items-center">
                 <header className="basis-1 grow-0 shrink-0 p-12 pb-0">
                     <Home />
 

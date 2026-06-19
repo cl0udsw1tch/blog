@@ -89,6 +89,7 @@ export function TocTree({ toc, activeId }: Props) {
                                     ?.scrollIntoView({
                                         behavior: "smooth",
                                         block: "start",
+
                                     });
 
                             }}

@@ -1,16 +1,11 @@
-export interface PaperMeta {
-    slug: string;
-    title: string;
-    date: string;
-    category: string;
-    description: string;
-    file: string;
-    type: string;
-}
+import type MetaData from "@/components/MetaData"
+
+export type PaperMeta = MetaData
 
 export const papers: PaperMeta[] = [
     {
         slug: "tensors-II",
+        class: "paper",
         title: "Tensors II: Universality",
         date: "2026-06-17",
         category: "Math",
@@ -20,6 +15,8 @@ export const papers: PaperMeta[] = [
     },
     {
         slug: "tensors-I",
+        class: "paper",
+
         title: "Tensors I: Construction",
         date: "2026-06-10",
         category: "Math",
@@ -30,6 +27,8 @@ export const papers: PaperMeta[] = [
     },
     {
         slug: "backpropogation-using-tensors",
+        class: "paper",
+
         title: "Backpropogation using Tensors",
         date: "2026-06-10",
         category: "Machine Learning",
@@ -40,6 +39,8 @@ export const papers: PaperMeta[] = [
     },
     {
         slug: "SIMPLE-fluid-solver",
+        class: "paper",
+
         title: "A Steady State Incompressible Fluid Flow Solver using the SIMPLE method",
         date: "2026-06-10",
         category: "Engineering",
