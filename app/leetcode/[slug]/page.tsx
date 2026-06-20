@@ -32,22 +32,13 @@ export default async function page({ params }: { params: Promise<{ slug: string 
     return (
 
         <main className="page leetcode">
-            <div className="problem page-content">
-                <aside >
-                    <div className="meta">
-                        <h1>{problem.title}</h1>
+         
 
-                        <div className="problem page-details">
-                            <span>{problem.category}</span> · <span>{problem.date}</span>
-                        </div>
-
-                    </div>
-                </aside>
 
 
                 <CodeClient problem={problem} codeBlock={codeBlock} codeDesc={codeDesc} />
 
-            </div>
+            
 
         </main>
     )
