@@ -18,7 +18,7 @@ export default async function PaperPage({ page }: { page: string }) {
             <main style={{ height: '100%' }}>
                 <h1>{paper.title}</h1>
 
-                <div className="paper-meta">
+                <div className="paper page-meta">
                     <span>{paper.category}</span> · <span>{paper.date}</span>
                 </div>
                 <iframe

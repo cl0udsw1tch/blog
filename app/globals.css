@@ -32,6 +32,20 @@ body {
     padding: 0;
 }
 
+main {
+    min-height: 90vh;
+}
+
+footer {
+    height: 10vh;
+    width: 300px;
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
 main.container {
     padding: 50px;
 
@@ -127,16 +141,35 @@ main.container {
 
 }
 
-.meta {
-    display: flex;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    color: #64748b;
-    margin-bottom: 0.5rem;
+/* .meta { */
+/*     display: flex; */
+/*     gap: 0.5rem; */
+/*     font-size: 0.85rem; */
+/*     color: #64748b; */
+/*     margin-bottom: 0.5rem; */
+/* } */
+
+main.leetcode {
+    pre {
+        background-color: #111111 !important;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        /* Adds a horizontal scrollbar if code is too wide */
+    }
+
+    aside {
+        width: 30vw;
+    }
+
+    article {
+        flex-grow: 1;
+    }
 }
 
 
-main.paper {
+main.page {
 
     width: 100%;
     padding: 2%;
@@ -144,7 +177,7 @@ main.paper {
     margin: 0%;
     display: block;
 
-    .paper-content {
+    .page-content {
         display: flex;
         width: 100%;
         margin-top: 2rem;
@@ -154,11 +187,12 @@ main.paper {
 
         aside {
             height: 100%;
-            flex-grow: 1;
+            flex-grow: 0;
             margin-right: 50px;
             align-self: flex-start;
             flex-shrink: 0;
             position: sticky;
+
 
             top: 0;
 
@@ -168,6 +202,16 @@ main.paper {
                 border-bottom-width: 1px;
                 margin-top: 20px;
                 margin-bottom: 20px;
+
+                .page-details {
+                    display: flex;
+                    gap: 0.5rem;
+                    font-size: 0.85rem;
+                    color: #64748b;
+                    margin-bottom: 0.5rem;
+                }
+
+
 
             }
 
@@ -199,102 +243,104 @@ main.paper {
             overflow-x: hidden;
             height: 100%;
             margin-right: 50px;
-
-            section {
-                scroll-margin-top: 50px;
-            }
-
-
-            .theorem {
-
-                overflow-x: scroll;
-                background-color: #f0f7f9;
-                border-left: 4px solid #d97706;
-                border-radius: 4px;
-                padding: 50px;
-                margin: 20px 0;
-                /* Classic mathematical typography */
-            }
-
-            .theorem-title::before {
-                counter-increment: theorem;
-                content: "Theorem " counter(theorem) " ";
-                font-weight: bold;
-                color: #1e81b0;
-            }
-
-            .theorem-content {
-                margin-top: 8px;
-                margin-bottom: 0;
-                font-style: italic;
-            }
-
-            /* --- Proof Block --- */
-            .proof {
-                overflow-x: scroll;
-                position: relative;
-                background-color: #ffffff;
-                border: 1px solid #e0e0e0;
-                border-left: 4px solid #a9a9a9;
-                border-radius: 4px;
-                padding: 16px 36px 16px 20px;
-                /* Extra right padding for QED symbol */
-                margin: 20px 0;
-
-            }
-
-            .proof-title {
-                font-weight: bold;
-                color: #555555;
-            }
-
-            .proof-content {
-                margin-top: 8px;
-                margin-bottom: 0;
-            }
-
-            /* --- QED (End of Proof) Symbol --- */
-            .qed {
-                position: absolute;
-                bottom: 16px;
-                right: 16px;
-                color: #333333;
-            }
-
-            .corollary {
-                background-color: #fdfaf6;
-                border-left: 4px solid #845ef7;
-                border-radius: 4px;
-                padding: 16px 20px;
-                margin: 20px 0;
-
-                /* Classic mathematical typography */
-            }
-
-            .corollary-title::before {
-                counter-increment: corollary;
-                content: "Corollary " counter(corollary) " ";
-                font-weight: bold;
-                color: #7048e8;
-            }
-
-            .corollary-content {
-                margin-top: 8px;
-                margin-bottom: 0;
-                font-style: italic;
-            }
-
-            .quote {
-                margin: 20px 0;
-                padding: 10px 20px;
-                border-left: 5px solid #007bff;
-                background-color: #f8f9fa;
-                font-style: italic;
-
-            }
-
-
         }
+    }
+}
+
+main.paper article {
+
+    section {
+        scroll-margin-top: 50px;
+    }
+
+
+    .theorem {
+
+        overflow-x: scroll;
+        background-color: #f0f7f9;
+        border-left: 4px solid #d97706;
+        border-radius: 4px;
+        padding: 50px;
+        margin: 20px 0;
+        /* Classic mathematical typography */
+    }
+
+    .theorem-title::before {
+        counter-increment: theorem;
+        content: "Theorem " counter(theorem) " ";
+        font-weight: bold;
+        color: #1e81b0;
+    }
+
+    .theorem-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+        font-style: italic;
+    }
+
+    /* --- Proof Block --- */
+    .proof {
+        overflow-x: scroll;
+        position: relative;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-left: 4px solid #a9a9a9;
+        border-radius: 4px;
+        padding: 16px 36px 16px 20px;
+        /* Extra right padding for QED symbol */
+        margin: 20px 0;
 
     }
+
+    .proof-title {
+        font-weight: bold;
+        color: #555555;
+    }
+
+    .proof-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+    }
+
+    /* --- QED (End of Proof) Symbol --- */
+    .qed {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        color: #333333;
+    }
+
+    .corollary {
+        background-color: #fdfaf6;
+        border-left: 4px solid #845ef7;
+        border-radius: 4px;
+        padding: 16px 20px;
+        margin: 20px 0;
+
+        /* Classic mathematical typography */
+    }
+
+    .corollary-title::before {
+        counter-increment: corollary;
+        content: "Corollary " counter(corollary) " ";
+        font-weight: bold;
+        color: #7048e8;
+    }
+
+    .corollary-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+        font-style: italic;
+    }
+
+    .quote {
+        margin: 20px 0;
+        padding: 10px 20px;
+        border-left: 5px solid #007bff;
+        background-color: #f8f9fa;
+        font-style: italic;
+
+    }
+
+
 }

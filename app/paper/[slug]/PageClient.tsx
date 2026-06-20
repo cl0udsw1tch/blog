@@ -86,12 +86,12 @@ export default function PageClient({ html, paper }: { html: string, paper: Paper
 
     console.log(activeId)
     return (
-        <div className="paper-content" >
+        <div className="paper page-content" >
             <aside >
                 <div className="meta">
                     <h1>{paper.title}</h1>
 
-                    <div className="paper-meta">
+                    <div className="paper page-details">
                         <span>{paper.category}</span> · <span>{paper.date}</span>
                     </div>
 

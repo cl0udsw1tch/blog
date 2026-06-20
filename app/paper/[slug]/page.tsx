@@ -8,7 +8,7 @@ export default async function page({
     const { slug } = await params;
 
     return (
-        <main className="paper">
+        <main className="page paper">
             <PaperPage page={slug} />
         </main>
     )

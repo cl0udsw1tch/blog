@@ -1,16 +1,19 @@
 import { solutions } from "@/data/leetcode/solutions"
 import { notFound } from "next/navigation"
-import { readFileSync } from "fs"
+import { readdirSync, readFileSync } from "fs"
 import path from "path"
 import { cwd } from "process"
-import { NextURL } from "next/dist/server/web/next-url"
+
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url"
+import CodeClient from "./CodeClient"
+
+
+
 
 
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
     const problem = solutions.find(p => {
-        console.log(p.slug, decodeURIComponent(slug))
         return (p.class === 'leetcode' && p.slug === decodeURIComponent(slug))
     })
 
@@ -18,16 +21,34 @@ export default async function page({ params }: { params: Promise<{ slug: string 
         notFound();
     }
 
-    const codeBlock = readFileSync(path.join(cwd(), 'data', 'leetcode', problem.file), 'utf8')
+    const folder = path.join(cwd(), 'data', 'leetcode', 'submissions', problem.title)
+
+
+    const codeDesc = readFileSync(path.join(folder, problem.file), 'utf8')
+    const files = readdirSync(folder)
+    const codeBlock = readFileSync(path.join(folder, files.filter(f => f.endsWith(problem.type))[0]), 'utf8')
 
 
     return (
 
-        <main className="leetcode">
-            <h1 className="text-4xl">Problem: {problem.title}</h1>
-            <code className="font-mono w-0.5">
-                {codeBlock}
-            </code>
+        <main className="page leetcode">
+            <div className="problem page-content">
+                <aside >
+                    <div className="meta">
+                        <h1>{problem.title}</h1>
+
+                        <div className="problem page-details">
+                            <span>{problem.category}</span> · <span>{problem.date}</span>
+                        </div>
+
+                    </div>
+                </aside>
+
+
+                <CodeClient problem={problem} codeBlock={codeBlock} codeDesc={codeDesc} />
+
+            </div>
+
         </main>
     )
 }

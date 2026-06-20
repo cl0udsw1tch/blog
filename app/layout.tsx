@@ -6,6 +6,9 @@ import Home from "@/components/home";
 import { Inter } from 'next/font/google'
 import { Playfair_Display } from "next/font/google";
 import { Open_Sans, Lato } from "next/font/google";
+import "prismjs/themes/prism-tomorrow.css";
+
+
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -57,7 +60,7 @@ export default function RootLayout({
             <head>
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
             </head>
-            <body className="min-h-full min-w-full w-full h-full flex flex-col justify-start items-center">
+            <body className="min-h-full min-w-full flex flex-col justify-start items-center">
                 <header className="basis-1 grow-0 shrink-0 p-12 pb-0">
                     <Home />
 
@@ -65,7 +68,7 @@ export default function RootLayout({
 
                 {children}
 
-                <footer className="bg-black text-white p-5 pl-10 basis-[10%] grow-0 shrink-0 font-mono" style={{ minHeight: '100px', width: "100%" }}>
+                <footer className="bg-black text-white p-5 pl-10 font-mono" >
                     <a href={'https://nureinumeya.vercel.app'}>About me</a>
                     <span> | </span>
                     <Link href={'mailto:nurein.umeya@alumni.utoronto.ca'}>Contact</Link>
