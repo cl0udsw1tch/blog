@@ -49,7 +49,6 @@ footer {
 main.container {
   padding: 50px;
 
-
   .hero {
     padding: 5rem 0 3rem;
   }
@@ -131,12 +130,28 @@ main.container {
     text-decoration: none;
     color: inherit;
     background: white;
+
+    .list-item-meta {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 0.5rem;
+
+    }
   }
 
   .list-item-card:hover {
     border-color: #94a3b8;
   }
 
+
+  &>section.leetcode {
+
+    .list-item-desc {
+      color: #566756
+    }
+  }
 
 
 }
@@ -196,8 +211,6 @@ main.page {
           color: #64748b;
           margin-bottom: 0.5rem;
         }
-
-
 
       }
 
