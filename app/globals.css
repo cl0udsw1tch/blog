@@ -164,7 +164,7 @@ main.page {
     display: flex;
     width: 100%;
     margin-top: 2rem;
-    padding: 5%;
+    padding: 2%;
     line-height: 1.7;
     counter-reset: theorem corollary;
     font-family: var(--font-playfair);
