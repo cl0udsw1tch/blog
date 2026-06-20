@@ -164,6 +164,7 @@ main.page {
     display: flex;
     width: 100%;
     margin-top: 2rem;
+    padding: 5%;
     line-height: 1.7;
     counter-reset: theorem corollary;
     font-family: var(--font-playfair);
@@ -226,7 +227,7 @@ main.page {
       flex-shrink: 1;
       overflow-x: hidden;
       height: 100%;
-      margin-right: 50px;
+
     }
   }
 }
@@ -347,12 +348,14 @@ main.leetcode {
 
   .page-content {
     height: 100%;
+
   }
 
   aside {
     width: 30vw;
     max-height: 75vw;
     overflow-y: scroll;
+    margin-right: 5%;
 
     .codeDesc {
 
