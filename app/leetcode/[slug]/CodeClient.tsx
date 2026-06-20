@@ -6,7 +6,6 @@ import 'prismjs/themes/prism-dark.css'
 import { LeetCodeData } from '@/data/leetcode/solutions';
 
 
-import Markdown from 'react-markdown';
 
 
 const ext2lang: { [key: string]: string } = {
