@@ -14,8 +14,7 @@
         "prism-themes": "^1.9.0",
         "prismjs": "^1.30.0",
         "react": "19.2.4",
-        "react-dom": "19.2.4",
-        "react-markdown": "^10.1.0"
+        "react-dom": "19.2.4"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4",
@@ -26,6 +25,7 @@
         "concurrently": "^9.2.1",
         "eslint": "^9",
         "eslint-config-next": "16.2.4",
+        "pnpm": "^11.8.0",
         "rehype-document": "^7.0.3",
         "rehype-easytex": "1.0.1",
         "rehype-katex": "^7.0.1",
