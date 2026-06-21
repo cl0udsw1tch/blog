@@ -1,1619 +1,1864 @@
-<h1 class="text-5xl my-20" style="text-align:center; font-family: var(--font-playfair);">Tensorial
-    Formulation of
-    Backpropagation</h1>
+<section id="tensor-backprop" data-title="Tensorial Formulation of Backpropogation">
+    <h1 class="text-5xl my-20" style="text-align:center; font-family: var(--font-playfair);">Tensorial
+        Formulation of
+        Backpropagation</h1>
 
-<p>The matrix formulation of both feed-foward neural networks and convolutional neural networks (and other networks as
-    well, for example, transformers) is inspired by the linear relationship between the parameters of the network.
-    However,
-    when the dimensions of the space the parameters live in begins to grow, and so do the relationships between
-    parameters,
-    matrices become an inappropriate tool to mathematically describe the model and a rather clumsy tool to describe the
-    backpropogation algorithm, so here, tensors are chosen instead.
-</p>
-
-<h2 class="text-3xl my-8" style="font-family: var(--font-playfair);"> 1. Feed Forward Neural Networks
-</h2>
-
-
-We will call a neural network a layered model that produces features of samples in a "linear" way, by using
-parameters
-and the sample features at previous layers and then applying a non-linear transform. Define the following:
-<ul style="list-style: disc;">
-    <li>
-        Dataset: $$\mathcal{D} = \{(\{\bar{x}^{i,j}\}_{j \in J}, \bar{v}^i)\}_{i \in I} $$ for some index set $I$, where
-        $x^{i,j}
-        \in
-        \mathbb{R}^n$ is the jth feature of sample $i$ and $v^i \in \mathbb{R}$ is its label
-
-    </li>
-    <li>
-        The $j$th feature of the $i$th sample produced at hidden layer $l-1$, feeding into hidden
-        layer
-        $l$.
-        $$(y_{l})^{i,j}$$
-
-    </li>
-</ul>
-Suppose now we have $(y_{l-1})^{i,j}$ for every $j$ in some index set $\mathcal{V}_{l-1}$. We aim to produce [one
-of]
-the next features $(y_{l})^{i,k}$ for the same sample $i$; namely feature number $k \in \mathcal{V}_l$ not
-necessarily
-equal to $j$. The feed-forward neural network (FFN) achieves this in two steps:
-<div class="border-2 bg-emerald-100 p-10 my-4 rounded-md">
-
-    <ol type="1" style="list-style-type: decimal; list-style-position: outside; padding-left: 0px;">
-        <li>
-            We take a set of <span class="italic font-bold">parameters</span> $\{(W_l)^{j,k} \in \mathbb{R}\}_{j \in
-            \mathcal{V}_{l-1}} \cup \{(b_l)^k\}$ - we may also call
-            these <span class="italic font-bold">weights and biases</span> - and multiply each to the respective $j$th
-            feature of
-            the $i$th sample at layer $l-1$,
-            before
-            summing. That is, we produce
-            $$
-            \begin{equation}
-            (z_l)^{i,k} = \sum_{j \in \mathcal{V}_{l-1}}(y_{l-1})^{i,j} (W_l)^{j,k} + (b_l)^k
-            \end{equation}
-            $$
-            a "preimage" of the $k$th feature of the $i$th sample at layer $l$. Just the preimage thus far, since at
-            step
-            2...
+    <section id="into" data-title="Introduction">
+        <p>The matrix formulation of both feed-foward neural networks and convolutional neural networks (and other
+            networks
+            as
+            well, for example, transformers) is inspired by the linear relationship between the parameters of the
+            network.
+            However,
+            when the dimensions of the space the parameters live in begins to grow, and so do the relationships between
+            parameters,
+            matrices become an inappropriate tool to mathematically describe the model and a rather clumsy tool to
+            describe
+            the
+            backpropogation algorithm, so here, tensors are chosen instead.
+        </p>
 
 
-        </li>
-        <li>
-            a <span class="italic font-bold">smooth, nonlinear transform</span> from $C^{\infty}(\mathbb{R},
-            \mathbb{R})$ is
-            henceforth applied:
-            $$
-            \begin{equation}
-            (y_l)^{i,k} = f_l((z_l)^{i,k})
-            \end{equation}
-            $$
-            producing the desired feature.
+    </section>
+
+    <section id="FFN" data-title="1. Feed Forward Neural Networks">
+
+        <h2 class="text-3xl my-8" style="font-family: var(--font-playfair);"> 1. Feed Forward Neural Networks
+        </h2>
 
 
-        </li>
-    </ol>
-
-</div>
-
-<h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Tensors</h3>
-
-It is at this point we will specify important details needed to understand the rest of the article. Firstly, we will use
-<span class="italic">Einstein's Summation Convention</span> (ESC) to simplify sums with a repeated index, signifying the
-summation of the terms
-over said index. For example, we can rewrite (1) as
-$$
-\begin{equation}
-(z_l)^{i,k} = (y_{l-1})^{i,j} (W_l)^{j,k} + b^k
-\end{equation}
-$$
-where the sum is meant to be over $j$, which repeats, and where all terms are zero outside of their domains. This too
-deserves formalization. Firstly, let's consider $(y_l)$ as a well defined object, namely, a <span
-    class="italic font-bold">tensor</span> over infinite
-dimensional vector spaces, but with <span class="italic">finite support</span>. Let's clarify, since the $(y_l)^{a,b}$
-objects encompass $\mathcal{V}_l$ features
-for $n$ samples, lets define
-$$
-\begin{align}
-\bar{\bf x} &amp;= \sum_{i,j} x^{i,j} e_i \otimes e_j \in \mathbb{R}^{\mathbb{Z}} \otimes \mathbb{R}^{\mathbb{Z}} \\
-\bar{\bm{v}} &amp;= \sum_i v^i e_i \in \mathbb{R}^{\mathbb{Z}}\\
-y_l &amp;= \sum_{i,k} (y_l)^{i,k} e_i \otimes e_k \in \mathbb{R}^{\mathbb{Z}} \otimes \mathbb{R}^{\mathbb{Z}} \\
-W_l &amp;= \sum_{j,k} (W_l)^{j,k} e_j \otimes e_k \in \mathbb{R}^{\mathbb{Z}} \otimes \mathbb{R}^{\mathbb{Z}} \\
-b_l &amp;= \sum_{i,k} (b_l)^{k} e_k \in \mathbb{R}^{\mathbb{Z}}
-\end{align}
-$$
-
-
-<div class="border-2 p-2 m-2 bg-emerald-100 rounded-md">
-
-    Throughout the article, $\mathbb{V} = \mathbb{R}^{\mathbb{Z}}$ and $\mathbb{V}^{\otimes 2} = \mathbb{V} \otimes
-    \mathbb{V} $ so $b_l, \bar{\bm{v}} \in \mathbb{V}$ and $\bar{\bf x}, y_l,W_l,z_l\in \mathbb{V}^{\otimes 2}$.
-</div>
-We will also make use of <span class="italic">Abstract Index Notation </span> (AIN), which is particularly useful when
-representing the <span class="italic">shape</span> of
-a tensor. For example, we could write $(y_l)^{ab}$ to denote that $y_l \in V \otimes V$, or
-for a more general example
-$$
-T^{ab}{}_{c}{}^{d}{}_{e}
-$$
-to denote a tensor $T \in V \otimes V \otimes V^* \otimes V \otimes V^*$.
-<br />
-We proceed from the
-tensorized version of (1)
-$$
-\begin{align}
-(z_l)^{i,k} e_i \otimes e_k &amp;= ((y_{l-1})^{i,j} (W_l)^{j,k} + (b_l)^{i,k} ) e_i \otimes e_k \\
-\implies z_l &amp;= \sum_{i,j,k} (y_{l-1})^{i,j} (W_l)^{j,k} e_i \otimes e_k + \sum_{i,k} (b_l)^{k} e_i \otimes e_k
-\in
-V
-\otimes V
-\end{align}
-$$
-We also need to transform the $\mathbb{R} \to \mathbb{R}$ transform into
-a $\Bbb{V}^{\otimes 2} \to \Bbb{V}^{\otimes 2}$ transform that acts on tensors, by defining
-$$
-\begin{equation}
-y_l = F_l(z_l) = \sum_{i,k} f_l((z_l)^{i,k}) e_i \otimes e_k
-\end{equation}
-$$
-<h3 class="text-2xl" style="font-family: var(--font-playfair);">Contraction, Inner Products, Metric Tensors</h3>
-<br />
-The issue thus far is that we want to speak in a language of tensors and yet are using the
-coefficients of the layer features and parameters. Using
-basic linear algebra, one realizes that $z_l$ can be formulated as a matrix product, where the inner product is over the
-space indexed by $j$. Using <span class="italic">tensors</span> however, we see it as the image of the metric tensor,
-or, if one of the $j$ were lowered, as a contraction. Before jumping in, we need to agree on contraction notation; in
-(AIN) this is straighforward:
-
-<div class="bg-cyan-100 border-2 m-2 p-2 rounded-md">
-    Let $S^{\ldots a \ldots}_{\ldots b \ldots} = S^{\ldots i \ldots}_{\ldots j \ldots} \ldots \otimes e_{i} \otimes
-    \ldots \otimes e^j \otimes \ldots$ be arbitrary. Contraction along slots $a,b$ is defined as
-    $$
-    S^{\ldots i \ldots}_{\ldots j \ldots} e^j(e_i)\ldots \otimes \ldots \otimes \ldots =:S^{\ldots a \ldots}_{\ldots a
-    \ldots}
-    $$
-    In the case where $e^j(e_i) = \delta_{ij}$:
-    $$
-    S^{\ldots a \ldots}_{\ldots a
-    \ldots} = S^{\ldots i \ldots}_{\ldots i \ldots} \ldots \otimes \ldots \otimes \ldots
-
-    $$
-
-
-</div>
-If it had been the case that our tensors were of mixed $(1,1)$ rank, we could write
-$$
-\begin{equation}
-(z_l)^a{}_c = (y_{l-1})^a{}_b (W_l)^b{}_c + (b_l)^a{}_c
-\end{equation}
-$$
-
-Unfortunately our tensors arent of rank $(1,1)$ so
-the operation we're looking for is the inner-product, or, contraction against a metric tensor. We should talk briefly
-about the metric tensor $g_{ab}$ and the inverse metric tensor $ {g}^{ab}$.
-$\Bbb{V}$ has the canonical orthonormal basis $\{e_i \}$, and is endowed with the canonical inner
-product $\langle e_i , e_j \rangle = \delta_{ij}$. Such an inner product admits a dual
-basis for $\Bbb{V}^*$ defined by $\{e^i = \langle \cdot, e_i \rangle\} $.
-The metric tensors are then given by agreement with the inner products
-$$\begin{align} g_{ab} = g_{i,j} e^i \otimes e^j =
-\delta_{ij} e^i \otimes e^j \\
-{g}^{ab} = g^{i,j} e_i \otimes e_j = \delta_{ij} e_i \otimes e_j \end{align}$$
-
-Now we can define what it means to contract against the metric $g$
-<div class="bg-cyan-100 border-2 m-2 rounded-md">
-    $$
-    g_{ab} S^{\ldots a \ldots}_{\ldots \phantom{x} \ldots} T^{\ldots b \ldots}_{\ldots \phantom{x} \ldots} = S^{\ldots
-    \phantom{x}
-    \ldots}_{\ldots a
-    \ldots}T^{\ldots a \ldots}_{\ldots \phantom{x}
-    \ldots} \\
-    g^{ab} S_{\ldots a \ldots}^{\ldots \phantom{x} \ldots} T_{\ldots b \ldots}^{\ldots \phantom{x} \ldots} = S_{\ldots
-    \phantom{x} \ldots}^{\ldots a
-    \ldots}T_{\ldots a \ldots}^{\ldots \phantom{x} \ldots}
-    $$
-</div>
-
-
-Now we can find a suitable tensorial representation for $z$: <div>
-    $$
-    z_l = (y_{l-1})^{i,j}(W_l)^{j,k}e_i \otimes e_k + (b_l)^{k} e_i \otimes e_k= g_{bc}(y_{l-1})^{ab}(W_l)^{cd} +
-    \sum_i e_i \otimes b_l
-    $$
-</div>
-
-
-<h3 class="text-2xl mt-8 mb-8" style="font-family: var(--font-playfair);">The Model </h3>
-<p>
-    We now formalize the FNN model $\mathcal{F}$ completely.
-
-<div class="bg-emerald-100 border-2 px-8 py-6 rounded-md">
-    <ul style="list-style: disc">
-        <li>
-            We will call a <span class="font-bold">layer</span> $l=1...L$ the function $$y_{l-1} \mapsto
-            \mathcal{L}_l(y_{l-1}
-            ; W_l, b_l) = F_l \circ
-            \Gamma_l(y_{l-1}, W_l, b_l)$$ where
-            $$
-            \begin{equation}
-            \Gamma_{l}(S,T,U) = g_{bc}S^{ab}T^{cd}+ \sum_i e_i \otimes U
-            \end{equation}
-            $$
-            We will call the <span class="font-bold">neuron</span> $k$ at layer $l$ the function $$
-            y_{l-1} \mapsto \mathcal{N}_{l,k}(y_{l-1} ; (W_l)^{j,k}
-            e_j , (b_l)^k) = F_l \circ \gamma_{l}(y_{l-1}, (W_l)^{j,k}
-            e_j, (b_l)^k)
-            $$ where
-            $$
-            \gamma_{l}(S,T, u) =
-            g_{bc}S^{ab}T^{c}+ u \sum_i e_i
-            $$
-            Note that
-            $$
-            \mathcal{N}_{l,k}(y_{l-1} ; (W_l)^{j,k}
-            e_j , (b_l)^k) \otimes e_k = \mathcal{L}_l(y_{l-1}; W_l, b_l)
-            $$
-            that is, a layer is a sum of neurons.
-        </li>
-        <li>
-            First we start with the <span class="font-bold">input layer </span>, $\mathcal{L}_0$. We define
-            $$y_0 := x $$
-            for any sample $x \in V \otimes V$
-            and define $\mathcal{L}_0$ by $x \mapsto y_0$, so $\mathcal{L}_0$ is the
-            identity. It's not
-            strictly a <span class="italic">computational</span> layer like defined earlier,
-            however some folks like to speak of an input layer, which refers to this.
-        </li>
-        <li>
-            The <span class="font-bold">hidden</span> layers are $\{\mathcal{L}_l\}_{ l=1\dots L}$
-        </li>
-        <li>
-            The <span class="font-bold">output</span> layer is $$y_L \mapsto \mathcal{L}_{L+1}(y_L; W_{L+1}, b_{L+1}) =
-            F_{L+1} \circ \Gamma(y_{L}, W_{L+1}, b_{L+1})$$ where $F_{L+1}$ is called the activation function.
-        </li>
-        <li>
-            The <span class="font-bold">model</span> $\mathcal{F}$ is defined by
-            $$ \mathcal{F}(x ; \theta) = \mathcal{L}_{L+1}(\cdot ; W_{L+1},b_{L+1}) \circ \ldots \circ
-            \mathcal{L}_{1}(\cdot ;
-            W_{1}, b_1)
-            \circ \mathcal{L_0} (x) $$ where $$\theta = W_1,b_1 \ldots W_{L+1},b_{L+1} $$ are the parameters of the
-            model.</li>
-
-    </ul>
-</div>
-<h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss, Empirical Risk</h3>
-
-<div>
-    We have so far the ability to compute the output of our parameterized model $y_{L+1} = \mathcal{F}(x;\theta)$.
-    <br />
-    <br />
-    Let $X,Y$
-    be the random variables for input features and labels, over the spaces $\mathcal{X}, \mathcal{Y} $.
-    Let $$X,Y \sim \mathcal{P}(X,Y) $$ with pdf $p_{X,Y}(x,y)$. Let $X_i,Y_i$ be the ith feature and label random
-    variables,
-    and assume
-    $$X_i, Y_i \sim_{i.i.d} \mathcal{P}(X,Y)$$
-    Define
-    a
-    <span class="font-bold">loss function</span> $\mathbb{R} \times \mathbb{V} \to \mathbb{R}:$
-    $$ w, \hat{w} \mapsto \Delta(w, \hat{w}) $$
-
-    Define
-    $$
-    \begin{align*}
-    T^{[i]} &amp;= \sum_{\alpha} T^{i,\alpha} e_i \otimes e_{\alpha} \\
-    T^{\rangle i \langle} &amp;= \sum_{\alpha} T^{i,\alpha} e_{\alpha} \\
-    T^{\langle i \rangle}& = \sum_{\alpha} T^{\alpha} e_i \otimes e_{\alpha} = e_i \otimes T
-    \end{align*}
-    $$
-    For a batch model $h$ (one defined over $\mathbb{V}^{\otimes 2}$ like ours), the <span
-        class="font-bold italic">loss</span> at a
-    point $(x,y) \in \mathbb{V} \times \mathbb{R}$ is
-    $$
-    l(x, y,h) = \Delta(y, h(x^{\langle \mu \rangle})^{\rangle \mu \langle})
-    $$
-    The <span class="font-bold">risk</span> is the expected value of the loss over $\mathcal{X} \times \mathcal{Y}$
-    $$
-    R(h) = \mathbb{E}_{X,Y}(l(x,y,h)) = \int l(x,y,h) p_{X,Y}(x,y) dxdy
-    $$ which is intractable, so the <span class="font-bold">empirical risk</span> over a sample $\bm{d}=(
-    \bm{x},
-    \bm{y})$
-    is used instead, which, as data size
-    grows, converges to the risk by the LLN:
-    $$
-    \begin{equation}
-    \hat{R}(\bm{d}, h) = \frac{1}{I}\sum_i l(x_i,y_i,h)
-    \to
-    \mathbb{E}_{X,Y}(l(x,y,h))
-
-    \end{equation}
-    $$as $I\to\infty$.
-    <span class="font-bold">Empirical Risk Minimization</span> chooses a model space $\mathcal{H}$ and finds
-    $$
-    \argmin_{h \in \mathcal{H}}\hat{R}(\bm{d}, h)$$
-</div>
-<div class="my-10 py-5 border-y-1 border-y-emerald-400">
-    For our purposes, $\mathcal{X}=\Bbb{V}, \mathcal{Y}=\Bbb{R}$.
-    Our loss is defined as
-
-    $$
-    l(\bm{x}, v, \mathcal{F}(\cdot; \theta)) = \Delta(v, \mathcal{F}(\bm{x}^{\langle \mu \rangle}; \theta)^{\rangle \mu
-    \langle})
-    $$
-    and for a sample ${\bf d} = ({\bf x}, \bm{v})$
-    $$
-    \hat{R}({\bf d}, \mathcal{F}(\cdot; \theta)) = \frac{1}{I}\sum_i l({\bf x}^{\rangle i \langle}, v^i,
-    \mathcal{F}(\cdot;
-    \theta))
-    \to \Bbb{E}_{X, Y}(l(\bm{x}, v, \mathcal{F}(\cdot; \theta)))
-    $$
-</div>
-
-So given our sample $\bar{\bf{d}} =
-(\bar{\bf x}, \bar{\bm{v}})$ we find
-$$
-\argmin_{\theta} \hat{R}(\bar{\bf d}, \mathcal{F}(\cdot ; \theta)) = \argmin_{\theta}\frac{1}{I}\sum_i l(\bar{\bf
-x}^{\rangle i \langle},\bar{v}^i, \mathcal{F}(\cdot; \theta)) \\
-= \argmin_{\theta}\frac{1}{I}\sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{\bf x}^{\rangle i \langle \langle i \rangle};
-\theta)^{\rangle i \langle })
-= \argmin_{\theta}\frac{1}{I}\sum_i\Delta(\bar{v}^i,
-\mathcal{F}(\bar{\bf x}^{[i]}
-;
-\theta)^{\rangle i \langle} )
-$$
-
-<h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss Function, Activation Functions</h3>
-We will need a way to choose the loss function $\Delta$. While we could make an arbitrary choice, we could also use
-<span class="font-bold"> Maximum Likelihood Estimation </span>(MLE) to derive it.
-
-Let $$\mathscr{P}=\{\mathcal{P}(X,Y; \theta) : p_{X,Y}(x,y;\theta) =
-p_{Y|X}(y|x;\theta)p_X(x) = p_0(y;\mathcal{F}(x^{\langle \mu \rangle};\theta)^{\rangle \mu \langle})p_X(x) \}_{\theta
-\in \Theta
-}$$ and assume
-$$X,Y \sim
-\mathcal{P}(X, Y; {\theta}) \in \mathscr{P} $$
-with density
-$p_{X,Y}(x,y;\theta) = p_0(y;\mathcal{F}(x;\theta))p_X(x)$ for some $\theta$.
-The sample distribution for the random vector ${\bf D}= ({\bf X}, {\bf Y})$ is then given by the density
-$$
-p_{{\bf D}}(\bm{d};\theta)=_{i.i.d} \prod_i p(x_i, y_i;\theta) = \prod_i
-p_0(y_i;\mathcal{F}(x_i^{\langle \mu \rangle};\theta)^{\rangle \mu \langle})p_X(x_i)$$
-
-
-<div class="my-10 py-5 border-y-1 border-y-emerald-400">
-
-    With our $\mathcal{X} = \Bbb{V}, \mathcal{Y} = \Bbb{R}$ and ${\bf d} = {\bf x}, \bm{y}$
-    $$
-    p_{\bf D} ({\bf d}; \theta)= \prod_i
-    p_0(y_i;\mathcal{F}({\bf x}^{[i]};\theta)^{\rangle i \langle})p_X({\bf x}^{\rangle i \langle})
-    $$
-</div>
-The likelihood is
-$$
-\mathbb{L}(\theta; {\bf \bar{d}}) = p_{\bf D}({\bf \bar{\bf d}}; \theta) = \prod_i
-p_0(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]};\theta)^{\rangle i \langle})p_X(\bar{\bf x}^{\rangle i \langle})
-
-$$
-Taking the negative log gives
-$$
--\log(\mathbb{L}(\theta; {\bf \bar{d}})) = -\sum_i \log(p_X(\bar{\bf x}^{\rangle i \langle})) - \sum_i
-\log(p_0(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]};
-\theta)^{\rangle i \langle}))
-$$
-which we want minimized over $\theta$.
-To do so, we need only find
-$$
-
-\begin{equation}
-\argmin_{\theta}\left(- \sum_i \log(p_0(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]}; \theta)^{\rangle i \langle}))\right)
-\end{equation}
-$$
-If we set $$\Delta(a, b) := -\log(p_0(a;b)) $$
-
-we then have
-$$ \argmin_{\theta}\left(\sum_i \Delta(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]}; \theta)^{\rangle i
-\langle})\right) = \argmin_{\theta}\left(\sum_i l(\bar{\bf x}^{\rangle i \langle}, \bar{v}^i, \mathcal{F}(\cdot;\theta))
-\right)
-\\
-
-=\argmin_{\theta} I \hat{R}({\bf \bar{d}},\mathcal{F}(\cdot; \theta)) =\argmin_{\theta}
-\hat{R}(\bar{\bf d},\mathcal{F}(\cdot; \theta))$$
-
-
-
-so maximizing the likelihood assuming class $\mathscr{P}$ will also minimize the empirical risk with this loss. By our
-assumption on the data and $\mathscr{P}$,
-$$(Y|X=\bm{x}) \sim \mathcal{P}(Y|X=\bm{x}; \theta) $$ with
-$$p_{Y|X=\bm{x}}(y|\bm{x};\theta)=p_0(y;\mathcal{F}(\bm{x}^{\rangle
-\mu
-\langle};\theta)^{\langle \mu \rangle})$$
-$$\implies (Y|X=\bm{x}) \sim \mathcal{P}_0(Y;\mathcal{F}(\bm{x}^{\rangle \mu \langle};\theta)^{\langle \mu \rangle})$$
-
-for some apriori chosen $\mathcal{P}_0$ with density $p_0$. We now investigate
-suitable choices for
-$\mathcal{P}_0$ by the nature of the random variable $(Y|X=\bm{x})$:
-<ul style="list-style: disc; margin-top: 10px;">
-    <li class="bg-blue-100 border-2 m-2 p-5 rounded-md">
-        If $(Y|X=\bm{x}) \in \{0,1\}$ in the case of a binary learning task, then $$\mathcal{P}_0(Y;\hat{y})
-        =
-        \textbf{Bernoulli}(Y;\hat{y})$$ where $\hat{y} =
-        \mathcal{F}(\bm{x}^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$,
-        is a suitable choice (although actually derived from the axioms
-        of probability) with
-        $$p_0(y;\hat{y}) =
-        \hat{y}^y(1-\hat{y})^{1-y} $$
-        $$\implies \Delta(v, \hat{y})= -\log(p_0(v, \hat{y})) = -\left(v\log(\hat{y}) +
-        (1-v)\log(1-\hat{y})\right) $$ that is, the <span class="font-bold">Binary Cross Entropy</span> (BCE) loss. Such
-        a
-        loss demands our tensor output $\hat{\bm y} =\mathcal{F}({\bf x}; \theta)$ for a sample ${\bf x}$ obey
-        certain properties:
-        <ol style="list-style: lower-latin; margin: 10px;">
+        We will call a neural network a layered model that produces features of samples in a "linear" way, by using
+        parameters
+        and the sample features at previous layers and then applying a non-linear transform. Define the following:
+        <ul style="list-style: disc;">
             <li>
-                $\hat{\bm y} \in \mathbb{V}$
-            </li>
-            <li>
-                $\hat{y}^{i} \in [0,1]$
-            </li>
-        </ol>
-        so that $\Delta$ is well defined, by using $\hat{\bm y}^{\rangle i \langle}$ in place of $\hat{y}$ for each
-        $i$ in the sample. To
-        satisfy (b) we
-        choose
-        the activation
-        $f_{L+1}$ to be the <span class="font-bold">sigmoid</span>
-        activation
-        $$
-        f_{L+1}: \mathbb{R} \to \mathbb{R} = z \mapsto \frac{1}{1+e^{-z}}
-        $$
-        To satisfy (a),
-        $$
-        W_{L+1} \in \mathbb{V}
-        $$
-        is required.
-    </li>
-    <li class="bg-blue-100 border-2 m-2 p-5 rounded-md">
-        If $(Y|X=\bm{x}) \in S \subset \mathbb{Z} : \lvert S \rvert &lt; \infty$ more broadly, in the case of
-        categorical
-        learning, then $$ \mathcal{P}_0(Y;{\hat{\bm y}})=\textbf{Categorical}(Y;{\hat{\bm y}}) $$ where ${\hat{\bm
-        y}}=\mathcal{F}(\bm{x}^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$, is a suitable choice (although
-        actually derived from the axioms of probability) with $$p_0(y;{\hat{\bm y}})=\prod_c (\bm{\it
-        \hat{y}}^c)^{[y=c]}$$ $$\implies \Delta(v, {\hat{\bm y}})=-\log(p_0(v, {\hat{\bm y}}))=-\sum_c
-        [v=c]\log(\hat{y}^c) $$ that is, the <span class="font-bold">
-            Categorical Cross Entropy</span> (CCE) loss.
-        Such a
-        loss demands our output $\hat{\bf y}=\mathcal{F}({\bf x}, \theta)$ obey certain properties:
-
-        <ol style="list-style: lower-latin; margin: 10px;">
-            <li>
-                $
-                \text{supp}^{b}(\hat{\bf y}^{ab}) \subset \{e_c\}_{c\leq C} (\implies
-                \text{supp}^b((z_{L+1})^{ab})
-                \subset
-                \{e_c\}_{c\leq
-                C})
-                $
+                Dataset: $$\mathcal{D} = \{(\{\bar{x}^{i,j}\}_{j \in J}, \bar{v}^i)\}_{i \in I} $$ for some index set
+                $I$,
+                where
+                $x^{i,j}
+                \in
+                \mathbb{R}^n$ is the jth feature of sample $i$ and $v^i \in \mathbb{R}$ is its label
 
             </li>
             <li>
-                $\hat{y}^{i,c} \in [0,1], \sum_c \hat{y}^{i,c} = 1$
-            </li>
-        </ol>
-        so that $\Delta$ is well defined by using $\hat{\bf y}^{\rangle i \langle}$ in place of $\hat{\bm y}$.
-        To satisfy (b) we
-        choose
-        the activation
-        $F_{L+1}$ to be the <span class="font-bold">softmax</span>
-        activation, a type of tensor activation:
-        $$
-        F_{L+1}: \mathbb{V}^{\otimes 2} \to \mathbb{V}^{\otimes 2} = z^{i,j}e_i \otimes e_j \mapsto
-        \frac{e^{z^{i,j}}}{\sum_k e^{z^{i,k}}}e_i
-        \otimes
-        e_j
-        $$
-        At layer $L+1$, there is only one neuron, given by
-        $$\mathcal{N}_{L+1, 1} \otimes e_1 = \mathcal{L}_{L+1}$$ with
-        $$\text{supp}^b ((W_{L+1})^{ab}) \subset \{e_c\}_{c\leq C} $$
-        so that $(a)$ is satisfied.
-    </li>
-
-    <li class="bg-blue-100 border-2 m-2 p-5 rounded-md">
-        If $(Y|X=\bm{x}) \in \mathbb{R}$ in the case of a regression, then $$
-        \mathcal{P}_0(Y;\hat{y})=\mathcal{N}(Y;\mu=\hat{y},\sigma^2=1) $$
-        where $\hat{y} =
-        \mathcal{F}(\bm{x}^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$,
-
-        is a suitable choice with $$p_0(y;\hat{y})=\frac{1}{\sqrt{2\pi}} \exp\left({-\frac{(y-\hat{y})^2}{2}}\right)$$
-        $$\implies \Delta(v, \hat{y})= -\log(p_0(v, \hat{y})) =-\log(\frac{1}{\sqrt{2\pi}}) +
-        \frac{1}{2}(v - \hat{y})^2 $$
-        although note to minimize the above, one need only minimize the <span class="font-bold">Mean Squared
-            Error</span> (MSE) term $(v-\hat{y})^2$.
-        Such a
-        loss demands our output $\hat{\bm y}=\mathcal{F}({\bf x}, \theta)$ obey certain properties:
-        <ol style="list-style: lower-latin; margin: 10px;">
-            <li>
-                $\hat{\bm y} \in \mathbb{V} $
+                The $j$th feature of the $i$th sample produced at hidden layer $l-1$, feeding into hidden
+                layer
+                $l$.
+                $$(y_{l})^{i,j}$$
 
             </li>
-        </ol>
-        so that $\Delta$ is well defined, by using $\hat{\bm y}^{\rangle i \langle}$ in place of $\hat{y}$.
-        To satisfy this requirement
-        $$
-        W_{L+1} \in \mathbb{V}
-        $$ is required.
-        For regression,
-        the
-        activation is unrestricted and can infact be left out entirely by being set to the identity.
-    </li>
+        </ul>
+        Suppose now we have $(y_{l-1})^{i,j}$ for every $j$ in some index set $\mathcal{V}_{l-1}$. We aim to produce
+        [one
+        of]
+        the next features $(y_{l})^{i,k}$ for the same sample $i$; namely feature number $k \in \mathcal{V}_l$ not
+        necessarily
+        equal to $j$. The feed-forward neural network (FFN) achieves this in two steps:
+        <section id="components" data-title="FNN Components" class="model focus">
 
-
-    <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Backpropogation</h3>
-
-    We can now formulate the backpropogation algorithm, sticking with the language of tensors. Backpropogation will be
-    used to find
-    $$
-    \theta^* = \argmin_{\theta} \hat{R}(\bar{\bf d},
-    \mathcal{F}(\cdot; \theta))
-    $$
-    via Gradient Descent.
-    We proceed by finding the partial derivatives of the empirical risk. Assume as per the previous section we have a
-    loss function $\Delta$ and define the tensorized version by
-    $$
-    {\bf \Delta}(\bm{v}, T) = \sum_i \Delta(v^i, T^{\rangle i \langle})
-    $$
-    so that
-    $$
-    {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) = \sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{\bf x};
-    \theta)^{\rangle i
-    \langle}) \\
-    \implies \hat{R}(\bar{\bf d},
-    \mathcal{F}(\cdot; \theta))
-    = \frac{1}{I} {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
-
-    $$
-    Perturb $\mathcal{F}(\cdot; \theta)$ by $h$, then
-    $$
-    \begin{align*}
-    d \mathcal{F}(\bar{\bf x}; \theta) &amp;= h(\bar{\bf x}) \\
-    \implies d {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
-    &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [d\mathcal{F}(\bar{\bf x}; \theta)]
-    \\
-    &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [h(\bar{\bf x})] \\
-    \implies d \hat{R}(\bar{\bf d},
-    \mathcal{F}(\cdot; \theta))
-    &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [h(\bar{\bf x})] \\
-    &amp;= \frac{1}{I} \left( \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
-    \delta_{\bar{\bf
-    x}}\right) [h] \\
-    \implies \partial_2 \hat{R}(\bar{\bf d},
-    \mathcal{F}(\cdot; \theta))
-    &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ \delta_{\bar{\bf
-    x}}\\
-
-
-    \end{align*}
-    $$
-
-
-    By the chain rule
-    $$
-    \partial_{\theta} \hat{R}(\bar{\bf d},
-    \mathcal{F}(\cdot; \theta))
-    = \partial_2 \hat{R}(\bar{\bf d},
-    \mathcal{F}(\cdot; \theta))
-    \circ \partial_{\theta} \mathcal{F}(\cdot; \theta) \\
-    = \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ \delta_{\bar{\bf
-    x}} \circ \partial_{\theta} \mathcal{F}(\cdot; \theta ) $$
-    $$
-    \begin{align}
-    &amp;= \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ \partial_{\theta}
-    \mathcal{F}(\bar{\bf x}; \theta )\\
-    \end{align}
-    $$
-
-    Define
-    $$
-    \begin{align}
-    S &amp;= \frac{1}{I}{\bf \Delta}(\bar{\bm{v}}, \cdot) \circ F_{L+1} \\
-    T(\cdot, \theta) &amp;=
-    \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ ... \circ \mathcal{L}_0
-    \implies \mathcal{F}(\bar{\bf x}; \theta) = F_{L+1} \circ T(\bar{\bf x}, \theta)
-    \end{align}
-    $$
-
-
-    Then
-
-
-    $$
-    \begin{align}
-    \hat{R}(\bar{\bf d},
-    \mathcal{F}(\cdot; \theta))
-    &amp;= {\bf \Delta}(\bar{\bm{v}}, \cdot) \circ \mathcal{F}({\bf x}; \theta) \\
-    &amp; = S \circ T ({\bf x}, \theta) \\
-    \implies \partial_{\theta} \hat{R}(\bar{\bf d},
-    \mathcal{F}(\cdot; \theta))
-    &amp;= DS
-    ({\bf z}_{L+1}) \circ
-    \partial_{2} T(\bar{\bf x},\theta)\\
-
-    \end{align}
-    $$
-
-    It turns out that combining ${\bf \Delta}$ and $F_{L+1}$ into $S$ results in very elegant derivatives, which we will
-    derive below.
-
-
-    <ul style="list-style: disc; list-style-position: inside;" class="my-10 py-5 border-y-1 border-y-emerald-400">
-        <li class="my-8">
-            If $\bm{\hat y} = \mathcal{F}(\bar{\bf x}, \theta) \in \Bbb{V} $ and $\Delta(\bar{v}^i,
-            \bm{\hat{y}}^{\rangle i \langle}) = -\left(\bar{v}^i\log(\hat{\bm{y}}^{\rangle i \langle}) +
-            (1-\bar{v}^i)\log(\hat{\bm{y}}^{\rangle i \langle})\right) $ in the case of a binary learning task, then
-            tensorizing gives
-
-
-            $$
-            {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = -{\bf 1}_{a} \left(\bar{\bm v} \odot
-            \log(\hat{\bm{y}}) + ({\bf 1}-
-            \bar{\bm v}) \odot \log({\bf 1} -
-            \hat{\bm{y}})
-            \right)^{a}
-            $$
-
-            Perburb $\hat{\bm{y}}$ by $d\hat{\bm{y}}$, then
-
-
-            $$
-            \begin{align*}
-            d \log(\bm{\hat{y}} ) &amp;= \bm{\hat{y}}^{-1} \odot d \bm{\hat{y}} \\
-            d \log(1-\bm{\hat{y}}) &amp;= - ({\bf 1}-\bm{\hat{y}})^{-1} \odot d \bm{\hat{y}} \\
-            \implies d {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= -{\bf 1}_{a} \left(\bar{\bm v} \odot
-            (\bm{\hat{y}}^{-1} \odot d \bm{\hat{y}}) + ({\bf 1}-\bar{\bm{v}}) \odot (- ({\bf 1}-\bm{\hat{y}})^{-1} \odot
-            d \bm{\hat{y}})
-            \right)^a \\
-            &amp;= {\bf 1}_{a} \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
-            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right)^a \\
-            \implies D_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto {\bf 1}_{a} \left(\left(({\bf
-            1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
-            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \bm{h}\right)^a
-
-            \end{align*}
-            $$
-            Tensoring the sigmoid activation gives
-            $$
-            \hat{\bm{y}} = F_{L+1}(\bm{z}_{L+1}) = \sigma(\bm{z}_{L+1}) = ({\bf 1} + \exp(-\bm{z}_{L+1}))^{-1}
-            $$
-            Perturb $\bm{z}_{L+1}$ by $d\bm{z}_{L+1}$, then
-            $$
-            \begin{align*}
-
-            d \exp(-\bm{z}_{L+1}) &amp;= -\exp(-\bm{z}_{L+1}) \odot d\bm{z}_{L+1} \\
-            \implies d\hat{\bm{y}} = d F_{L+1}(\bm{z}_{L+1}) &amp;=({\bf 1} + \exp(-\bm{z}_{L+1}))^{-2}\odot
-            \exp(-\bm{z}_{L+1})\odot
-            d\bm{z}_{L+1} \\
-
-            &amp;= \hat{\bm{y}}^{2}\odot
-            \exp(-\bm{z}_{L+1})\odot
-            d\bm{z}_{L+1} \\
-            &amp;= \hat{\bm{y}}^{2}\odot
-            ({\bf -1 + 1} + \exp(-\bm{z}_{L+1}))\odot
-            d\bm{z}_{L+1} \\
-            &amp;= \hat{\bm{y}}^{2}\odot
-            ({\bf - 1} + \hat{\bm{y}}^{-1})\odot
-            d\bm{z}_{L+1} \\
-            &amp;= \hat{\bm{y}}\odot
-            ({\bf 1} - \hat{\bm{y}})\odot
-            d\bm{z}_{L+1} \\
-            \end{align*}
-
-            $$
-            Now we find $DS
-            (\bm{z}_{L+1})
-            $ by making the previous preturbations
-
-            $$
-            \begin{align*}
-            & d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
-            &amp;= {\bf 1}_a \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
-            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right)^a \\
-            &amp;= {\bf 1}_a \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
-            -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \left(\hat{\bm{y}}\odot
-            ({\bf 1} - \hat{\bm{y}})\odot
-            d\bm{z}_{L+1} \right)\right)^a \\
-            &amp;= {\bf 1}_a \left(
-
-            \left(
-            \bm{\hat{y}} -\bar{\bm{v}} \odot \bm{\hat{y}}
-            -\bar{\bm v} \odot ({\bf 1} - \bm{\hat{y}})
-            \right) \odot
-
-            d\bm{z}_{L+1}
-            \right)^a \\
-
-            &amp;= {\bf 1}_a \left(
-
-            \left(
-            \bm{\hat{y}} -\bar{\bm{v}} \right) \odot
-
-            d\bm{z}_{L+1}
-            \right)^a \\
-            \implies DS
-            (\bm{z}_{L+1})
-            &amp;= \bm{h}
-            \mapsto
-            {\bf 1}_a \left(
-
-            \left(
-            \bm{\hat{y}} -\bar{\bm{v}} \right) \odot
-
-            \bm{h}
-
-            \right)^a \\
-            &amp;= \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle
-
-            \end{align*}
-            $$
-            <div class="bg-emerald-100 border-2 px-2 py-2 rounded-md">
-
-                $$
-                \therefore \partial_{\theta} \hat{R}(\bar{\bf d},
-                \mathcal{F}(\cdot; \theta))
-                = \frac{1}{I} \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle \circ \partial_{2} T(\bar{\bf x},\theta)
-                $$
-            </div>
-
-
-
-        </li>
-        <li class="my-8">
-            If $\hat{\bf y} = \mathcal{F}(\bar{\bf x}; \theta) \in \Bbb{V}^{\otimes 2}$ and $\Delta(\bar{v}^i,
-            \hat{\bf y}^{\rangle i \langle})
-            = -\sum_c [\bar{v}^i = c] \log((\hat{\bf y}^{\rangle i \langle})^{c})$ in
-            the case of a categorical learning task, then tensorizing gives
-
-            $$
-            {\bf \Delta}(\bar{\bm{v}}, \hat{\bf y}) = -{\bf 1}_{ab} \left(\Bbb{X} \odot \log(\hat{\bf y}) \right)^{ab}
-            $$
-            where $\Bbb{X} \in \Bbb{V}^{\otimes 2}$ is the one hot tensor of $\bar{\bm{v}}$ defined by
-            $$
-            \Bbb{X} = \delta_{\bar{v}^i, j} e_i \otimes e_j$$
-            Perturb $\hat{\bf y}$ by $d \hat{\bf y}$, then
-
-            $$
-            \begin{align*}
-            d \log(\hat{\bf y}) &amp;= \hat{\bf y}^{-1} \odot d \hat{\bf y} \\
-            \implies d (\Bbb{X} \odot \log(\hat{\bf y})) &amp;= \Bbb{X} \odot \hat{\bf y}^{-1} \odot d \hat{\bf y} \\
-            \implies d {\bf \Delta} (\bar{\bm{v}}, \hat{\bf y}) &amp;= -{\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf
-            y}^{-1}
-            \odot
-            d \hat{\bf y} \right)^{ab}
-            \\
-
-            \end{align*}
-
-            $$
-            Tensorizing the softmax activation gives
-            $$
-            \hat{\bf y} = F_{L+1}({\bf z}_{L+1}) = \text{Diag}((\exp({\bf z}_{L+1})^{ab} {\bf
-            1}_b)^{-1})^{a}{}_b \exp({\bf
-            z}_{L+1})^{bc}
-            $$
-            Perturb ${\bf z}_{L+1}$ by $d{\bf z}_{L+1}$, then letting $E = \exp({\bf z}_{L+1})$
-            $$
-            \begin{align*}
-            d E &amp;= E \odot d{\bf z}_{L+1} \\
-            \implies d (E^{ab} {\bf 1}_b) &amp;= (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \\
-            \implies d (E^{ab} {\bf 1}_b)^{-1} &amp;= - (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf
-            z}_{L+1})^{ab}{\bf 1}_b)
-            \\
-
-            \implies d \hat{\bf y} &amp;= d (\text{Diag}((E^{ab}{\bf 1}_b)^{-1}))^a{}_bE^{bc} +
-            \text{Diag}((E^{ab}{\bf 1}_b)^{-1})^a{}_bd E^{bc} \\
-            &amp;= \text{Diag}(- (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b))^a{}_bE^{bc} +
-            \text{Diag}((E^{ab}{\bf
-            1}_b)^{-1})^a{}_b(E
-            \odot d {\bf z}_{L+1})^{bc}
-            \end{align*}
-            $$
-            Let $A, B$ be arbitrary, and $C=\text{Diag}(c), D=\text{Diag}(d)$ be diagonal. We will use a few facts
-            concerning diagonal degree-2 tensors and the $\odot $ operator:
-            <ol style="list-style: decimal; list-style-position: inside;">
+            <ol type="1" style="list-style-type: decimal; list-style-position: outside; padding-left: 0px;">
                 <li>
-                    $D^a{}_bA^{bc} = (d^{a} \otimes {\bf 1}_{b}) \odot A$
+                    We take a set of <span class="italic font-bold">parameters</span> $\{(W_l)^{j,k} \in \mathbb{R}\}_{j
+                    \in
+                    \mathcal{V}_{l-1}} \cup \{(b_l)^k\}$ - we may also call
+                    these <span class="italic font-bold">weights and biases</span> - and multiply each to the respective
+                    $j$th
+                    feature of
+                    the $i$th sample at layer $l-1$,
+                    before
+                    summing. That is, we produce
+                    $$
+                    \begin{equation}
+                    (z_l)^{i,k} = \sum_{j \in \mathcal{V}_{l-1}}(y_{l-1})^{i,j} (W_l)^{j,k} + (b_l)^k
+                    \end{equation}
+                    $$
+                    a "preimage" of the $k$th feature of the $i$th sample at layer $l$. Just the preimage thus far,
+                    since at
+                    step
+                    2...
+
+
                 </li>
                 <li>
-                    $D^a{}_b(A \odot B)^{bc} = (D^a{}_bA^{bc}) \odot B$
-                </li>
-                <li>
-                    $C^a{}_bD^{bc} = \text{Diag}(c \odot d)$
+                    a <span class="italic font-bold">smooth, nonlinear transform</span> from $C^{\infty}(\mathbb{R},
+                    \mathbb{R})$ is
+                    henceforth applied:
+                    $$
+                    \begin{equation}
+                    (y_l)^{i,k} = f_l((z_l)^{i,k})
+                    \end{equation}
+                    $$
+                    producing the desired feature.
+
+
                 </li>
             </ol>
-            Noting that $\hat{\bf y} = \text{Diag}((E^{ab}{\bf 1}_b)^{-1})^a{}_bE^{bc} = (\text{Diag}(E^{ab}{\bf
-            1}_b)^{-1})^a{}_bE^{bc}
-            \implies E =
-            \text{Diag}(E^{ab}{\bf 1}_b)^{a}{}_b \hat{\bf
-            y}^{bc}$
+
+        </section>
+        <section id="tensors" data-title="Tensors">
+            <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Tensors</h3>
+
+            It is at this point we will specify important details needed to understand the rest of the article. Firstly,
+            we
+            will
+            use
+            <span class="italic">Einstein's Summation Convention</span> (ESC) to simplify sums with a repeated index,
+            signifying
+            the
+            summation of the terms
+            over said index. For example, we can rewrite (1) as
             $$
-            \begin{align*}
-            d \hat{\bf y} &amp;= -\text{Diag}( (E^{ab}{\bf 1}_b)^{-2})^a{}_b\text{Diag}((E \odot d {\bf
-            z}_{L+1})^{ab}{\bf
-            1}_b)^b{}_c\text{Diag}(E^{ab}{\bf
-            1}_b)^{c}{}_d
-            \hat{\bf
-            y}^{de} +
-            (\text{Diag}((E^{ab}{\bf
-            1}_b)^{-1}
-            )^a{}_bE^{bc})
-            \odot
-            d {\bf z}_{L+1}\\
-            &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b\text{Diag}( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b)^b{}_c
-            \hat{\bf
-            y}^{cd} + \hat{\bf y}
-            \odot
-            d {\bf z}_{L+1} \\
-            &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b(( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
-            1}^c)\odot
-            \hat{\bf
-            y})^{bc} + \hat{\bf y}
-            \odot
-            d {\bf z}_{L+1} \\
-            &amp;=-(\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b(E \odot d {\bf z}_{L+1})^{bc}{\bf 1}_c \otimes {\bf
-            1}^d)\odot
-            \hat{\bf
-            y} + \hat{\bf y}
-            \odot
-            d {\bf z}_{L+1} \\
-
-            &amp;=-(((\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_bE^{bc}) \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes
-            {\bf
-            1}^c)\odot
-            \hat{\bf
-            y} + \hat{\bf y}
-            \odot
-            d {\bf z}_{L+1} \\
-            &amp;=-((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
-            1}^c)\odot
-            \hat{\bf
-            y} + \hat{\bf y}
-            \odot
-            d {\bf z}_{L+1} \\
-            \end{align*}
+            \begin{equation}
+            (z_l)^{i,k} = (y_{l-1})^{i,j} (W_l)^{j,k} + b^k
+            \end{equation}
             $$
-            Now we find $DS({\bf z}_{L+1}) $ by making the previous preturbations
-
+            where the sum is meant to be over $j$, which repeats, and where all terms are zero outside of their domains.
+            This
+            too
+            deserves formalization. Firstly, let's consider $(y_l)$ as a well defined object, namely, a <span
+                class="italic font-bold">tensor</span> over infinite
+            dimensional vector spaces, but with <span class="italic">finite support</span>. Let's clarify, since the
+            $(y_l)^{a,b}$
+            objects encompass $\mathcal{V}_l$ features
+            for $n$ samples, lets define
             $$
-            \begin{align*}
-            & d {\bf \Delta}(\bm{\bar{v}},\hat{\bf y}) \\
-            &amp;= d {\bf \Delta}(\bm{\bar{v}},
-            F_{L+1}({\bf z}_{L+1}) ) = d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
-            &amp;= -{\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
-            d \hat{\bf y} \right)^{ab} \\
-
-            &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
-            (((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
-            1}^c)\odot
-            \hat{\bf
-            y} - \hat{\bf y}
-            \odot
-            d {\bf z}_{L+1} ) \right)^{ab} \\
-
-            &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
-            1}^c) - \Bbb{X}
-            \odot
-            d
-            {\bf z}_{L+1} \right)^{ab} \\
-            &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
-            1}^c)\right)^{ab}-
-            {\bf 1}_{ab} \left( \Bbb{X} \odot d
-            {\bf z}_{L+1} \right)^{ab} \\
-            &amp;= {\bf 1}_{ab} \left(\hat{\bf y} \odot d {\bf z}_{L+1} \right)^{ab} - {\bf 1}_{ab}\left(
-            \Bbb{X} \odot d
-            {\bf z}_{L+1} \right)^{ab} \\
-            &amp;= {\bf 1}_{ab} \left((\hat{\bf y} - \Bbb{X}) \odot d {\bf z}_{L+1} \right)^{ab}
-
-            \end{align*}
+            \begin{align}
+            \bar{\bf x} &amp;= \sum_{i,j} x^{i,j} e_i \otimes e_j \in \mathbb{R}^{\mathbb{Z}} \otimes
+            \mathbb{R}^{\mathbb{Z}} \\
+            \bar{\bm{v}} &amp;= \sum_i v^i e_i \in \mathbb{R}^{\mathbb{Z}}\\
+            y_l &amp;= \sum_{i,k} (y_l)^{i,k} e_i \otimes e_k \in \mathbb{R}^{\mathbb{Z}} \otimes
+            \mathbb{R}^{\mathbb{Z}} \\
+            W_l &amp;= \sum_{j,k} (W_l)^{j,k} e_j \otimes e_k \in \mathbb{R}^{\mathbb{Z}} \otimes
+            \mathbb{R}^{\mathbb{Z}} \\
+            b_l &amp;= \sum_{i,k} (b_l)^{k} e_k \in \mathbb{R}^{\mathbb{Z}}
+            \end{align}
             $$
 
-            where the second to last line makes use of the identity ${\bf 1}_{ab}(\Bbb{X} \odot (A^{ab} {\bf 1}_b
-            \otimes {\bf 1}^c))^{ab} = {\bf 1}_{ab} A^{ab} $
-            for any
-            $A$ and 1-hot
-            $\Bbb{X}$.
-            Thus
 
-            $$
-            \begin{align*}
-            DS({\bf z}_{L+1}) &amp;= {\bf h} \mapsto {\bf 1}_{ab} \left((\hat{\bf y} - \Bbb{X}) \odot {\bf
-            h}
-            \right)^{ab}
-            \\
-            &amp;= \langle \cdot,{\bf \hat{y}} -\Bbb{X} \rangle
+            <div class="focus">
 
-            \end{align*}
-            $$
-            <div class="bg-emerald-100 border-2 px-2 py-2 rounded-md">
-
-                $$
-                \therefore \partial_{\theta} \hat{R}(\bar{\bf d},
-                \mathcal{F}(\cdot; \theta))
-                = \frac{1}{I} \langle \cdot,{\bf \hat{y}} -\Bbb{X} \rangle \circ \partial_2 T(\bar{\bf x},\theta)
-                $$
+                Throughout the article, $\mathbb{V} = \mathbb{R}^{\mathbb{Z}}$ and $\mathbb{V}^{\otimes 2} = \mathbb{V}
+                \otimes
+                \mathbb{V} $ so $b_l, \bar{\bm{v}} \in \mathbb{V}$ and $\bar{\bf x}, y_l,W_l,z_l\in \mathbb{V}^{\otimes
+                2}$.
             </div>
-        </li>
-        <li>
-            If $\bm{\hat y} = \mathcal{F}(\bar{\bf x}, \theta) \in \Bbb{V} $ and $\Delta(\bar{v}^i,
-            \bm{\hat{y}}^{\rangle i \langle}) = (\bar{v}^i - \bm{\hat{y}}^{\rangle i \langle})^2$ in the case of a
-            regression task, then
-            tensorizing gives
+            We will also make use of <span class="italic">Abstract Index Notation </span> (AIN), which is particularly
+            useful
+            when
+            representing the <span class="italic">shape</span> of
+            a tensor. For example, we could write $(y_l)^{ab}$ to denote that $y_l \in V \otimes V$, or
+            for a more general example
             $$
-            {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = {\bf 1}_a((\bm{\bar{v}}-\hat{\bm{y}})^2)^a
+            T^{ab}{}_{c}{}^{d}{}_{e}
             $$
-            Perturbing $\hat{\bm{y}}$ by $d\hat{\bm{y}}$ gives
+            to denote a tensor $T \in V \otimes V \otimes V^* \otimes V \otimes V^*$.
+            <br />
+            We proceed from the
+            tensorized version of (1)
             $$
-            \begin{align*}
-            d{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= {\bf 1}_a(-2(\bm{\bar{v}}-\hat{\bm{y}}) \odot
-            d\hat{\bm{y}})^a \\
-            &amp;= -2{\bf 1}_a((\bm{\bar{v}}-\hat{\bm{y}}) \odot d\hat{\bm{y}})^{a} \\
-            \implies D_2{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto -2{\bf
-            1}_a((\bm{\bar{v}}-\hat{\bm{y}}) \odot h)^{a} \\
-            &amp;= 2\langle \cdot, \hat{\bm{y}}- \bm{\bar{v}}
-            \rangle
-
-            \end{align*}
-
-            $$
-            If $F_{L+1}$ is the identity, we further conclude
-            $$
-            DS(\bm{z}_{L+1}) = 2\langle \cdot,
-            \hat{\bm{y}}- \bm{\bar{v}} \rangle
-
-            $$
-            <div class="bg-emerald-100 border-2 px-2 py-2 rounded-md">
-
-                $$
-                \therefore \partial_{\theta} \hat{R}(\bar{\bf d},
-                \mathcal{F}(\cdot; \theta))
-                = \frac{2}{I} \langle \cdot, \hat{\bm{y}}- \bm{\bar{v}} \rangle
-                \circ \partial_2 T(\bar{\bf x},\theta)
-
-                $$
-            </div>
-
-        </li>
-    </ul>
-
-    We are now remained with finding $\partial_{\theta} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    $ which we
-    can
-    do recursively, making up the
-    backpropogation procedure.
-    Firstly
-
-    $$
-    \begin{align*}
-    \partial_{\theta_{L+1}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    &amp;= DS({\bf z}_{L+1}) \circ
-    \partial_{2}\Gamma_{L+1}({\bf y}_L,
-    \theta_{L+1})
-    \end{align*}
-    $$
-
-
-    Let, for $l=L\ldots 1$
-    $$
-    \begin{align*}
-    U_l(\cdot, \theta) :&amp;=
-    S \circ \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ F_{L} \circ ... \circ F_{l+1} \circ
-    \Gamma_{l+1}(\cdot, \theta_{l+1}) \\
-    \implies \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    &amp;= \left(
-    U_l(\cdot, \theta) \circ F_l \circ \Gamma_l(\cdot, \theta_l) \circ \ldots \circ \mathcal{L}_0 \right)(\bar{\bf x})
-    \end{align*}
-    $$$$
-    \begin{align}
-
-    \implies \begin{cases}
-    \partial_{W_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
-    \circ
-    \partial_{2}\Gamma_l({\bf
-    y}_{l-1},
-    \theta_l) \\
-    \partial_{b_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
-    \circ
-    \partial_{3}\Gamma_l({\bf
-    y}_{l-1},
-    \theta_l) \end{cases}
-
-
-    \end{align}
-    $$
-    where
-    $$
-    \begin{align}
-    U_{l}(\cdot, \theta) &amp;= \begin{cases}
-    S \circ \Gamma_{L+1}(\cdot, \theta_{L+1}) & l=L \\
-    U_{l+1}(\cdot, \theta) \circ F_{l+1} \circ \Gamma_{l+1}(\cdot, \theta_{l+1}) & l&lt;L \end{cases} \\ \implies
-    \partial_{1} U_l({\bf y}_l, \theta) &amp;=\begin{cases}
-    DS({\bf z}_{L+1}) \circ \partial_1
-    \Gamma_{L+1}({\bf y}_{L}, \theta_{L+1}) & l=L\\
-    \partial_{1} U_{l+1}({\bf y}_{l+1}, \theta) \circ
-    DF_{l+1}({\bf z}_{l+1}) \circ \partial_1 \Gamma_{l+1}({\bf y}_l, \theta_{l+1}) & l&lt;L \end{cases} \end{align} $$
-
-    So
-    the recursion is well posed.
-
-    Finally
-    $$
-    \partial_{\theta} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    \\ = \left( (dW_1, db_1 \ldots dW_{L+1}, db_{L+1})
-    \mapsto \sum_l
-    \partial_{W_l}
-    \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    [d W_l] + \sum_l \partial_{b_l}
-    \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    [d b_l] \right)
-    $$
-    allowing the full computation of $\partial_{\theta}\hat{R}(\bar{\bf d}, \mathcal{F}(\cdot;\theta))$.
-
-    A few derivatives will need to be computed. We will write the maps using their tensor identifications, as that will
-    allow an alternative way to not only compose maps but also compute their adoints, which we will need when finding
-    the gradient.
-
-    <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">The Hom-Tensor Identification</h2>
-    A word on the canonical identification: if we have a map $T \in \text{Hom}(V, W)$ where $V$ is a tensor product
-    space with
-    basis $\{e_{\mathcal{I}}\} $, and the basis for $V^*$ is induced by the standard inner product $\langle
-    e_{\mathcal{I}} , e_{\mathcal{J}}
-    \rangle = \delta_{\mathcal{I}, \mathcal{J}} $ giving $\{(e_{\mathcal{I}})' = \langle \cdot , e_{\mathcal{I}} \rangle
-    \}$,
-    then using
-    $$
-    \text{Hom}(V,W) \cong W\otimes V^* \\
-
-
-    (\bigotimes V_i)^* \cong \bigotimes V_i^*
-    $$
-    we have the identification
-    <div class="bg-cyan-100 border-2 rounded-2xl p-2 m-4">
-        $$
-        \phi: T \mapsto T(e_{\mathcal{I}}) \otimes (e_{\mathcal{I}})' \mapsto T(e_{\mathcal{I}}) \otimes e^{\mathcal{I}}
-        = \phi(T)
-
-        $$
-
-    </div>
-    Composition with $\phi(S) = S(f_{\mathcal J}) \otimes f^{\mathcal{J}}$ is then given by the slot-wise contraction of
-    the
-    input slot $e^{\mathcal{I}}$ of $\phi(T)$ with the output slot $S(f_{\mathcal{J}})$ of $S$
-    $$
-    \phi(T \circ S) = T(e_{\mathcal{I}}) \otimes
-    e^{\mathcal{I}}(S(f_{\mathcal{J}})) \otimes f^{\mathcal{J}} =
-    e^{\mathcal{I}}(S(f_{\mathcal{J}})) T(e_{\mathcal{I}}) \otimes f^{\mathcal{J}} = (\phi(T))^{a}{}_b (\phi(S))^{b}{}_c
-    $$
-    <ul style="list-style: disc; list-style-position: inside;" class="my-10">
-        <li class="my-4">
-            $DF_l({\bf z}_l)$: <br />
-            Perturb ${\bf z}_l$ by $d {\bf z}_l$, then
-            $$
-            \begin{align*}
-            dF_l({\bf z}_l) = f_l'((z_l)^{i,j})d(z_l)^{i,j}e_i \otimes e_j &amp;= F_l'({\bf z}_l) \odot d{\bf z}_l \\
-            \implies DF_l({\bf z}_l) = {\bf h} \mapsto F_l'({\bf z}_l) \odot {\bf h}
-            \end{align*}
-            $$
-            where $F_l'({\bf z}_l) := f_l'((z_l)^{i,j})e_i \otimes e_j$
-            $$
-            \begin{align*}
-            \implies \phi(DFl({\bf z}_l)) &amp;= F'_l({\bf z}_l) \odot (e_i \otimes e_j) \otimes e^i
-            \otimes e^j = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes e^i
-            \otimes e^j \\
-            \end{align*}
-            $$
-
-        </li>
-        <li class="my-4">
-            $\partial_{2}\Gamma_l({\bf
-            y}_{l-1},
-            \theta_l) $: <br />
-            Contraction of two tensors against the metric, and $\otimes$, are both bilinear so
-
-            $$
-            \begin{align*}
-
-            \partial_{W_l} \Gamma_l({\bf
-            y}_{l-1},
-            \theta_l) =&amp;\quad dW_l \mapsto g_{bc}({\bf y}_{l-1})^{ab}(dW_l)^{cd} \\
-            \xmapsto[]{\phi}&amp;\quad g_{bc}({\bf y}_{l-1})^{ab}(e_i \otimes e_j)^{cd} \otimes
-            e^i \otimes e^j\\
-            =&amp;\quad ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j\\
-
-            \partial_{b_l} \Gamma_l({\bf
-            y}_{l-1},
-            \theta_l) =&amp;\quad db_l \mapsto \sum_i e_i \otimes db_l \\
-            \xmapsto[]{\phi}&amp;\quad \sum_{i} e_i \otimes e_j \otimes e^j
-
-
-            \end{align*}
-            $$
-        </li>
-        <li class="my-4">
-            $\partial_{1}\Gamma_l({\bf
-            y}_{l-1},\theta_l) $: <br />
-            $$
-            \begin{align*}
-            \partial_{1} \Gamma_l({\bf
-            y}_{l-1},
-            \theta_l) =&amp;\quad d{\bf y}_{l-1} \mapsto g_{bc}(d{\bf y}_{l-1})^{ab}(W_l)^{cd} \\
-            \xmapsto[]{\phi}&amp;\quad g_{bc}(e_i \otimes e_j)^{ab}(W_l)^{cd} \otimes e^i \otimes e^j\\
-            =&amp;\quad (W_l)^{jx} e_i \otimes e_x \otimes e^i \otimes e^j
-            \end{align*}
-            $$
-        </li>
-    </ul>
-
-
-    Now we can calculate the full derivative of each parameter.
-    <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">Adjunction</h2>
-    The gradient is technically the adjoint of the derivative
-    $$
-    \nabla f(x) = (Df(x))^{\dagger}
-    $$
-    Since we will express all derivatives as tensors, we need to quickly mention the suitable 'adjunction' operator for
-    tensors: if $T \in \text{Hom}(V, W)$ where $V$ has basis $\{e_{\mathcal{I}}\}$, $W$ has basis
-    $\{f_{\mathcal{I}}\}$, and both spaces are endowed with the standard products
-    $\langle e_{\mathcal{I}}, e_{\mathcal{J}}\rangle = \delta_{\mathcal{I}, \mathcal{J}}$ and $\langle f_{\mathcal{I}},
-    f_{\mathcal{J}}\rangle = \delta_{\mathcal{I}, \mathcal{J}}$
-    , and $V^*, W^*$ have the dual bases induced from these inner products, then
-    $$
-    \phi(T^{\dagger}) = \langle f_{\mathcal{J}}, T(e_{\mathcal{I}}) \rangle e_{\mathcal{I}} \otimes f^{\mathcal{J}}
-    $$
-    Also
-    $$
-    \phi(T) = T(e_{\mathcal{I}}) \otimes e^{\mathcal{I}} \\
-    = \langle f_{\mathcal{J}}, T(e_{\mathcal{I}}) \rangle f_{\mathcal{J}}
-    \otimes e^{\mathcal{I}} $$
-    Thus 'adunction' on tensors can be defined by
-    <div class="bg-cyan-100 border-2 rounded-2xl p-2 m-4">
-        $$
-        \phi(T^a{}_b)^{\dagger} := T^b{}_{a} = \phi(T^{\dagger})
-        $$
-    </div>
-
-    <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">The Gradients</h2>
-    In practice, solving for $\theta^* = \argmin \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))$ is infeasible for
-    many reasons, two important ones being the many flat regions of the objective $\hat{R}$ and the large matrix
-    inversions that would have to be computed. However,
-    now that we've obtained the partial derivatives of $\hat{R}$ at $(\bar{\bf d}; \mathcal{F}(\cdot; \theta))$ we can
-    subtract the gradient from $\theta$ to move towards the optimal point. The procedure to find the gradients will be
-    illustrated.
-    Firstly, some shorthands; let $l$ be a layer index and denote
-    $$
-    \begin{align*}
-    {\bm{\xi}}_l &amp;=
-    \phi(\partial_{1} U_l({\bf y}_l, \theta)) &amp;= ({\xi}_l)^{i,j} e^i \otimes e^j\\
-    {\bm{\xi}}_z &amp;= \phi(\partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)) \\
-    {\bm{\delta}}_w &amp;= \phi(\partial_{W_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))) \\
-    {\bm{\delta}}_b &amp;= \phi(\partial_{b_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))\\
-    \bm{\epsilon}_w &amp;= \phi(\partial_{W_l}\Gamma_l({\bf
-    y}_{l-1},
-    \theta_l)) &amp;= ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j \\
-    \bm{\epsilon}_b &amp;= \phi(\partial_{b_l}\Gamma_l({\bf
-    y}_{l-1},
-    \theta_l)) &amp;= \sum_{i,j} e_i \otimes e_j \otimes e^j
-    \\
-    \bm{\epsilon}_z &amp;= \phi(DF_l({\bf z}_l)) &amp; = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes e^i
-    \otimes e^j\\
-    \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma_l({\bf
-    y}_{l-1};
-    \theta_l)) &amp;= (W_l)^{j,x} e_i \otimes e_x \otimes e^i \otimes e^j
-    \\
-
-    \end{align*}
-    $$
-    By the preceding work we can find the gradient tensors for each parameter. Note that transposition is used to denote
-    permuting
-    the slots of 2-tensors.
-    <div class="flex flex-row justify-between align-baseline">
-        <div>
-            $$
-            \begin{align*}
-
-            \bm{\delta}_w &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
-            \theta)
-            \circ DF_l({\bf z}_l)
-            \circ
-            \partial_{W_l}\Gamma_l({\bf
-            y}_{l-1},
-            \theta_l) \right) \\
-            &amp;= (\bm{\xi}_z){}_{ab}
-            (\bm{\epsilon}_w)^{ab}{}_{cd} \\
-            &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e^i \otimes e^q \\
-            \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e_i \otimes e_q \\
-            &amp;= (\xi_z^{\dagger})^{p,q} (y_{l-1}^T)^{i,p} \otimes e_i \otimes e_q \\
-            &amp;= g_{bc}({\bf y}_{l-1}^T)^{ab}(\bm{\xi}_z^{\dagger})^{cd}
-            \end{align*}
-            $$
-        </div>
-        <div>
-            $$
-            \begin{align*}
-            \bm{\delta}_b &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
-            \theta)
-            \circ DF_l({\bf z}_l)
-            \circ
-            \partial_{b_l}\Gamma_l({\bf
-            y}_{l-1},
-            \theta_l) \right) \\
-            &amp;= (\bm{\xi}_z){}_{ab}
-            (\bm{\epsilon}_b)^{ab}{}_{c} \\
-            &amp;= \sum_p (\xi_z)_{p,q} e^q \\
-            \implies \bm{\delta}_b^{\dagger} &amp;= \sum_p (\xi_z)_{p,q} e_q \\
-            &amp;= \sum_p (\xi_z^{\dagger})^{p,q} e_q \\
-            &amp;= {\bm{1}}_{a}(\bm{\xi}_z^{\dagger})^{ab} \\
-
-            \end{align*}
-
-            $$
-        </div>
-    </div>
-    where
-    <div class="flex flex-row justify-between align-baseline">
-        <div>
-            $$
-            \begin{align*}
-            \bm{\xi}_z &amp;= (\bm{\xi}_l)_{ab}(\bm{\epsilon}_z)^{ab}{}_{cd}\\
-
-            &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e^i \otimes e^j \\
-            \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
-            &amp;= (\xi_l^{\dagger})^{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
-            &amp;= \bm{\xi}_l^{\dagger} \odot F_l'({\bf z}_l) \\
-            \end{align*}
-
-            $$
-        </div>
-        <div>
-            $$
-            \begin{align*}
-            \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U_{l-1}({\bf y}_{l-1}, \theta)) = \phi(\partial_{1} U_{l}({\bf y}_{l},
-            \theta)
-            \circ
-            DF_{l}({\bf z}_{l}) \circ \partial_1 \Gamma_{l}({\bf y}_{l-1}, \theta_l))\\
-            &amp;= (\bm{\xi}_l)_{ab} (\bm{\epsilon}_z)^{ab}{}_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
-
-            &amp;= (\bm{\xi}_z)_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
-            &amp;= (\xi_z)_{p,q} (W_l)^{j, q} e^p \otimes e^j \\
-            \implies \bm{\xi}_{l-1}^{\dagger} &amp; = (\xi_l)_{p,q} (W_l)^{j, q} e_p \otimes e_j \\
-            &amp; = (\xi_l^{\dagger})^{p,q} (W_l^T)^{q, j} e_p \otimes e_j \\
-            &amp; = g_{bc}(\bm{\xi_l}^{\dagger})^{ab} (W_l^T)^{cd}
-            \end{align*}
-
-            $$
-        </div>
-    </div>
-
-    <h2 class="text-3xl my-8" style="font-family: var(--font-playfair);"> 2. Convolutional Neural Networks
-    </h2>
-    The machinery used to formalize FNNs is even more applicable to convolutional neural networks (CNNs). Lets start
-    with the key operation; define the operator
-    $$
-    Y^{\mathcal{A}b_1\ldots b_n} *^n_{m} W^{\mathcal{C}b_1 \ldots b_n} = \sum_{\alpha \in \Bbb{Z}^{|m|}}Y_{
-    \mathcal{A}b_1 \ldots b_n}
-    \tau(W; sgn(m)\cdot\alpha)^{\mathcal{C}b_1\ldots b_n} \otimes e_{\alpha}
-    $$
-
-    for $|m| \leq n$ and, using $\mathcal{I}$ to index all but the last $m$ slots and $\mathcal{J}$ to index the last
-    $|m|$ slots
-    $$
-    \tau(W;\alpha) = W^{\mathcal{I},\mathcal{J}-\alpha} e_{\mathcal{I}}\otimes e_{\mathcal{J}} = W^{\mathcal{I},
-    \mathcal{J}}
-    e_{\mathcal{I}}\otimes e_{\mathcal{J}+\alpha}
-    $$
-    is the translation operator over the last $|m|=\text{len}(\alpha)$ slots. $\mathcal{A},\mathcal{C}$ are abstract
-    multiindices. Now let $m \in \Bbb{N}$ and $$\chi_m(W)^{\mathcal{I},\mathcal{J}} =
-    W^{\mathcal{I},-\mathcal{J}}$$ be the tensor flipped at the last $m$ slots.
-    Define a few operators
-    $$
-    \begin{align*}
-    &amp;Y \rtimes W = Y *^3_2 W \\
-    &amp;Y \bar{\rtimes} W = Y *^3_2 \chi_2(W) \\
-
-    &amp;Y \ltimes W = Y *^3_{-2} W \\
-
-    &amp;Y \bar{\ltimes} W = Y *^3_{-2} \chi_2(W) \end{align*}
-    $$
-    Let $y_{l-1}^c, W_{l}^c \in \Bbb{V}^{\otimes 4}, b_{l}^c \in \Bbb{V}$.
-    <div class="border-2 bg-emerald-100 p-10 my-4 rounded-md">
-
-        The convolutional layer is defined for $l=1\ldots L_c$ as the map
-        $$
-        y_{l-1}^c \mapsto \mathcal{L}^c_l(y_{l-1}^c;W_l^c, b_l^c) = F^c_l \circ \Gamma^c_l(y_{l-1}^c, W_l^c, b_l^c) $$
-
-        where $$
-        \Gamma^c_l(Y, W, b)
-        =Y \rtimes W + \bm{1}^{a} \otimes b \otimes
-        \bm{1}^{bc}
-        $$
-        We will call the neuron $k$ at layer $l$ the function
-        $$
-        y_{l-1}^c \mapsto \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k \langle}) =
-        F^c_l
-        \circ
-        \Gamma^c_l(y_{l-1}^c, (W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k \langle})
-        $$
-
-        Note that $$ \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k \langle})^{\rangle i
-        \langle \langle k \rangle \langle i \rangle} =
-        \mathcal{L}^c_l(y_{l-1}^c;W_l^c, b_l^c)$$
-        The <span class="font-bold">flattening layer </span> changes the dimension of $y^c_{L_c}$ so that $y_0 =
-        y^c_{L_c+1}
-        \in \Bbb{V}^{\otimes 2}$ as follows:
-        Let $T \in \Bbb{V}^{\otimes n}$ for some $n$. Define
-        $$
-        \alpha_{m} = \min \{ \alpha | e_{\alpha} \in \text{supp}(T) \} \\
-        \alpha_{M} = \max \{ \alpha | e_{\alpha} \in \text{supp}(T) \} \\
-        d_i = (\alpha_M)_i - (\alpha_m)_i + 1$$ for $i=1\ldots n$, and $\beta = (\beta_1 \ldots \beta_n)$ such
-        that
-        $$
-        \beta_j = \begin{cases}
-        \prod_{i=j+1}^n d_i & i &lt; n \\
-        1 & i = n
-        \end{cases}
-        $$
-        Let $|\alpha| = \sum_i \alpha_i$. Then define
-
-        $$\gamma(T) = \sum_{\alpha} T^{\alpha} e_{|\beta \cdot (\alpha-\alpha_m)|+1}$$
-        The flattening layer is the map
-        $$
-        y^c_{L_c} \mapsto \Gamma^c_{L_c}(y^c_{L_c}) = \sum_i \gamma((y^c_{L_c})^{\rangle i \langle}) \otimes e_i
-        $$
-    </div>
-
-    <h2 class="text-2xl my-4">Backpropogation</h2>
-    We will use the same setup to find the derivatives as in the FNN section. Let, for $l=L_c\ldots 1$
-    $$
-    \begin{align*}
-    U_l^c(\cdot, \theta) :&amp;=
-    S \circ \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ \ldots \circ \Gamma_{1}(\cdot, \theta_{1}) \circ
-    \Gamma^c_{L_c+1}
-    \circ \ldots \circ \Gamma^c_{l+1}(\cdot; \theta^c_{l+1}) \\
-    \implies \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    &amp;= \left(
-    U_l^c(\cdot, \theta) \circ F_l^c \circ \Gamma_l^c(\cdot, \theta_l^c) \circ \ldots \circ \mathcal{L}_0
-    \right)(\bar{\bf x})
-    \end{align*}
-    $$$$
-    \begin{align}
-
-    \implies \begin{cases}
-    \partial_{W_l^c} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    &amp;= \partial_{1} U_l^c({\bf y}_l^c, \theta) \circ DF_l^c({\bf z}_l^c)
-    \circ
-    \partial_{2}\Gamma_l^c({\bf
-    y}_{l-1}^c,
-    \theta_l^c) \\
-    \partial_{b_l^c} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
-    &amp;= \partial_{1} U_l^c({\bf y}_l^c, \theta) \circ DF_l^c({\bf z}_l^c)
-    \circ
-    \partial_{3}\Gamma_l^c({\bf
-    y}_{l-1}^c,
-    \theta_l^c) \end{cases}
-
-
-    \end{align}
-    $$
-    where
-    $$
-    \begin{align}
-    U_{l}^c(\cdot, \theta) &amp;= \begin{cases}
-    S \circ \Gamma_{L+1}^c(\cdot, \theta_{L+1}^c) & l=L_c \\
-    U_{l+1}^c(\cdot, \theta) \circ F_{l+1}^c \circ \Gamma_{l+1}^c(\cdot, \theta_{l+1}^c) & l&lt;L_c \end{cases} \\
-    \implies
-    \partial_{1} U_l^c({\bf y}_l^c, \theta) &amp;=\begin{cases}
-    DS({\bf z}_{L_c+1}^c) \circ \partial_1
-    \Gamma_{L+1}^c({\bf y}_{L_c}^c, \theta_{L+1}^c) & l=L_c\\
-    \partial_{1} U_{l+1}^c({\bf y}_{l+1}^c, \theta) \circ
-    DF_{l+1}({\bf z}_{l+1}^c) \circ \partial_1 \Gamma_{l+1}^c({\bf y}_l^c, \theta_{l+1}^c) & l&lt;L_c \end{cases}
-    \end{align} $$
-    We compute the needed partials:
-    <ul style="list-style-type: disc">
-        <li>$DF^c_l({\bf z}^c_l) $: Same as for FNN's:
-            $$
-            \begin{align*}
-            DF^c_l({\bf z}^c_l) &amp;= {\bf h} \mapsto F^{c}_l{}'({\bf z}^c_l) \odot {\bf h} \\
-            \implies \phi(DF^c_l({\bf z}^c_l)) &amp;= f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes e^{ijmn}
-            \end{align*}
-
-            $$
-        </li>
-        <li>
-            $
-            \partial_{1}\Gamma_l^c({\bf
-            y}_{l-1}^c,
-            W_l^c, b_l^c) $: Perturb $y^c_{l-1}$.
-            $$
-            \begin{align*}
-            \partial_{1}\Gamma_l^c({\bf
-            y}_{l-1}^c,
-            W_l^c, b_l^c)&amp;= dy^c_{l-1} \mapsto (dy^c_{l-1}) \rtimes W^c_l \\
-            \implies \phi(\partial_{1}\Gamma_l^c({\bf
-            y}_{l-1}^c,
-            W_l^c, b_l^c)) &amp;= (e_{\alpha\beta\gamma\delta} \rtimes W^c_l) \otimes e^{\alpha\beta\gamma\delta} \\
-            &amp;= (e_{\alpha\beta\gamma\delta})^{ituv} \tau(W^c_l; (s, r))^{jtuv} e_{ijsr} \otimes
-            e^{\alpha\beta\gamma\delta} \\
-
-            &amp;= \tau(W^c_l; (s, r))^{j\beta\gamma\delta} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta} \\
-            &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta}
-            \end{align*}
-            $$
-        </li>
-
-        <li>
-            $\partial_{2}\Gamma_l^c({\bf
-            y}_{l-1}^c,
-            W_l^c, b_l^c)$: Perturb $W^c_l$:
-            $$
-            \begin{align*}
-            \partial_{2}\Gamma_l^c({\bf
-            y}_{l-1}^c,
-            W_l^c, b_l^c) &amp;= dW^c_l \mapsto y^c_{l-1} \rtimes dW^c_l \\
-            \implies \phi(\partial_{2}\Gamma_l^c({\bf
-            y}_{l-1}^c,
-            W_l^c, b_l^c)) &amp;= (y^c_{l-1} \rtimes e_{\alpha\beta\gamma\delta}) \otimes e^{\alpha
-            \beta\gamma\delta} \\
-            &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
-            e^{\alpha\beta\gamma\delta} \\
-            &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
-            e^{\alpha\beta\gamma\delta} \\
-            &amp;= (y^c_{l-1})^{ituv} (e_{\alpha\beta(\gamma+s)(\delta+r)})^{jtuv} e_{ijsr} \otimes
-            e^{\alpha\beta\gamma\delta} \\
-            &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
-            e_{i\alpha sr}
+            \begin{align}
+            (z_l)^{i,k} e_i \otimes e_k &amp;= ((y_{l-1})^{i,j} (W_l)^{j,k} + (b_l)^{i,k} ) e_i \otimes e_k \\
+            \implies z_l &amp;= \sum_{i,j,k} (y_{l-1})^{i,j} (W_l)^{j,k} e_i \otimes e_k + \sum_{i,k} (b_l)^{k} e_i
             \otimes
-            e^{\alpha\beta\gamma\delta} \\
-
-            \end{align*}
+            e_k
+            \in
+            V
+            \otimes V
+            \end{align}
             $$
-        </li>
+            We also need to transform the $\mathbb{R} \to \mathbb{R}$ transform into
+            a $\Bbb{V}^{\otimes 2} \to \Bbb{V}^{\otimes 2}$ transform that acts on tensors, by defining
+            $$
+            \begin{equation}
+            y_l = F_l(z_l) = \sum_{i,k} f_l((z_l)^{i,k}) e_i \otimes e_k
+            \end{equation}
+            $$
 
-        <li>
-            $\partial_{3}\Gamma_l^c({\bf
-            y}_{l-1}^c,
-            W_l^c, b_l^c)$: Perturb $b^c_l$
+        </section>
+        <section id="tensor-ops" data-title="Contraction, Inner Products, Metric Tensors">
+            <h3 class="text-2xl" style="font-family: var(--font-playfair);">Contraction, Inner Products, Metric Tensors
+            </h3>
+            <br />
+            The issue thus far is that we want to speak in a language of tensors and yet are using the
+            coefficients of the layer features and parameters. Using
+            basic linear algebra, one realizes that $z_l$ can be formulated as a matrix product, where the inner product
+            is
+            over
+            the
+            space indexed by $j$. Using <span class="italic">tensors</span> however, we see it as the image of the
+            metric
+            tensor,
+            or, if one of the $j$ were lowered, as a contraction. Before jumping in, we need to agree on contraction
+            notation;
+            in
+            (AIN) this is straighforward:
+
+            <div class="exposition">
+                Let $S^{\ldots a \ldots}_{\ldots b \ldots} = S^{\ldots i \ldots}_{\ldots j \ldots} \ldots \otimes e_{i}
+                \otimes
+                \ldots \otimes e^j \otimes \ldots$ be arbitrary. Contraction along slots $a,b$ is defined as
+                $$
+                S^{\ldots i \ldots}_{\ldots j \ldots} e^j(e_i)\ldots \otimes \ldots \otimes \ldots =:S^{\ldots a
+                \ldots}_{\ldots
+                a
+                \ldots}
+                $$
+                In the case where $e^j(e_i) = \delta_{ij}$:
+                $$
+                S^{\ldots a \ldots}_{\ldots a
+                \ldots} = S^{\ldots i \ldots}_{\ldots i \ldots} \ldots \otimes \ldots \otimes \ldots
+
+                $$
+
+
+            </div>
+            If it had been the case that our tensors were of mixed $(1,1)$ rank, we could write
+            $$
+            \begin{equation}
+            (z_l)^a{}_c = (y_{l-1})^a{}_b (W_l)^b{}_c + (b_l)^a{}_c
+            \end{equation}
+            $$
+
+            Unfortunately our tensors arent of rank $(1,1)$ so
+            the operation we're looking for is the inner-product, or, contraction against a metric tensor. We should
+            talk
+            briefly
+            about the metric tensor $g_{ab}$ and the inverse metric tensor $ {g}^{ab}$.
+            $\Bbb{V}$ has the canonical orthonormal basis $\{e_i \}$, and is endowed with the canonical inner
+            product $\langle e_i , e_j \rangle = \delta_{ij}$. Such an inner product admits a dual
+            basis for $\Bbb{V}^*$ defined by $\{e^i = \langle \cdot, e_i \rangle\} $.
+            The metric tensors are then given by agreement with the inner products
+            $$\begin{align} g_{ab} = g_{i,j} e^i \otimes e^j =
+            \delta_{ij} e^i \otimes e^j \\
+            {g}^{ab} = g^{i,j} e_i \otimes e_j = \delta_{ij} e_i \otimes e_j \end{align}$$
+
+            Now we can define what it means to contract against the metric $g$
+            <div class="exposition">
+                $$
+                g_{ab} S^{\ldots a \ldots}_{\ldots \phantom{x} \ldots} T^{\ldots b \ldots}_{\ldots \phantom{x} \ldots} =
+                S^{\ldots
+                \phantom{x}
+                \ldots}_{\ldots a
+                \ldots}T^{\ldots a \ldots}_{\ldots \phantom{x}
+                \ldots} \\
+                g^{ab} S_{\ldots a \ldots}^{\ldots \phantom{x} \ldots} T_{\ldots b \ldots}^{\ldots \phantom{x} \ldots} =
+                S_{\ldots
+                \phantom{x} \ldots}^{\ldots a
+                \ldots}T_{\ldots a \ldots}^{\ldots \phantom{x} \ldots}
+                $$
+            </div>
+
+
+            Now we can find a suitable tensorial representation for $z$: <div>
+                $$
+                z_l = (y_{l-1})^{i,j}(W_l)^{j,k}e_i \otimes e_k + (b_l)^{k} e_i \otimes e_k=
+                g_{bc}(y_{l-1})^{ab}(W_l)^{cd}
+                +
+                \sum_i e_i \otimes b_l
+                $$
+            </div>
+
+        </section>
+        <section id="model" data-title="The Model">
+            <h3 class="text-2xl mt-8 mb-8" style="font-family: var(--font-playfair);">The Model </h3>
+            <p>
+                We now formalize the FNN model $\mathcal{F}$ completely.
+
+            <div class="hyper-focus">
+                <ul style="list-style: disc">
+                    <li>
+                        We will call a <span class="font-bold">layer</span> $l=1...L$ the function $$y_{l-1} \mapsto
+                        \mathcal{L}_l(y_{l-1}
+                        ; W_l, b_l) = F_l \circ
+                        \Gamma_l(y_{l-1}, W_l, b_l)$$ where
+                        $$
+                        \begin{equation}
+                        \Gamma_{l}(S,T,U) = g_{bc}S^{ab}T^{cd}+ \sum_i e_i \otimes U
+                        \end{equation}
+                        $$
+                        We will call the <span class="font-bold">neuron</span> $k$ at layer $l$ the function $$
+                        y_{l-1} \mapsto \mathcal{N}_{l,k}(y_{l-1} ; (W_l)^{j,k}
+                        e_j , (b_l)^k) = F_l \circ \gamma_{l}(y_{l-1}, (W_l)^{j,k}
+                        e_j, (b_l)^k)
+                        $$ where
+                        $$
+                        \gamma_{l}(S,T, u) =
+                        g_{bc}S^{ab}T^{c}+ u \sum_i e_i
+                        $$
+                        Note that
+                        $$
+                        \mathcal{N}_{l,k}(y_{l-1} ; (W_l)^{j,k}
+                        e_j , (b_l)^k) \otimes e_k = \mathcal{L}_l(y_{l-1}; W_l, b_l)
+                        $$
+                        that is, a layer is a sum of neurons.
+                    </li>
+                    <li>
+                        First we start with the <span class="font-bold">input layer </span>, $\mathcal{L}_0$. We define
+                        $$y_0 := x $$
+                        for any sample $x \in V \otimes V$
+                        and define $\mathcal{L}_0$ by $x \mapsto y_0$, so $\mathcal{L}_0$ is the
+                        identity. It's not
+                        strictly a <span class="italic">computational</span> layer like defined earlier,
+                        however some folks like to speak of an input layer, which refers to this.
+                    </li>
+                    <li>
+                        The <span class="font-bold">hidden</span> layers are $\{\mathcal{L}_l\}_{ l=1\dots L}$
+                    </li>
+                    <li>
+                        The <span class="font-bold">output</span> layer is $$y_L \mapsto \mathcal{L}_{L+1}(y_L; W_{L+1},
+                        b_{L+1}) =
+                        F_{L+1} \circ \Gamma(y_{L}, W_{L+1}, b_{L+1})$$ where $F_{L+1}$ is called the activation
+                        function.
+                    </li>
+                    <li>
+                        The <span class="font-bold">model</span> $\mathcal{F}$ is defined by
+                        $$ \mathcal{F}(x ; \theta) = \mathcal{L}_{L+1}(\cdot ; W_{L+1},b_{L+1}) \circ \ldots \circ
+                        \mathcal{L}_{1}(\cdot ;
+                        W_{1}, b_1)
+                        \circ \mathcal{L_0} (x) $$ where $$\theta = W_1,b_1 \ldots W_{L+1},b_{L+1} $$ are the parameters
+                        of
+                        the
+                        model.</li>
+
+                </ul>
+            </div>
+
+        </section>
+
+        <section id="loss-risk" data-title="Loss, Empirical Risk">
+            <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss, Empirical Risk</h3>
+
+            <div>
+                We have so far the ability to compute the output of our parameterized model $y_{L+1} =
+                \mathcal{F}(x;\theta)$.
+                <br />
+                <br />
+                Let $X,Y$
+                be the random variables for input features and labels, over the spaces $\mathcal{X}, \mathcal{Y} $.
+                Let $$X,Y \sim \mathcal{P}(X,Y) $$ with pdf $p_{X,Y}(x,y)$. Let $X_i,Y_i$ be the ith feature and label
+                random
+                variables,
+                and assume
+                $$X_i, Y_i \sim_{i.i.d} \mathcal{P}(X,Y)$$
+                Define
+                a
+                <span class="font-bold">loss function</span> $\mathbb{R} \times \mathbb{V} \to \mathbb{R}:$
+                $$ w, \hat{w} \mapsto \Delta(w, \hat{w}) $$
+
+                Define
+                $$
+                \begin{align*}
+                T^{[i]} &amp;= \sum_{\alpha} T^{i,\alpha} e_i \otimes e_{\alpha} \\
+                T^{\rangle i \langle} &amp;= \sum_{\alpha} T^{i,\alpha} e_{\alpha} \\
+                T^{\langle i \rangle}& = \sum_{\alpha} T^{\alpha} e_i \otimes e_{\alpha} = e_i \otimes T
+                \end{align*}
+                $$
+                For a batch model $h$ (one defined over $\mathbb{V}^{\otimes 2}$ like ours), the <span
+                    class="font-bold italic">loss</span> at a
+                point $(x,y) \in \mathbb{V} \times \mathbb{R}$ is
+                $$
+                l(x, y,h) = \Delta(y, h(x^{\langle \mu \rangle})^{\rangle \mu \langle})
+                $$
+                The <span class="font-bold">risk</span> is the expected value of the loss over $\mathcal{X} \times
+                \mathcal{Y}$
+                $$
+                R(h) = \mathbb{E}_{X,Y}(l(x,y,h)) = \int l(x,y,h) p_{X,Y}(x,y) dxdy
+                $$ which is intractable, so the <span class="font-bold">empirical risk</span> over a sample $\bm{d}=(
+                \bm{x},
+                \bm{y})$
+                is used instead, which, as data size
+                grows, converges to the risk by the LLN:
+                $$
+                \begin{equation}
+                \hat{R}(\bm{d}, h) = \frac{1}{I}\sum_i l(x_i,y_i,h)
+                \to
+                \mathbb{E}_{X,Y}(l(x,y,h))
+
+                \end{equation}
+                $$as $I\to\infty$.
+                <span class="font-bold">Empirical Risk Minimization</span> chooses a model space $\mathcal{H}$ and finds
+                $$
+                \argmin_{h \in \mathcal{H}}\hat{R}(\bm{d}, h)$$
+            </div>
+            <div class="focus">
+                For our purposes, $\mathcal{X}=\Bbb{V}, \mathcal{Y}=\Bbb{R}$.
+                Our loss is defined as
+
+                $$
+                l(\bm{x}, v, \mathcal{F}(\cdot; \theta)) = \Delta(v, \mathcal{F}(\bm{x}^{\langle \mu \rangle};
+                \theta)^{\rangle
+                \mu
+                \langle})
+                $$
+                and for a sample ${\bf d} = ({\bf x}, \bm{v})$
+                $$
+                \hat{R}({\bf d}, \mathcal{F}(\cdot; \theta)) = \frac{1}{I}\sum_i l({\bf x}^{\rangle i \langle}, v^i,
+                \mathcal{F}(\cdot;
+                \theta))
+                \to \Bbb{E}_{X, Y}(l(\bm{x}, v, \mathcal{F}(\cdot; \theta)))
+                $$
+            </div>
+
+            So given our sample $\bar{\bf{d}} =
+            (\bar{\bf x}, \bar{\bm{v}})$ we find
+            $$
+            \argmin_{\theta} \hat{R}(\bar{\bf d}, \mathcal{F}(\cdot ; \theta)) = \argmin_{\theta}\frac{1}{I}\sum_i
+            l(\bar{\bf
+            x}^{\rangle i \langle},\bar{v}^i, \mathcal{F}(\cdot; \theta)) \\
+            = \argmin_{\theta}\frac{1}{I}\sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{\bf x}^{\rangle i \langle \langle i
+            \rangle};
+            \theta)^{\rangle i \langle })
+            = \argmin_{\theta}\frac{1}{I}\sum_i\Delta(\bar{v}^i,
+            \mathcal{F}(\bar{\bf x}^{[i]}
+            ;
+            \theta)^{\rangle i \langle} )
+            $$
+
+        </section>
+        <section id="loss-activation" data-title="Loss Function, Activation Functions">
+            <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss Function, Activation Functions
+            </h3>
+            We will need a way to choose the loss function $\Delta$. While we could make an arbitrary choice, we could
+            also
+            use
+            <span class="font-bold"> Maximum Likelihood Estimation </span>(MLE) to derive it.
+
+            Let $$\mathscr{P}=\{\mathcal{P}(X,Y; \theta) : p_{X,Y}(x,y;\theta) =
+            p_{Y|X}(y|x;\theta)p_X(x) = p_0(y;\mathcal{F}(x^{\langle \mu \rangle};\theta)^{\rangle \mu \langle})p_X(x)
+            \}_{\theta
+            \in \Theta
+            }$$ and assume
+            $$X,Y \sim
+            \mathcal{P}(X, Y; {\theta}) \in \mathscr{P} $$
+            with density
+            $p_{X,Y}(x,y;\theta) = p_0(y;\mathcal{F}(x;\theta))p_X(x)$ for some $\theta$.
+            The sample distribution for the random vector ${\bf D}= ({\bf X}, {\bf Y})$ is then given by the density
+            $$
+            p_{{\bf D}}(\bm{d};\theta)=_{i.i.d} \prod_i p(x_i, y_i;\theta) = \prod_i
+            p_0(y_i;\mathcal{F}(x_i^{\langle \mu \rangle};\theta)^{\rangle \mu \langle})p_X(x_i)$$
+
+
+            <div class="focus">
+
+                With our $\mathcal{X} = \Bbb{V}, \mathcal{Y} = \Bbb{R}$ and ${\bf d} = {\bf x}, \bm{y}$
+                $$
+                p_{\bf D} ({\bf d}; \theta)= \prod_i
+                p_0(y_i;\mathcal{F}({\bf x}^{[i]};\theta)^{\rangle i \langle})p_X({\bf x}^{\rangle i \langle})
+                $$
+            </div>
+            The likelihood is
+            $$
+            \mathbb{L}(\theta; {\bf \bar{d}}) = p_{\bf D}({\bf \bar{\bf d}}; \theta) = \prod_i
+            p_0(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]};\theta)^{\rangle i \langle})p_X(\bar{\bf x}^{\rangle i \langle})
+
+            $$
+            Taking the negative log gives
+            $$
+            -\log(\mathbb{L}(\theta; {\bf \bar{d}})) = -\sum_i \log(p_X(\bar{\bf x}^{\rangle i \langle})) - \sum_i
+            \log(p_0(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]};
+            \theta)^{\rangle i \langle}))
+            $$
+            which we want minimized over $\theta$.
+            To do so, we need only find
+            $$
+
+            \begin{equation}
+            \argmin_{\theta}\left(- \sum_i \log(p_0(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]}; \theta)^{\rangle i
+            \langle}))\right)
+            \end{equation}
+            $$
+            If we set $$\Delta(a, b) := -\log(p_0(a;b)) $$
+
+            we then have
+            $$ \argmin_{\theta}\left(\sum_i \Delta(\bar{v}^i;\mathcal{F}(\bar{\bf x}^{[i]}; \theta)^{\rangle i
+            \langle})\right) = \argmin_{\theta}\left(\sum_i l(\bar{\bf x}^{\rangle i \langle}, \bar{v}^i,
+            \mathcal{F}(\cdot;\theta))
+            \right)
+            \\
+
+            =\argmin_{\theta} I \hat{R}({\bf \bar{d}},\mathcal{F}(\cdot; \theta)) =\argmin_{\theta}
+            \hat{R}(\bar{\bf d},\mathcal{F}(\cdot; \theta))$$
+
+
+
+            so maximizing the likelihood assuming class $\mathscr{P}$ will also minimize the empirical risk with this
+            loss.
+            By
+            our
+            assumption on the data and $\mathscr{P}$,
+            $$(Y|X=\bm{x}) \sim \mathcal{P}(Y|X=\bm{x}; \theta) $$ with
+            $$p_{Y|X=\bm{x}}(y|\bm{x};\theta)=p_0(y;\mathcal{F}(\bm{x}^{\rangle
+            \mu
+            \langle};\theta)^{\langle \mu \rangle})$$
+            $$\implies (Y|X=\bm{x}) \sim \mathcal{P}_0(Y;\mathcal{F}(\bm{x}^{\rangle \mu \langle};\theta)^{\langle \mu
+            \rangle})$$
+
+            for some apriori chosen $\mathcal{P}_0$ with density $p_0$. We now investigate
+            suitable choices for
+            $\mathcal{P}_0$ by the nature of the random variable $(Y|X=\bm{x})$:
+
+            <section id='loss-derivation' data-title="Supervised Learning Loss Function">
+                <ul style="margin-top: 10px;">
+                    <li class="chalkboard">
+                        If $(Y|X=\bm{x}) \in \{0,1\}$ in the case of a binary learning task, then
+                        $$\mathcal{P}_0(Y;\hat{y})
+                        =
+                        \textbf{Bernoulli}(Y;\hat{y})$$ where $\hat{y} =
+                        \mathcal{F}(\bm{x}^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$,
+                        is a suitable choice (although actually derived from the axioms
+                        of probability) with
+                        $$p_0(y;\hat{y}) =
+                        \hat{y}^y(1-\hat{y})^{1-y} $$
+                        $$\implies \Delta(v, \hat{y})= -\log(p_0(v, \hat{y})) = -\left(v\log(\hat{y}) +
+                        (1-v)\log(1-\hat{y})\right) $$ that is, the <span class="font-bold">Binary Cross Entropy</span>
+                        (BCE)
+                        loss.
+                        Such
+                        a
+                        loss demands our tensor output $\hat{\bm y} =\mathcal{F}({\bf x}; \theta)$ for a sample ${\bf
+                        x}$
+                        obey
+                        certain properties:
+                        <ol style="list-style: lower-latin; margin: 10px;">
+                            <li>
+                                $\hat{\bm y} \in \mathbb{V}$
+                            </li>
+                            <li>
+                                $\hat{y}^{i} \in [0,1]$
+                            </li>
+                        </ol>
+                        so that $\Delta$ is well defined, by using $\hat{\bm y}^{\rangle i \langle}$ in place of
+                        $\hat{y}$
+                        for
+                        each
+                        $i$ in the sample. To
+                        satisfy (b) we
+                        choose
+                        the activation
+                        $f_{L+1}$ to be the <span class="font-bold">sigmoid</span>
+                        activation
+                        $$
+                        f_{L+1}: \mathbb{R} \to \mathbb{R} = z \mapsto \frac{1}{1+e^{-z}}
+                        $$
+                        To satisfy (a),
+                        $$
+                        W_{L+1} \in \mathbb{V}
+                        $$
+                        is required.
+                    </li>
+                    <li class="chalkboard">
+                        If $(Y|X=\bm{x}) \in S \subset \mathbb{Z} : \lvert S \rvert &lt; \infty$ more broadly, in the
+                        case
+                        of
+                        categorical
+                        learning, then $$ \mathcal{P}_0(Y;{\hat{\bm y}})=\textbf{Categorical}(Y;{\hat{\bm y}}) $$ where
+                        ${\hat{\bm
+                        y}}=\mathcal{F}(\bm{x}^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$, is a suitable
+                        choice
+                        (although
+                        actually derived from the axioms of probability) with $$p_0(y;{\hat{\bm y}})=\prod_c (\bm{\it
+                        \hat{y}}^c)^{[y=c]}$$ $$\implies \Delta(v, {\hat{\bm y}})=-\log(p_0(v, {\hat{\bm y}}))=-\sum_c
+                        [v=c]\log(\hat{y}^c) $$ that is, the <span class="font-bold">
+                            Categorical Cross Entropy</span> (CCE) loss.
+                        Such a
+                        loss demands our output $\hat{\bf y}=\mathcal{F}({\bf x}, \theta)$ obey certain properties:
+
+                        <ol style="list-style: lower-latin; margin: 10px;">
+                            <li>
+                                $
+                                \text{supp}^{b}(\hat{\bf y}^{ab}) \subset \{e_c\}_{c\leq C} (\implies
+                                \text{supp}^b((z_{L+1})^{ab})
+                                \subset
+                                \{e_c\}_{c\leq
+                                C})
+                                $
+
+                            </li>
+                            <li>
+                                $\hat{y}^{i,c} \in [0,1], \sum_c \hat{y}^{i,c} = 1$
+                            </li>
+                        </ol>
+                        so that $\Delta$ is well defined by using $\hat{\bf y}^{\rangle i \langle}$ in place of
+                        $\hat{\bm
+                        y}$.
+                        To satisfy (b) we
+                        choose
+                        the activation
+                        $F_{L+1}$ to be the <span class="font-bold">softmax</span>
+                        activation, a type of tensor activation:
+                        $$
+                        F_{L+1}: \mathbb{V}^{\otimes 2} \to \mathbb{V}^{\otimes 2} = z^{i,j}e_i \otimes e_j \mapsto
+                        \frac{e^{z^{i,j}}}{\sum_k e^{z^{i,k}}}e_i
+                        \otimes
+                        e_j
+                        $$
+                        At layer $L+1$, there is only one neuron, given by
+                        $$\mathcal{N}_{L+1, 1} \otimes e_1 = \mathcal{L}_{L+1}$$ with
+                        $$\text{supp}^b ((W_{L+1})^{ab}) \subset \{e_c\}_{c\leq C} $$
+                        so that $(a)$ is satisfied.
+                    </li>
+
+                    <li class="chalkboard">
+                        If $(Y|X=\bm{x}) \in \mathbb{R}$ in the case of a regression, then $$
+                        \mathcal{P}_0(Y;\hat{y})=\mathcal{N}(Y;\mu=\hat{y},\sigma^2=1) $$
+                        where $\hat{y} =
+                        \mathcal{F}(\bm{x}^{\langle \mu \rangle};\theta)^{\rangle \mu \langle}$,
+
+                        is a suitable choice with $$p_0(y;\hat{y})=\frac{1}{\sqrt{2\pi}}
+                        \exp\left({-\frac{(y-\hat{y})^2}{2}}\right)$$
+                        $$\implies \Delta(v, \hat{y})= -\log(p_0(v, \hat{y})) =-\log(\frac{1}{\sqrt{2\pi}}) +
+                        \frac{1}{2}(v - \hat{y})^2 $$
+                        although note to minimize the above, one need only minimize the <span class="font-bold">Mean
+                            Squared
+                            Error</span> (MSE) term $(v-\hat{y})^2$.
+                        Such a
+                        loss demands our output $\hat{\bm y}=\mathcal{F}({\bf x}, \theta)$ obey certain properties:
+                        <ol style="list-style: lower-latin; margin: 10px;">
+                            <li>
+                                $\hat{\bm y} \in \mathbb{V} $
+
+                            </li>
+                        </ol>
+                        so that $\Delta$ is well defined, by using $\hat{\bm y}^{\rangle i \langle}$ in place of
+                        $\hat{y}$.
+                        To satisfy this requirement
+                        $$
+                        W_{L+1} \in \mathbb{V}
+                        $$ is required.
+                        For regression,
+                        the
+                        activation is unrestricted and can infact be left out entirely by being set to the identity.
+                    </li>
+                </ul>
+            </section>
+
+        </section>
+
+        <section id="backpropogation" data-title="Backpropogation">
+            <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Backpropogation</h3>
+
+            We can now formulate the backpropogation algorithm, sticking with the language of tensors. Backpropogation
+            will
+            be
+            used to find
+            $$
+            \theta^* = \argmin_{\theta} \hat{R}(\bar{\bf d},
+            \mathcal{F}(\cdot; \theta))
+            $$
+            via Gradient Descent.
+            We proceed by finding the partial derivatives of the empirical risk. Assume as per the previous section we
+            have
+            a
+            loss function $\Delta$ and define the tensorized version by
+            $$
+            {\bf \Delta}(\bm{v}, T) = \sum_i \Delta(v^i, T^{\rangle i \langle})
+            $$
+            so that
+            $$
+            {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) = \sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{\bf
+            x};
+            \theta)^{\rangle i
+            \langle}) \\
+            \implies \hat{R}(\bar{\bf d},
+            \mathcal{F}(\cdot; \theta))
+            = \frac{1}{I} {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
+
+            $$
+            Perturb $\mathcal{F}(\cdot; \theta)$ by $h$, then
             $$
             \begin{align*}
-            \partial_{3}\Gamma_l^c({\bf
-            y}_{l-1}^c,
-            W_l^c, b_l^c) &amp;= db^c_l \mapsto \bm{1}^{a} \otimes db^c_l \otimes \bm{1}^{bc} \\
-            \implies \phi(\partial_{3}\Gamma_l^c({\bf
-            y}_{l-1}^c,
-            W_l^c, b_l^c) ) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
-            e^{\alpha} \\
+            d \mathcal{F}(\bar{\bf x}; \theta) &amp;= h(\bar{\bf x}) \\
+            \implies d {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
+            &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [d\mathcal{F}(\bar{\bf x};
+            \theta)]
+            \\
+            &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [h(\bar{\bf x})] \\
+            \implies d \hat{R}(\bar{\bf d},
+            \mathcal{F}(\cdot; \theta))
+            &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [h(\bar{\bf x})]
+            \\
+            &amp;= \frac{1}{I} \left( \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
+            \delta_{\bar{\bf
+            x}}\right) [h] \\
+            \implies \partial_2 \hat{R}(\bar{\bf d},
+            \mathcal{F}(\cdot; \theta))
+            &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
+            \delta_{\bar{\bf
+            x}}\\
 
 
             \end{align*}
             $$
-        </li>
-    </ul>
-    <h2 class="text-2xl my-4">The Gradients</h2>
-    <div style="width: 100%;">
-        Define the following:
+
+
+            By the chain rule
+            $$
+            \partial_{\theta} \hat{R}(\bar{\bf d},
+            \mathcal{F}(\cdot; \theta))
+            = \partial_2 \hat{R}(\bar{\bf d},
+            \mathcal{F}(\cdot; \theta))
+            \circ \partial_{\theta} \mathcal{F}(\cdot; \theta) \\
+            = \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ \delta_{\bar{\bf
+            x}} \circ \partial_{\theta} \mathcal{F}(\cdot; \theta ) $$
+            $$
+            \begin{align}
+            &amp;= \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
+            \partial_{\theta}
+            \mathcal{F}(\bar{\bf x}; \theta )\\
+            \end{align}
+            $$
+
+            Define
+            $$
+            \begin{align}
+            S &amp;= \frac{1}{I}{\bf \Delta}(\bar{\bm{v}}, \cdot) \circ F_{L+1} \\
+            T(\cdot, \theta) &amp;=
+            \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ ... \circ \mathcal{L}_0
+            \implies \mathcal{F}(\bar{\bf x}; \theta) = F_{L+1} \circ T(\bar{\bf x}, \theta)
+            \end{align}
+            $$
+
+
+            Then
+
+
+            $$
+            \begin{align}
+            \hat{R}(\bar{\bf d},
+            \mathcal{F}(\cdot; \theta))
+            &amp;= {\bf \Delta}(\bar{\bm{v}}, \cdot) \circ \mathcal{F}({\bf x}; \theta) \\
+            &amp; = S \circ T ({\bf x}, \theta) \\
+            \implies \partial_{\theta} \hat{R}(\bar{\bf d},
+            \mathcal{F}(\cdot; \theta))
+            &amp;= DS
+            ({\bf z}_{L+1}) \circ
+            \partial_{2} T(\bar{\bf x},\theta)\\
+
+            \end{align}
+            $$
+
+            It turns out that combining ${\bf \Delta}$ and $F_{L+1}$ into $S$ results in very elegant derivatives, which
+            we
+            will
+            derive below.
+
+
+            <ul>
+                <li class="my-8">
+                    <div class="chalkboard">
+                        If $\bm{\hat y} = \mathcal{F}(\bar{\bf x}, \theta) \in \Bbb{V} $ and $\Delta(\bar{v}^i,
+                        \bm{\hat{y}}^{\rangle i \langle}) = -\left(\bar{v}^i\log(\hat{\bm{y}}^{\rangle i \langle}) +
+                        (1-\bar{v}^i)\log(\hat{\bm{y}}^{\rangle i \langle})\right) $ in the case of a binary learning
+                        task,
+                        then
+                        tensorizing gives
+
+
+                        $$
+                        {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = -{\bf 1}_{a} \left(\bar{\bm v} \odot
+                        \log(\hat{\bm{y}}) + ({\bf 1}-
+                        \bar{\bm v}) \odot \log({\bf 1} -
+                        \hat{\bm{y}})
+                        \right)^{a}
+                        $$
+
+                        Perburb $\hat{\bm{y}}$ by $d\hat{\bm{y}}$, then
+
+
+                        $$
+                        \begin{align*}
+                        d \log(\bm{\hat{y}} ) &amp;= \bm{\hat{y}}^{-1} \odot d \bm{\hat{y}} \\
+                        d \log(1-\bm{\hat{y}}) &amp;= - ({\bf 1}-\bm{\hat{y}})^{-1} \odot d \bm{\hat{y}} \\
+                        \implies d {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= -{\bf 1}_{a} \left(\bar{\bm v} \odot
+                        (\bm{\hat{y}}^{-1} \odot d \bm{\hat{y}}) + ({\bf 1}-\bar{\bm{v}}) \odot (- ({\bf
+                        1}-\bm{\hat{y}})^{-1}
+                        \odot
+                        d \bm{\hat{y}})
+                        \right)^a \\
+                        &amp;= {\bf 1}_{a} \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf
+                        1}-\bm{\hat{y}})^{-1}
+                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right)^a \\
+                        \implies D_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto {\bf 1}_{a}
+                        \left(\left(({\bf
+                        1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
+                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \bm{h}\right)^a
+
+                        \end{align*}
+                        $$
+                        Tensoring the sigmoid activation gives
+                        $$
+                        \hat{\bm{y}} = F_{L+1}(\bm{z}_{L+1}) = \sigma(\bm{z}_{L+1}) = ({\bf 1} +
+                        \exp(-\bm{z}_{L+1}))^{-1}
+                        $$
+                        Perturb $\bm{z}_{L+1}$ by $d\bm{z}_{L+1}$, then
+                        $$
+                        \begin{align*}
+
+                        d \exp(-\bm{z}_{L+1}) &amp;= -\exp(-\bm{z}_{L+1}) \odot d\bm{z}_{L+1} \\
+                        \implies d\hat{\bm{y}} = d F_{L+1}(\bm{z}_{L+1}) &amp;=({\bf 1} + \exp(-\bm{z}_{L+1}))^{-2}\odot
+                        \exp(-\bm{z}_{L+1})\odot
+                        d\bm{z}_{L+1} \\
+
+                        &amp;= \hat{\bm{y}}^{2}\odot
+                        \exp(-\bm{z}_{L+1})\odot
+                        d\bm{z}_{L+1} \\
+                        &amp;= \hat{\bm{y}}^{2}\odot
+                        ({\bf -1 + 1} + \exp(-\bm{z}_{L+1}))\odot
+                        d\bm{z}_{L+1} \\
+                        &amp;= \hat{\bm{y}}^{2}\odot
+                        ({\bf - 1} + \hat{\bm{y}}^{-1})\odot
+                        d\bm{z}_{L+1} \\
+                        &amp;= \hat{\bm{y}}\odot
+                        ({\bf 1} - \hat{\bm{y}})\odot
+                        d\bm{z}_{L+1} \\
+                        \end{align*}
+
+                        $$
+                        Now we find $DS
+                        (\bm{z}_{L+1})
+                        $ by making the previous preturbations
+
+                        $$
+                        \begin{align*}
+                        & d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
+                        &amp;= {\bf 1}_a \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf
+                        1}-\bm{\hat{y}})^{-1}
+                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right)^a \\
+                        &amp;= {\bf 1}_a \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf
+                        1}-\bm{\hat{y}})^{-1}
+                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \left(\hat{\bm{y}}\odot
+                        ({\bf 1} - \hat{\bm{y}})\odot
+                        d\bm{z}_{L+1} \right)\right)^a \\
+                        &amp;= {\bf 1}_a \left(
+
+                        \left(
+                        \bm{\hat{y}} -\bar{\bm{v}} \odot \bm{\hat{y}}
+                        -\bar{\bm v} \odot ({\bf 1} - \bm{\hat{y}})
+                        \right) \odot
+
+                        d\bm{z}_{L+1}
+                        \right)^a \\
+
+                        &amp;= {\bf 1}_a \left(
+
+                        \left(
+                        \bm{\hat{y}} -\bar{\bm{v}} \right) \odot
+
+                        d\bm{z}_{L+1}
+                        \right)^a \\
+                        \implies DS
+                        (\bm{z}_{L+1})
+                        &amp;= \bm{h}
+                        \mapsto
+                        {\bf 1}_a \left(
+
+                        \left(
+                        \bm{\hat{y}} -\bar{\bm{v}} \right) \odot
+
+                        \bm{h}
+
+                        \right)^a \\
+                        &amp;= \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle
+
+                        \end{align*}
+                        $$
+
+                    </div>
+
+                    <div class="hyper-focus">
+
+                        $$
+                        \therefore \partial_{\theta} \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        = \frac{1}{I} \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle \circ \partial_{2} T(\bar{\bf
+                        x},\theta)
+                        $$
+                    </div>
+
+
+
+                </li>
+                <li class="my-8">
+                    <div class="chalkboard">
+                        If $\hat{\bf y} = \mathcal{F}(\bar{\bf x}; \theta) \in \Bbb{V}^{\otimes 2}$ and
+                        $\Delta(\bar{v}^i,
+                        \hat{\bf y}^{\rangle i \langle})
+                        = -\sum_c [\bar{v}^i = c] \log((\hat{\bf y}^{\rangle i \langle})^{c})$ in
+                        the case of a categorical learning task, then tensorizing gives
+
+                        $$
+                        {\bf \Delta}(\bar{\bm{v}}, \hat{\bf y}) = -{\bf 1}_{ab} \left(\Bbb{X} \odot \log(\hat{\bf y})
+                        \right)^{ab}
+                        $$
+                        where $\Bbb{X} \in \Bbb{V}^{\otimes 2}$ is the one hot tensor of $\bar{\bm{v}}$ defined by
+                        $$
+                        \Bbb{X} = \delta_{\bar{v}^i, j} e_i \otimes e_j$$
+                        Perturb $\hat{\bf y}$ by $d \hat{\bf y}$, then
+
+                        $$
+                        \begin{align*}
+                        d \log(\hat{\bf y}) &amp;= \hat{\bf y}^{-1} \odot d \hat{\bf y} \\
+                        \implies d (\Bbb{X} \odot \log(\hat{\bf y})) &amp;= \Bbb{X} \odot \hat{\bf y}^{-1} \odot d
+                        \hat{\bf
+                        y}
+                        \\
+                        \implies d {\bf \Delta} (\bar{\bm{v}}, \hat{\bf y}) &amp;= -{\bf 1}_{ab} \left(\Bbb{X} \odot
+                        \hat{\bf
+                        y}^{-1}
+                        \odot
+                        d \hat{\bf y} \right)^{ab}
+                        \\
+
+                        \end{align*}
+
+                        $$
+                        Tensorizing the softmax activation gives
+                        $$
+                        \hat{\bf y} = F_{L+1}({\bf z}_{L+1}) = \text{Diag}((\exp({\bf z}_{L+1})^{ab} {\bf
+                        1}_b)^{-1})^{a}{}_b \exp({\bf
+                        z}_{L+1})^{bc}
+                        $$
+                        Perturb ${\bf z}_{L+1}$ by $d{\bf z}_{L+1}$, then letting $E = \exp({\bf z}_{L+1})$
+                        $$
+                        \begin{align*}
+                        d E &amp;= E \odot d{\bf z}_{L+1} \\
+                        \implies d (E^{ab} {\bf 1}_b) &amp;= (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \\
+                        \implies d (E^{ab} {\bf 1}_b)^{-1} &amp;= - (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf
+                        z}_{L+1})^{ab}{\bf 1}_b)
+                        \\
+
+                        \implies d \hat{\bf y} &amp;= d (\text{Diag}((E^{ab}{\bf 1}_b)^{-1}))^a{}_bE^{bc} +
+                        \text{Diag}((E^{ab}{\bf 1}_b)^{-1})^a{}_bd E^{bc} \\
+                        &amp;= \text{Diag}(- (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf z}_{L+1})^{ab}{\bf
+                        1}_b))^a{}_bE^{bc}
+                        +
+                        \text{Diag}((E^{ab}{\bf
+                        1}_b)^{-1})^a{}_b(E
+                        \odot d {\bf z}_{L+1})^{bc}
+                        \end{align*}
+                        $$
+                        Let $A, B$ be arbitrary, and $C=\text{Diag}(c), D=\text{Diag}(d)$ be diagonal. We will use a few
+                        facts
+                        concerning diagonal degree-2 tensors and the $\odot $ operator:
+                        <ol style="list-style: decimal; list-style-position: inside;">
+                            <li>
+                                $D^a{}_bA^{bc} = (d^{a} \otimes {\bf 1}_{b}) \odot A$
+                            </li>
+                            <li>
+                                $D^a{}_b(A \odot B)^{bc} = (D^a{}_bA^{bc}) \odot B$
+                            </li>
+                            <li>
+                                $C^a{}_bD^{bc} = \text{Diag}(c \odot d)$
+                            </li>
+                        </ol>
+                        Noting that $\hat{\bf y} = \text{Diag}((E^{ab}{\bf 1}_b)^{-1})^a{}_bE^{bc} =
+                        (\text{Diag}(E^{ab}{\bf
+                        1}_b)^{-1})^a{}_bE^{bc}
+                        \implies E =
+                        \text{Diag}(E^{ab}{\bf 1}_b)^{a}{}_b \hat{\bf
+                        y}^{bc}$
+                        $$
+                        \begin{align*}
+                        d \hat{\bf y} &amp;= -\text{Diag}( (E^{ab}{\bf 1}_b)^{-2})^a{}_b\text{Diag}((E \odot d {\bf
+                        z}_{L+1})^{ab}{\bf
+                        1}_b)^b{}_c\text{Diag}(E^{ab}{\bf
+                        1}_b)^{c}{}_d
+                        \hat{\bf
+                        y}^{de} +
+                        (\text{Diag}((E^{ab}{\bf
+                        1}_b)^{-1}
+                        )^a{}_bE^{bc})
+                        \odot
+                        d {\bf z}_{L+1}\\
+                        &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b\text{Diag}( (E \odot d {\bf z}_{L+1})^{ab}{\bf
+                        1}_b)^b{}_c
+                        \hat{\bf
+                        y}^{cd} + \hat{\bf y}
+                        \odot
+                        d {\bf z}_{L+1} \\
+                        &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b(( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b
+                        \otimes
+                        {\bf
+                        1}^c)\odot
+                        \hat{\bf
+                        y})^{bc} + \hat{\bf y}
+                        \odot
+                        d {\bf z}_{L+1} \\
+                        &amp;=-(\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b(E \odot d {\bf z}_{L+1})^{bc}{\bf 1}_c
+                        \otimes
+                        {\bf
+                        1}^d)\odot
+                        \hat{\bf
+                        y} + \hat{\bf y}
+                        \odot
+                        d {\bf z}_{L+1} \\
+
+                        &amp;=-(((\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_bE^{bc}) \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b
+                        \otimes
+                        {\bf
+                        1}^c)\odot
+                        \hat{\bf
+                        y} + \hat{\bf y}
+                        \odot
+                        d {\bf z}_{L+1} \\
+                        &amp;=-((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+                        1}^c)\odot
+                        \hat{\bf
+                        y} + \hat{\bf y}
+                        \odot
+                        d {\bf z}_{L+1} \\
+                        \end{align*}
+                        $$
+                        Now we find $DS({\bf z}_{L+1}) $ by making the previous preturbations
+
+                        $$
+                        \begin{align*}
+                        & d {\bf \Delta}(\bm{\bar{v}},\hat{\bf y}) \\
+                        &amp;= d {\bf \Delta}(\bm{\bar{v}},
+                        F_{L+1}({\bf z}_{L+1}) ) = d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
+                        &amp;= -{\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
+                        d \hat{\bf y} \right)^{ab} \\
+
+                        &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
+                        (((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
+                        1}^c)\odot
+                        \hat{\bf
+                        y} - \hat{\bf y}
+                        \odot
+                        d {\bf z}_{L+1} ) \right)^{ab} \\
+
+                        &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b
+                        \otimes
+                        {\bf
+                        1}^c) - \Bbb{X}
+                        \odot
+                        d
+                        {\bf z}_{L+1} \right)^{ab} \\
+                        &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b
+                        \otimes
+                        {\bf
+                        1}^c)\right)^{ab}-
+                        {\bf 1}_{ab} \left( \Bbb{X} \odot d
+                        {\bf z}_{L+1} \right)^{ab} \\
+                        &amp;= {\bf 1}_{ab} \left(\hat{\bf y} \odot d {\bf z}_{L+1} \right)^{ab} - {\bf 1}_{ab}\left(
+                        \Bbb{X} \odot d
+                        {\bf z}_{L+1} \right)^{ab} \\
+                        &amp;= {\bf 1}_{ab} \left((\hat{\bf y} - \Bbb{X}) \odot d {\bf z}_{L+1} \right)^{ab}
+
+                        \end{align*}
+                        $$
+
+                        where the second to last line makes use of the identity ${\bf 1}_{ab}(\Bbb{X} \odot (A^{ab} {\bf
+                        1}_b
+                        \otimes {\bf 1}^c))^{ab} = {\bf 1}_{ab} A^{ab} $
+                        for any
+                        $A$ and 1-hot
+                        $\Bbb{X}$.
+                        Thus
+
+                        $$
+                        \begin{align*}
+                        DS({\bf z}_{L+1}) &amp;= {\bf h} \mapsto {\bf 1}_{ab} \left((\hat{\bf y} - \Bbb{X}) \odot {\bf
+                        h}
+                        \right)^{ab}
+                        \\
+                        &amp;= \langle \cdot,{\bf \hat{y}} -\Bbb{X} \rangle
+
+                        \end{align*}
+                        $$
+
+                    </div>
+
+                    <div class="hyper-focus">
+
+                        $$
+                        \therefore \partial_{\theta} \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        = \frac{1}{I} \langle \cdot,{\bf \hat{y}} -\Bbb{X} \rangle \circ \partial_2 T(\bar{\bf
+                        x},\theta)
+                        $$
+                    </div>
+                </li>
+                <li>
+                    <div class="chalkboard">
+                        If $\bm{\hat y} = \mathcal{F}(\bar{\bf x}, \theta) \in \Bbb{V} $ and $\Delta(\bar{v}^i,
+                        \bm{\hat{y}}^{\rangle i \langle}) = (\bar{v}^i - \bm{\hat{y}}^{\rangle i \langle})^2$ in the
+                        case of
+                        a
+                        regression task, then
+                        tensorizing gives
+                        $$
+                        {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = {\bf 1}_a((\bm{\bar{v}}-\hat{\bm{y}})^2)^a
+                        $$
+                        Perturbing $\hat{\bm{y}}$ by $d\hat{\bm{y}}$ gives
+                        $$
+                        \begin{align*}
+                        d{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= {\bf 1}_a(-2(\bm{\bar{v}}-\hat{\bm{y}}) \odot
+                        d\hat{\bm{y}})^a \\
+                        &amp;= -2{\bf 1}_a((\bm{\bar{v}}-\hat{\bm{y}}) \odot d\hat{\bm{y}})^{a} \\
+                        \implies D_2{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto -2{\bf
+                        1}_a((\bm{\bar{v}}-\hat{\bm{y}}) \odot h)^{a} \\
+                        &amp;= 2\langle \cdot, \hat{\bm{y}}- \bm{\bar{v}}
+                        \rangle
+
+                        \end{align*}
+
+                        $$
+                        If $F_{L+1}$ is the identity, we further conclude
+                        $$
+                        DS(\bm{z}_{L+1}) = 2\langle \cdot,
+                        \hat{\bm{y}}- \bm{\bar{v}} \rangle
+
+                        $$
+
+                    </div>
+
+                    <div class="hyper-focus">
+
+                        $$
+                        \therefore \partial_{\theta} \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        = \frac{2}{I} \langle \cdot, \hat{\bm{y}}- \bm{\bar{v}} \rangle
+                        \circ \partial_2 T(\bar{\bf x},\theta)
+
+                        $$
+                    </div>
+
+                </li>
+            </ul>
+
+            We are now remained with finding $\partial_{\theta} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            $ which we
+            can
+            do recursively, making up the
+            backpropogation procedure.
+            Firstly
+
+            $$
+            \begin{align*}
+            \partial_{\theta_{L+1}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            &amp;= DS({\bf z}_{L+1}) \circ
+            \partial_{2}\Gamma_{L+1}({\bf y}_L,
+            \theta_{L+1})
+            \end{align*}
+            $$
+
+
+            Let, for $l=L\ldots 1$
+            $$
+            \begin{align*}
+            U_l(\cdot, \theta) :&amp;=
+            S \circ \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ F_{L} \circ ... \circ F_{l+1} \circ
+            \Gamma_{l+1}(\cdot, \theta_{l+1}) \\
+            \implies \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            &amp;= \left(
+            U_l(\cdot, \theta) \circ F_l \circ \Gamma_l(\cdot, \theta_l) \circ \ldots \circ \mathcal{L}_0
+            \right)(\bar{\bf
+            x})
+            \end{align*}
+            $$$$
+            \begin{align}
+
+            \implies \begin{cases}
+            \partial_{W_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
+            \circ
+            \partial_{2}\Gamma_l({\bf
+            y}_{l-1},
+            \theta_l) \\
+            \partial_{b_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
+            \circ
+            \partial_{3}\Gamma_l({\bf
+            y}_{l-1},
+            \theta_l) \end{cases}
+
+
+            \end{align}
+            $$
+            where
+            $$
+            \begin{align}
+            U_{l}(\cdot, \theta) &amp;= \begin{cases}
+            S \circ \Gamma_{L+1}(\cdot, \theta_{L+1}) & l=L \\
+            U_{l+1}(\cdot, \theta) \circ F_{l+1} \circ \Gamma_{l+1}(\cdot, \theta_{l+1}) & l&lt;L \end{cases} \\
+            \implies
+            \partial_{1} U_l({\bf y}_l, \theta) &amp;=\begin{cases}
+            DS({\bf z}_{L+1}) \circ \partial_1
+            \Gamma_{L+1}({\bf y}_{L}, \theta_{L+1}) & l=L\\
+            \partial_{1} U_{l+1}({\bf y}_{l+1}, \theta) \circ
+            DF_{l+1}({\bf z}_{l+1}) \circ \partial_1 \Gamma_{l+1}({\bf y}_l, \theta_{l+1}) & l&lt;L \end{cases}
+            \end{align}
+            $$
+
+            So
+            the recursion is well posed.
+
+            Finally
+            $$
+            \partial_{\theta} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            \\ = \left( (dW_1, db_1 \ldots dW_{L+1}, db_{L+1})
+            \mapsto \sum_l
+            \partial_{W_l}
+            \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            [d W_l] + \sum_l \partial_{b_l}
+            \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            [d b_l] \right)
+            $$
+            allowing the full computation of $\partial_{\theta}\hat{R}(\bar{\bf d}, \mathcal{F}(\cdot;\theta))$.
+
+            A few derivatives will need to be computed. We will write the maps using their tensor identifications, as
+            that
+            will
+            allow an alternative way to not only compose maps but also compute their adoints, which we will need when
+            finding
+            the gradient.
+
+            <section id="hom-tensor" data-title="The Hom-Tensor Identification">
+                <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">The Hom-Tensor Identification</h2>
+                A word on the canonical identification: if we have a map $T \in \text{Hom}(V, W)$ where $V$ is a tensor
+                product
+                space with
+                basis $\{e_{\mathcal{I}}\} $, and the basis for $V^*$ is induced by the standard inner product $\langle
+                e_{\mathcal{I}} , e_{\mathcal{J}}
+                \rangle = \delta_{\mathcal{I}, \mathcal{J}} $ giving $\{(e_{\mathcal{I}})' = \langle \cdot ,
+                e_{\mathcal{I}}
+                \rangle
+                \}$,
+                then using
+                $$
+                \text{Hom}(V,W) \cong W\otimes V^* \\
+
+
+                (\bigotimes V_i)^* \cong \bigotimes V_i^*
+                $$
+                we have the identification
+                <div class="exposition">
+                    $$
+                    \phi: T \mapsto T(e_{\mathcal{I}}) \otimes (e_{\mathcal{I}})' \mapsto T(e_{\mathcal{I}}) \otimes
+                    e^{\mathcal{I}}
+                    = \phi(T)
+
+                    $$
+
+                </div>
+
+            </section>
+
+            Composition with $\phi(S) = S(f_{\mathcal J}) \otimes f^{\mathcal{J}}$ is then given by the slot-wise
+            contraction of
+            the
+            input slot $e^{\mathcal{I}}$ of $\phi(T)$ with the output slot $S(f_{\mathcal{J}})$ of $S$
+            $$
+            \phi(T \circ S) = T(e_{\mathcal{I}}) \otimes
+            e^{\mathcal{I}}(S(f_{\mathcal{J}})) \otimes f^{\mathcal{J}} =
+            e^{\mathcal{I}}(S(f_{\mathcal{J}})) T(e_{\mathcal{I}}) \otimes f^{\mathcal{J}} = (\phi(T))^{a}{}_b
+            (\phi(S))^{b}{}_c
+            $$
+            <ul style="list-style: disc; list-style-position: inside;" class="my-10">
+                <li class="my-4">
+                    $DF_l({\bf z}_l)$: <br />
+                    Perturb ${\bf z}_l$ by $d {\bf z}_l$, then
+                    $$
+                    \begin{align*}
+                    dF_l({\bf z}_l) = f_l'((z_l)^{i,j})d(z_l)^{i,j}e_i \otimes e_j &amp;= F_l'({\bf z}_l) \odot d{\bf
+                    z}_l
+                    \\
+                    \implies DF_l({\bf z}_l) = {\bf h} \mapsto F_l'({\bf z}_l) \odot {\bf h}
+                    \end{align*}
+                    $$
+                    where $F_l'({\bf z}_l) := f_l'((z_l)^{i,j})e_i \otimes e_j$
+                    $$
+                    \begin{align*}
+                    \implies \phi(DFl({\bf z}_l)) &amp;= F'_l({\bf z}_l) \odot (e_i \otimes e_j) \otimes e^i
+                    \otimes e^j = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes e^i
+                    \otimes e^j \\
+                    \end{align*}
+                    $$
+
+                </li>
+                <li class="my-4">
+                    $\partial_{2}\Gamma_l({\bf
+                    y}_{l-1},
+                    \theta_l) $: <br />
+                    Contraction of two tensors against the metric, and $\otimes$, are both bilinear so
+
+                    $$
+                    \begin{align*}
+
+                    \partial_{W_l} \Gamma_l({\bf
+                    y}_{l-1},
+                    \theta_l) =&amp;\quad dW_l \mapsto g_{bc}({\bf y}_{l-1})^{ab}(dW_l)^{cd} \\
+                    \xmapsto[]{\phi}&amp;\quad g_{bc}({\bf y}_{l-1})^{ab}(e_i \otimes e_j)^{cd} \otimes
+                    e^i \otimes e^j\\
+                    =&amp;\quad ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j\\
+
+                    \partial_{b_l} \Gamma_l({\bf
+                    y}_{l-1},
+                    \theta_l) =&amp;\quad db_l \mapsto \sum_i e_i \otimes db_l \\
+                    \xmapsto[]{\phi}&amp;\quad \sum_{i} e_i \otimes e_j \otimes e^j
+
+
+                    \end{align*}
+                    $$
+                </li>
+                <li class="my-4">
+                    $\partial_{1}\Gamma_l({\bf
+                    y}_{l-1},\theta_l) $: <br />
+                    $$
+                    \begin{align*}
+                    \partial_{1} \Gamma_l({\bf
+                    y}_{l-1},
+                    \theta_l) =&amp;\quad d{\bf y}_{l-1} \mapsto g_{bc}(d{\bf y}_{l-1})^{ab}(W_l)^{cd} \\
+                    \xmapsto[]{\phi}&amp;\quad g_{bc}(e_i \otimes e_j)^{ab}(W_l)^{cd} \otimes e^i \otimes e^j\\
+                    =&amp;\quad (W_l)^{jx} e_i \otimes e_x \otimes e^i \otimes e^j
+                    \end{align*}
+                    $$
+                </li>
+            </ul>
+
+
+            Now we can calculate the full derivative of each parameter.
+            <section id='adjunction' data-title="Adjunction">
+                <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">Adjunction</h2>
+                The gradient is technically the adjoint of the derivative
+                $$
+                \nabla f(x) = (Df(x))^{\dagger}
+                $$
+                Since we will express all derivatives as tensors, we need to quickly mention the suitable 'adjunction'
+                operator
+                for
+                tensors: if $T \in \text{Hom}(V, W)$ where $V$ has basis $\{e_{\mathcal{I}}\}$, $W$ has basis
+                $\{f_{\mathcal{I}}\}$, and both spaces are endowed with the standard products
+                $\langle e_{\mathcal{I}}, e_{\mathcal{J}}\rangle = \delta_{\mathcal{I}, \mathcal{J}}$ and $\langle
+                f_{\mathcal{I}},
+                f_{\mathcal{J}}\rangle = \delta_{\mathcal{I}, \mathcal{J}}$
+                , and $V^*, W^*$ have the dual bases induced from these inner products, then
+                $$
+                \phi(T^{\dagger}) = \langle f_{\mathcal{J}}, T(e_{\mathcal{I}}) \rangle e_{\mathcal{I}} \otimes
+                f^{\mathcal{J}}
+                $$
+                Also
+                $$
+                \phi(T) = T(e_{\mathcal{I}}) \otimes e^{\mathcal{I}} \\
+                = \langle f_{\mathcal{J}}, T(e_{\mathcal{I}}) \rangle f_{\mathcal{J}}
+                \otimes e^{\mathcal{I}} $$
+                Thus 'adunction' on tensors can be defined by
+                <div class="exposition">
+                    $$
+                    \phi(T^a{}_b)^{\dagger} := T^b{}_{a} = \phi(T^{\dagger})
+                    $$
+                </div>
+
+            </section>
+            <section id='gradients' data-title="The Gradients">
+                <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">The Gradients</h2>
+                In practice, solving for $\theta^* = \argmin \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))$ is
+                infeasible
+                for
+                many reasons, two important ones being the many flat regions of the objective $\hat{R}$ and the large
+                matrix
+                inversions that would have to be computed. However,
+                now that we've obtained the partial derivatives of $\hat{R}$ at $(\bar{\bf d}; \mathcal{F}(\cdot;
+                \theta))$
+                we
+                can
+                subtract the gradient from $\theta$ to move towards the optimal point. The procedure to find the
+                gradients
+                will
+                be
+                illustrated.
+                Firstly, some shorthands; let $l$ be a layer index and denote
+                $$
+                \begin{align*}
+                {\bm{\xi}}_l &amp;=
+                \phi(\partial_{1} U_l({\bf y}_l, \theta)) &amp;= ({\xi}_l)^{i,j} e^i \otimes e^j\\
+                {\bm{\xi}}_z &amp;= \phi(\partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)) \\
+                {\bm{\delta}}_w &amp;= \phi(\partial_{W_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))) \\
+                {\bm{\delta}}_b &amp;= \phi(\partial_{b_l} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))\\
+                \bm{\epsilon}_w &amp;= \phi(\partial_{W_l}\Gamma_l({\bf
+                y}_{l-1},
+                \theta_l)) &amp;= ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j \\
+                \bm{\epsilon}_b &amp;= \phi(\partial_{b_l}\Gamma_l({\bf
+                y}_{l-1},
+                \theta_l)) &amp;= \sum_{i,j} e_i \otimes e_j \otimes e^j
+                \\
+                \bm{\epsilon}_z &amp;= \phi(DF_l({\bf z}_l)) &amp; = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes
+                e^i
+                \otimes e^j\\
+                \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma_l({\bf
+                y}_{l-1};
+                \theta_l)) &amp;= (W_l)^{j,x} e_i \otimes e_x \otimes e^i \otimes e^j
+                \\
+
+                \end{align*}
+                $$
+                By the preceding work we can find the gradient tensors for each parameter. Note that transposition is
+                used
+                to
+                denote
+                permuting
+                the slots of 2-tensors.
+                <div class="flex flex-row justify-between align-baseline">
+                    <div>
+                        $$
+                        \begin{align*}
+
+                        \bm{\delta}_w &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
+                        \theta)
+                        \circ DF_l({\bf z}_l)
+                        \circ
+                        \partial_{W_l}\Gamma_l({\bf
+                        y}_{l-1},
+                        \theta_l) \right) \\
+                        &amp;= (\bm{\xi}_z){}_{ab}
+                        (\bm{\epsilon}_w)^{ab}{}_{cd} \\
+                        &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e^i \otimes e^q \\
+                        \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e_i \otimes e_q \\
+                        &amp;= (\xi_z^{\dagger})^{p,q} (y_{l-1}^T)^{i,p} \otimes e_i \otimes e_q \\
+                        &amp;= g_{bc}({\bf y}_{l-1}^T)^{ab}(\bm{\xi}_z^{\dagger})^{cd}
+                        \end{align*}
+                        $$
+                    </div>
+                    <div>
+                        $$
+                        \begin{align*}
+                        \bm{\delta}_b &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
+                        \theta)
+                        \circ DF_l({\bf z}_l)
+                        \circ
+                        \partial_{b_l}\Gamma_l({\bf
+                        y}_{l-1},
+                        \theta_l) \right) \\
+                        &amp;= (\bm{\xi}_z){}_{ab}
+                        (\bm{\epsilon}_b)^{ab}{}_{c} \\
+                        &amp;= \sum_p (\xi_z)_{p,q} e^q \\
+                        \implies \bm{\delta}_b^{\dagger} &amp;= \sum_p (\xi_z)_{p,q} e_q \\
+                        &amp;= \sum_p (\xi_z^{\dagger})^{p,q} e_q \\
+                        &amp;= {\bm{1}}_{a}(\bm{\xi}_z^{\dagger})^{ab} \\
+
+                        \end{align*}
+
+                        $$
+                    </div>
+                </div>
+                where
+                <div class="flex flex-row justify-between align-baseline">
+                    <div>
+                        $$
+                        \begin{align*}
+                        \bm{\xi}_z &amp;= (\bm{\xi}_l)_{ab}(\bm{\epsilon}_z)^{ab}{}_{cd}\\
+
+                        &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e^i \otimes e^j \\
+                        \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
+                        &amp;= (\xi_l^{\dagger})^{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
+                        &amp;= \bm{\xi}_l^{\dagger} \odot F_l'({\bf z}_l) \\
+                        \end{align*}
+
+                        $$
+                    </div>
+                    <div>
+                        $$
+                        \begin{align*}
+                        \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U_{l-1}({\bf y}_{l-1}, \theta)) = \phi(\partial_{1}
+                        U_{l}({\bf
+                        y}_{l},
+                        \theta)
+                        \circ
+                        DF_{l}({\bf z}_{l}) \circ \partial_1 \Gamma_{l}({\bf y}_{l-1}, \theta_l))\\
+                        &amp;= (\bm{\xi}_l)_{ab} (\bm{\epsilon}_z)^{ab}{}_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
+
+                        &amp;= (\bm{\xi}_z)_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
+                        &amp;= (\xi_z)_{p,q} (W_l)^{j, q} e^p \otimes e^j \\
+                        \implies \bm{\xi}_{l-1}^{\dagger} &amp; = (\xi_l)_{p,q} (W_l)^{j, q} e_p \otimes e_j \\
+                        &amp; = (\xi_l^{\dagger})^{p,q} (W_l^T)^{q, j} e_p \otimes e_j \\
+                        &amp; = g_{bc}(\bm{\xi_l}^{\dagger})^{ab} (W_l^T)^{cd}
+                        \end{align*}
+
+                        $$
+                    </div>
+                </div>
+
+            </section>
+        </section>
+
+    </section>
+
+
+    <section id="CNNs" data-title="2. Convolutional Neural Networks">
+        <h2 class="text-3xl my-8" style="font-family: var(--font-playfair);"> 2. Convolutional Neural Networks
+        </h2>
+        The machinery used to formalize FNNs is even more applicable to convolutional neural networks (CNNs). Lets start
+        with the key operation; define the operator
+        $$
+        Y^{\mathcal{A}b_1\ldots b_n} *^n_{m} W^{\mathcal{C}b_1 \ldots b_n} = \sum_{\alpha \in \Bbb{Z}^{|m|}}Y_{
+        \mathcal{A}b_1 \ldots b_n}
+        \tau(W; sgn(m)\cdot\alpha)^{\mathcal{C}b_1\ldots b_n} \otimes e_{\alpha}
+        $$
+
+        for $|m| \leq n$ and, using $\mathcal{I}$ to index all but the last $m$ slots and $\mathcal{J}$ to index the
+        last
+        $|m|$ slots
+        $$
+        \tau(W;\alpha) = W^{\mathcal{I},\mathcal{J}-\alpha} e_{\mathcal{I}}\otimes e_{\mathcal{J}} = W^{\mathcal{I},
+        \mathcal{J}}
+        e_{\mathcal{I}}\otimes e_{\mathcal{J}+\alpha}
+        $$
+        is the translation operator over the last $|m|=\text{len}(\alpha)$ slots. $\mathcal{A},\mathcal{C}$ are abstract
+        multiindices. Now let $m \in \Bbb{N}$ and $$\chi_m(W)^{\mathcal{I},\mathcal{J}} =
+        W^{\mathcal{I},-\mathcal{J}}$$ be the tensor flipped at the last $m$ slots.
+        Define a few operators
         $$
         \begin{align*}
-        {\bm{\xi}}_l{} &amp;=
-        \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta)) &amp;= ({\xi}^c_l{})_{tuvw} e^{tuvw}\\
-        {\bm{\xi}}_z &amp;= \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta) \circ DF^c_l{}({\bf z}^c_l{})) \\
-        {\bm{\delta}}_w &amp;= \phi(\partial_{W^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))) \\
-        {\bm{\delta}}_b &amp;= \phi(\partial_{b^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))\\
-        \bm{\epsilon}_w &amp;= \phi(\partial_{W^c_l{}}\Gamma^c_l{}({\bf
-        y}_{l-1},
-        \theta^c_l{})) &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
-        e_{i\alpha sr}
-        \otimes
-        e^{\alpha\beta\gamma\delta}\\
-        \bm{\epsilon}_b &amp;= \phi(\partial_{b^c_l{}}\Gamma^c_l{}({\bf
-        y}_{l-1},
-        \theta^c_l{})) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
-        e^{\alpha} \\
-        \bm{\epsilon}_z &amp;= \phi(DF^c_l{}({\bf z}^c_l{})) &amp; = f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes
-        e^{ijmn}
-        \\
-        \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma^c_l{}({\bf
-        y}_{l-1};
-        \theta^c_l{})) &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma
-        \delta}
-        \\
+        &amp;Y \rtimes W = Y *^3_2 W \\
+        &amp;Y \bar{\rtimes} W = Y *^3_2 \chi_2(W) \\
 
-        \end{align*}
+        &amp;Y \ltimes W = Y *^3_{-2} W \\
+
+        &amp;Y \bar{\ltimes} W = Y *^3_{-2} \chi_2(W) \end{align*}
         $$
-        By the preceding work we can find the gradient tensors for each parameter. NOTE: all transpositions denote
-        permuting the first two slots.
-        <div class="flex flex-row justify-between align-baseline">
-            <div>
-                $$
-                \begin{align*}
+        Let $y_{l-1}^c, W_{l}^c \in \Bbb{V}^{\otimes 4}, b_{l}^c \in \Bbb{V}$.
+        <section id='cnn-model' data-title="The Model">
+            <h3 class="text-2xl mt-8 mb-8" style="font-family: var(--font-playfair);">The Model </h3>
 
-                \bm{\delta}_w &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
-                \theta)
-                \circ DF^c_l{}({\bf z}^c_l{})
+            <div class="hyper-focus">
+
+                The convolutional layer is defined for $l=1\ldots L_c$ as the map
+                $$
+                y_{l-1}^c \mapsto \mathcal{L}^c_l(y_{l-1}^c;W_l^c, b_l^c) = F^c_l \circ \Gamma^c_l(y_{l-1}^c, W_l^c,
+                b_l^c)
+                $$
+
+                where $$
+                \Gamma^c_l(Y, W, b)
+                =Y \rtimes W + \bm{1}^{a} \otimes b \otimes
+                \bm{1}^{bc}
+                $$
+                We will call the neuron $k$ at layer $l$ the function
+                $$
+                y_{l-1}^c \mapsto \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k
+                \langle}) =
+                F^c_l
                 \circ
-                \partial_{W^c_l{}}\Gamma^c_l{}({\bf
-                y}_{l-1},
-                \theta^c_l{}) \right) \\
-                &amp;= (\bm{\xi}_z){}_{abcd}
-                (\bm{\epsilon}_w)^{abcd}{}_{efgh} \\
-                &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
+                \Gamma^c_l(y_{l-1}^c, (W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k \langle})
+                $$
 
-                e^{u\beta\gamma\delta}\\
-                \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
-                e_{u\beta\gamma\delta} \\
-                &amp;= (\xi^{\dagger}_z{}^T)^{utvw} (y^c_{l-1}{}^T)^{\beta t(\gamma+v)(\delta+w)}
-                e_{u\beta\gamma\delta} \\
-                &amp;= \bm{\xi}^T_z \ltimes {\bf y}^c_{l-1}{}^T \\
+                Note that $$ \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k
+                \langle})^{\rangle i
+                \langle \langle k \rangle \langle i \rangle} =
+                \mathcal{L}^c_l(y_{l-1}^c;W_l^c, b_l^c)$$
+                The <span class="font-bold">flattening layer </span> changes the dimension of $y^c_{L_c}$ so that $y_0 =
+                y^c_{L_c+1}
+                \in \Bbb{V}^{\otimes 2}$ as follows:
+                Let $T \in \Bbb{V}^{\otimes n}$ for some $n$. Define
+                $$
+                \alpha_{m} = \min \{ \alpha | e_{\alpha} \in \text{supp}(T) \} \\
+                \alpha_{M} = \max \{ \alpha | e_{\alpha} \in \text{supp}(T) \} \\
+                d_i = (\alpha_M)_i - (\alpha_m)_i + 1$$ for $i=1\ldots n$, and $\beta = (\beta_1 \ldots \beta_n)$ such
+                that
+                $$
+                \beta_j = \begin{cases}
+                \prod_{i=j+1}^n d_i & i &lt; n \\
+                1 & i = n
+                \end{cases}
+                $$
+                Let $|\alpha| = \sum_i \alpha_i$. Then define
 
-                &amp;\equiv ({\bf y}^c_{l-1}{}^T \rtimes \bm{\xi}^T_z)^T \\
-                \end{align*}
+                $$\gamma(T) = \sum_{\alpha} T^{\alpha} e_{|\beta \cdot (\alpha-\alpha_m)|+1}$$
+                The flattening layer is the map
+                $$
+                y^c_{L_c} \mapsto \Gamma^c_{L_c}(y^c_{L_c}) = \sum_i \gamma((y^c_{L_c})^{\rangle i \langle}) \otimes e_i
                 $$
             </div>
-            <div>
-                $$
-                \begin{align*}
-                \bm{\delta}_b &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
-                \theta)
-                \circ DF^c_l{}({\bf z}^c_l{})
-                \circ
-                \partial_{b^c_l{}}\Gamma^c_l{}({\bf
-                y}_{l-1},
-                \theta^c_l{}) \right) \\
-                &amp;= (\bm{\xi}_z){}_{abcd}
-                (\bm{\epsilon}_b)^{abcd}{}_{e} \\
-                &amp;= \sum_{tvw} (\xi_z)_{tuvw} e^u
-                \\
-                \implies \bm{\delta}_b^{\dagger} &amp;= \sum_{tvw} (\xi_z)_{tuvw} e_u
-                \\
-                &amp;= \sum_{tvw} (\xi^{\dagger}_z)^{tuvw} e_u
-                \\
-                &amp;=\bm{1}_{acd}(\bm{\xi}^{\dagger}_z)^{abcd}
-                \\
+        </section>
+        <section id='cnn-backprop' data-title="Backpropogation">
+            <h2 class="text-2xl my-4">Backpropogation</h2>
+            We will use the same setup to find the derivatives as in the FNN section. Let, for $l=L_c\ldots 1$
+            $$
+            \begin{align*}
+            U_l^c(\cdot, \theta) :&amp;=
+            S \circ \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ \ldots \circ \Gamma_{1}(\cdot, \theta_{1}) \circ
+            \Gamma^c_{L_c+1}
+            \circ \ldots \circ \Gamma^c_{l+1}(\cdot; \theta^c_{l+1}) \\
+            \implies \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            &amp;= \left(
+            U_l^c(\cdot, \theta) \circ F_l^c \circ \Gamma_l^c(\cdot, \theta_l^c) \circ \ldots \circ \mathcal{L}_0
+            \right)(\bar{\bf x})
+            \end{align*}
+            $$$$
+            \begin{align}
 
-                \end{align*}
+            \implies \begin{cases}
+            \partial_{W_l^c} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            &amp;= \partial_{1} U_l^c({\bf y}_l^c, \theta) \circ DF_l^c({\bf z}_l^c)
+            \circ
+            \partial_{2}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            \theta_l^c) \\
+            \partial_{b_l^c} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
+            &amp;= \partial_{1} U_l^c({\bf y}_l^c, \theta) \circ DF_l^c({\bf z}_l^c)
+            \circ
+            \partial_{3}\Gamma_l^c({\bf
+            y}_{l-1}^c,
+            \theta_l^c) \end{cases}
 
-                $$
-            </div>
-        </div>
 
-        where
+            \end{align}
+            $$
+            where
+            $$
+            \begin{align}
+            U_{l}^c(\cdot, \theta) &amp;= \begin{cases}
+            S \circ \Gamma_{L+1}^c(\cdot, \theta_{L+1}^c) & l=L_c \\
+            U_{l+1}^c(\cdot, \theta) \circ F_{l+1}^c \circ \Gamma_{l+1}^c(\cdot, \theta_{l+1}^c) & l&lt;L_c \end{cases}
+            \\
+            \implies
+            \partial_{1} U_l^c({\bf y}_l^c, \theta) &amp;=\begin{cases}
+            DS({\bf z}_{L_c+1}^c) \circ \partial_1
+            \Gamma_{L+1}^c({\bf y}_{L_c}^c, \theta_{L+1}^c) & l=L_c\\
+            \partial_{1} U_{l+1}^c({\bf y}_{l+1}^c, \theta) \circ
+            DF_{l+1}({\bf z}_{l+1}^c) \circ \partial_1 \Gamma_{l+1}^c({\bf y}_l^c, \theta_{l+1}^c) & l&lt;L_c
+            \end{cases}
+            \end{align} $$
+            We compute the needed partials:
+            <ul style="list-style-type: disc">
+                <li>$DF^c_l({\bf z}^c_l) $: Same as for FNN's:
+                    $$
+                    \begin{align*}
+                    DF^c_l({\bf z}^c_l) &amp;= {\bf h} \mapsto F^{c}_l{}'({\bf z}^c_l) \odot {\bf h} \\
+                    \implies \phi(DF^c_l({\bf z}^c_l)) &amp;= f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes
+                    e^{ijmn}
+                    \end{align*}
 
-        <div class="flex flex-row justify-between align-baseline">
-            <div>
-                $$
-                \begin{align*}
-                \bm{\xi}_z &amp;= (\bm{\xi}_l{})_{abcd}(\bm{\epsilon}_z)^{abcd}{}_{efgh}\\
+                    $$
+                </li>
+                <li>
+                    $
+                    \partial_{1}\Gamma_l^c({\bf
+                    y}_{l-1}^c,
+                    W_l^c, b_l^c) $: Perturb $y^c_{l-1}$.
+                    $$
+                    \begin{align*}
+                    \partial_{1}\Gamma_l^c({\bf
+                    y}_{l-1}^c,
+                    W_l^c, b_l^c)&amp;= dy^c_{l-1} \mapsto (dy^c_{l-1}) \rtimes W^c_l \\
+                    \implies \phi(\partial_{1}\Gamma_l^c({\bf
+                    y}_{l-1}^c,
+                    W_l^c, b_l^c)) &amp;= (e_{\alpha\beta\gamma\delta} \rtimes W^c_l) \otimes
+                    e^{\alpha\beta\gamma\delta} \\
+                    &amp;= (e_{\alpha\beta\gamma\delta})^{ituv} \tau(W^c_l; (s, r))^{jtuv} e_{ijsr} \otimes
+                    e^{\alpha\beta\gamma\delta} \\
 
-                &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e^{tuvw} \\
-                \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
-                &amp;= (\xi_l{}^{\dagger})^{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
-                &amp;= \bm{\xi}_l{}^{\dagger} \odot F^c_l{}'({\bf z}^c_l{}) \\
-                \end{align*}
+                    &amp;= \tau(W^c_l; (s, r))^{j\beta\gamma\delta} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma
+                    \delta} \\
+                    &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta}
+                    \end{align*}
+                    $$
+                </li>
 
-                $$
+                <li>
+                    $\partial_{2}\Gamma_l^c({\bf
+                    y}_{l-1}^c,
+                    W_l^c, b_l^c)$: Perturb $W^c_l$:
+                    $$
+                    \begin{align*}
+                    \partial_{2}\Gamma_l^c({\bf
+                    y}_{l-1}^c,
+                    W_l^c, b_l^c) &amp;= dW^c_l \mapsto y^c_{l-1} \rtimes dW^c_l \\
+                    \implies \phi(\partial_{2}\Gamma_l^c({\bf
+                    y}_{l-1}^c,
+                    W_l^c, b_l^c)) &amp;= (y^c_{l-1} \rtimes e_{\alpha\beta\gamma\delta}) \otimes e^{\alpha
+                    \beta\gamma\delta} \\
+                    &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
+                    e^{\alpha\beta\gamma\delta} \\
+                    &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
+                    e^{\alpha\beta\gamma\delta} \\
+                    &amp;= (y^c_{l-1})^{ituv} (e_{\alpha\beta(\gamma+s)(\delta+r)})^{jtuv} e_{ijsr} \otimes
+                    e^{\alpha\beta\gamma\delta} \\
+                    &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
+                    e_{i\alpha sr}
+                    \otimes
+                    e^{\alpha\beta\gamma\delta} \\
 
-            </div>
-            <div>
-                $$
-                \begin{align*}
-                \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U^c_{l-1}({\bf y}^c_{l-1}, \theta)) = \phi(\partial_{1}
-                U^c_{l}({\bf
-                y}^c_{l},
-                \theta)
-                \circ
-                DF^c_{l}({\bf z}^c_{l}) \circ \partial_1 \Gamma^c_{l}({\bf y}^c_{l-1}, \theta^c_l{}))\\
-                &amp;= (\bm{\xi}_l{})_{abcd} (\bm{\epsilon}_z)^{abcd}{}_{efgh}
-                (\bm{\epsilon}_{l-1})^{efgh}{}_{wxyz}\\
+                    \end{align*}
+                    $$
+                </li>
 
-                &amp;= (\bm{\xi}_z)_{efgh} (\bm{\epsilon}_{l-1})^{efgh}{}_{wxyz}\\
-                &amp;= (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)} e^{t\beta \gamma \delta}
-                \\
-                \implies \bm{\xi}_{l-1}{}^{\dagger} &amp; = (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)}
-                e_{t\beta
-                \gamma
-                \delta}
-                \\
-                &amp; = (\xi^{\dagger}_z{})^{tuvw} (W^c_l{}^T)^{\beta u(\gamma-v)(\delta-w)} e_{t\beta \gamma
-                \delta} \\
-                &amp; =(\xi^{\dagger}_z{})^{tuvw} \chi_2(W^c_l{}^T)^{\beta u(v-\gamma)(w-\delta)} e_{t\beta \gamma
-                \delta}
-                \\
-                &amp; = \bm{\xi}^{\dagger}_z{} \bar{\rtimes} W^c_l{}^T
+                <li>
+                    $\partial_{3}\Gamma_l^c({\bf
+                    y}_{l-1}^c,
+                    W_l^c, b_l^c)$: Perturb $b^c_l$
+                    $$
+                    \begin{align*}
+                    \partial_{3}\Gamma_l^c({\bf
+                    y}_{l-1}^c,
+                    W_l^c, b_l^c) &amp;= db^c_l \mapsto \bm{1}^{a} \otimes db^c_l \otimes \bm{1}^{bc} \\
+                    \implies \phi(\partial_{3}\Gamma_l^c({\bf
+                    y}_{l-1}^c,
+                    W_l^c, b_l^c) ) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
+                    e^{\alpha} \\
 
-                \end{align*}
 
-                $$
-            </div>
-        </div>
-    </div>
+                    \end{align*}
+                    $$
+                </li>
+            </ul>
+            <section id='cnn-grad' data-title="The Gradients">
+                <h2 class="text-2xl my-4">The Gradients</h2>
+                <div style="width: 100%;">
+                    Define the following:
+                    $$
+                    \begin{align*}
+                    {\bm{\xi}}_l{} &amp;=
+                    \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta)) &amp;= ({\xi}^c_l{})_{tuvw} e^{tuvw}\\
+                    {\bm{\xi}}_z &amp;= \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta) \circ DF^c_l{}({\bf z}^c_l{}))
+                    \\
+                    {\bm{\delta}}_w &amp;= \phi(\partial_{W^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))) \\
+                    {\bm{\delta}}_b &amp;= \phi(\partial_{b^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))\\
+                    \bm{\epsilon}_w &amp;= \phi(\partial_{W^c_l{}}\Gamma^c_l{}({\bf
+                    y}_{l-1},
+                    \theta^c_l{})) &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
+                    e_{i\alpha sr}
+                    \otimes
+                    e^{\alpha\beta\gamma\delta}\\
+                    \bm{\epsilon}_b &amp;= \phi(\partial_{b^c_l{}}\Gamma^c_l{}({\bf
+                    y}_{l-1},
+                    \theta^c_l{})) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
+                    e^{\alpha} \\
+                    \bm{\epsilon}_z &amp;= \phi(DF^c_l{}({\bf z}^c_l{})) &amp; = f^{c}_l{}'((z^c_l)^{ijmn}) \otimes
+                    e_{ijmn}
+                    \otimes
+                    e^{ijmn}
+                    \\
+                    \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma^c_l{}({\bf
+                    y}_{l-1};
+                    \theta^c_l{})) &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta
+                    \gamma
+                    \delta}
+                    \\
+
+                    \end{align*}
+                    $$
+                    By the preceding work we can find the gradient tensors for each parameter. NOTE: all transpositions
+                    denote
+                    permuting the first two slots.
+                    <div class="flex flex-row justify-between align-baseline">
+                        <div>
+                            $$
+                            \begin{align*}
+
+                            \bm{\delta}_w &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
+                            \theta)
+                            \circ DF^c_l{}({\bf z}^c_l{})
+                            \circ
+                            \partial_{W^c_l{}}\Gamma^c_l{}({\bf
+                            y}_{l-1},
+                            \theta^c_l{}) \right) \\
+                            &amp;= (\bm{\xi}_z){}_{abcd}
+                            (\bm{\epsilon}_w)^{abcd}{}_{efgh} \\
+                            &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
+
+                            e^{u\beta\gamma\delta}\\
+                            \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{tuvw}
+                            (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
+                            e_{u\beta\gamma\delta} \\
+                            &amp;= (\xi^{\dagger}_z{}^T)^{utvw} (y^c_{l-1}{}^T)^{\beta t(\gamma+v)(\delta+w)}
+                            e_{u\beta\gamma\delta} \\
+                            &amp;= \bm{\xi}^T_z \ltimes {\bf y}^c_{l-1}{}^T \\
+
+                            &amp;\equiv ({\bf y}^c_{l-1}{}^T \rtimes \bm{\xi}^T_z)^T \\
+                            \end{align*}
+                            $$
+                        </div>
+                        <div>
+                            $$
+                            \begin{align*}
+                            \bm{\delta}_b &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
+                            \theta)
+                            \circ DF^c_l{}({\bf z}^c_l{})
+                            \circ
+                            \partial_{b^c_l{}}\Gamma^c_l{}({\bf
+                            y}_{l-1},
+                            \theta^c_l{}) \right) \\
+                            &amp;= (\bm{\xi}_z){}_{abcd}
+                            (\bm{\epsilon}_b)^{abcd}{}_{e} \\
+                            &amp;= \sum_{tvw} (\xi_z)_{tuvw} e^u
+                            \\
+                            \implies \bm{\delta}_b^{\dagger} &amp;= \sum_{tvw} (\xi_z)_{tuvw} e_u
+                            \\
+                            &amp;= \sum_{tvw} (\xi^{\dagger}_z)^{tuvw} e_u
+                            \\
+                            &amp;=\bm{1}_{acd}(\bm{\xi}^{\dagger}_z)^{abcd}
+                            \\
+
+                            \end{align*}
+
+                            $$
+                        </div>
+                    </div>
+
+                    where
+
+                    <div class="flex flex-row justify-between align-baseline">
+                        <div>
+                            $$
+                            \begin{align*}
+                            \bm{\xi}_z &amp;= (\bm{\xi}_l{})_{abcd}(\bm{\epsilon}_z)^{abcd}{}_{efgh}\\
+
+                            &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e^{tuvw} \\
+                            \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
+                            &amp;= (\xi_l{}^{\dagger})^{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
+                            &amp;= \bm{\xi}_l{}^{\dagger} \odot F^c_l{}'({\bf z}^c_l{}) \\
+                            \end{align*}
+
+                            $$
+
+                        </div>
+                        <div>
+                            $$
+                            \begin{align*}
+                            \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U^c_{l-1}({\bf y}^c_{l-1}, \theta)) =
+                            \phi(\partial_{1}
+                            U^c_{l}({\bf
+                            y}^c_{l},
+                            \theta)
+                            \circ
+                            DF^c_{l}({\bf z}^c_{l}) \circ \partial_1 \Gamma^c_{l}({\bf y}^c_{l-1}, \theta^c_l{}))\\
+                            &amp;= (\bm{\xi}_l{})_{abcd} (\bm{\epsilon}_z)^{abcd}{}_{efgh}
+                            (\bm{\epsilon}_{l-1})^{efgh}{}_{wxyz}\\
+
+                            &amp;= (\bm{\xi}_z)_{efgh} (\bm{\epsilon}_{l-1})^{efgh}{}_{wxyz}\\
+                            &amp;= (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)} e^{t\beta \gamma \delta}
+                            \\
+                            \implies \bm{\xi}_{l-1}{}^{\dagger} &amp; = (\xi_z)_{tuvw} (W^c_l)^{u\beta
+                            (\gamma-v)(\delta-w)}
+                            e_{t\beta
+                            \gamma
+                            \delta}
+                            \\
+                            &amp; = (\xi^{\dagger}_z{})^{tuvw} (W^c_l{}^T)^{\beta u(\gamma-v)(\delta-w)} e_{t\beta
+                            \gamma
+                            \delta} \\
+                            &amp; =(\xi^{\dagger}_z{})^{tuvw} \chi_2(W^c_l{}^T)^{\beta u(v-\gamma)(w-\delta)} e_{t\beta
+                            \gamma
+                            \delta}
+                            \\
+                            &amp; = \bm{\xi}^{\dagger}_z{} \bar{\rtimes} W^c_l{}^T
+
+                            \end{align*}
+
+                            $$
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </section>
+
+    </section>
 
     I hope this was an informative read; the backpropagation procedure is derived so often in a way that sweeps
     important
     concepts under the rug. Tensors are the natural objects for high dimensional data, so it's important to know how to
     actually use them when they appear in ML.
+</section>
