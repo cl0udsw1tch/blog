@@ -66,7 +66,7 @@ export default function Home() {
                     <p>{solutions.length} published</p>
                 </div>
 
-                <List items={solutions} />
+                <List items={solutions} dropDown={true} />
 
             </section>
         </main >

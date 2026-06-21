@@ -1,157 +1,157 @@
 @import "tailwindcss";
 
 :root {
-  --background: white;
-  --foreground: black;
-  --foo: #F12340;
+    --background: white;
+    --foreground: black;
+    --foo: #F12340;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: white;
-    --foreground: black;
-  }
+    :root {
+        --background: white;
+        --foreground: black;
+    }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #f8fafc;
-  color: #0f172a;
-  width: 100%;
-  padding: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+    width: 100%;
+    padding: 0;
 }
 
 main {
-  min-height: 90vh;
+    min-height: 90vh;
 }
 
 footer {
-  height: 10vh;
-  width: 300px;
-  padding: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    height: 10vh;
+    width: 300px;
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
 }
 
 main.container {
-  padding: 50px;
+    padding: 50px;
 
-  .hero {
-    padding: 5rem 0 3rem;
-  }
-
-  .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-  }
-
-  .hero p {
-    font-size: 1.2rem;
-    color: #475569;
-    max-width: 600px;
-  }
-
-  .hero-actions {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1rem;
-  }
-
-  .button {
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    background: #0f172a;
-    color: white;
-    text-decoration: none;
-  }
-
-  .button.secondary {
-    background: transparent;
-    border: 1px solid #cbd5e1;
-    color: #0f172a;
-  }
-
-  .intro {
-    margin: 4rem 0;
-    max-width: 700px;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 1rem;
-  }
-
-  .list-category-group {
-    margin-bottom: 2rem;
-  }
-
-  .list-category-title {
-    margin: 1.5rem 0 0.75rem;
-    font-size: 1.2rem;
-    color: #0f172a;
-  }
-
-  .list-category-list {
-    display: grid;
-    gap: 1rem;
-  }
-
-
-
-  .hero {
-    padding: 3rem 0;
-  }
-
-  .list {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .list-item-card {
-    display: block;
-    padding: 1.25rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    text-decoration: none;
-    color: inherit;
-    background: white;
-
-    .list-item-meta {
-      display: flex;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: #64748b;
-      margin-bottom: 0.5rem;
-
+    .hero {
+        padding: 5rem 0 3rem;
     }
-  }
 
-  .list-item-card:hover {
-    border-color: #94a3b8;
-  }
-
-
-  &>section.leetcode {
-
-    .list-item-desc {
-      color: #566756
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
     }
-  }
+
+    .hero p {
+        font-size: 1.2rem;
+        color: #475569;
+        max-width: 600px;
+    }
+
+    .hero-actions {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .button {
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        background: #0f172a;
+        color: white;
+        text-decoration: none;
+    }
+
+    .button.secondary {
+        background: transparent;
+        border: 1px solid #cbd5e1;
+        color: #0f172a;
+    }
+
+    .intro {
+        margin: 4rem 0;
+        max-width: 700px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 1rem;
+    }
+
+    .list-category-group {
+        margin-bottom: 2rem;
+    }
+
+    .list-category-title {
+        margin: 1.5rem 0 0.75rem;
+        font-size: 1.2rem;
+        color: #0f172a;
+    }
+
+    .list-category-list {
+        display: grid;
+        gap: 1rem;
+    }
+
+
+
+    .hero {
+        padding: 3rem 0;
+    }
+
+    .list {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .list-item-card {
+        display: block;
+        padding: 1.25rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        text-decoration: none;
+        color: inherit;
+        background: white;
+
+        .list-item-meta {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+
+        }
+    }
+
+    .list-item-card:hover {
+        border-color: #94a3b8;
+    }
+
+
+    &>section.leetcode {
+
+        .list-item-desc {
+            color: #566756
+        }
+    }
 
 
 }
@@ -168,268 +168,268 @@ main.container {
 
 main.page {
 
-  width: 100%;
-  padding: 2%;
-  border: 0;
-  margin: 0%;
-  display: block;
-
-  .page-content {
-
-    display: flex;
     width: 100%;
-    margin-top: 2rem;
     padding: 2%;
-    line-height: 1.7;
-    counter-reset: theorem corollary;
-    font-family: var(--font-playfair);
+    border: 0;
+    margin: 0%;
+    display: block;
 
-    aside {
-      height: 100%;
-      overflow-y: scroll;
-      flex-grow: 0;
-      margin-right: 50px;
-      padding: 2%;
-      align-self: flex-start;
-      flex-shrink: 0;
-      position: sticky;
+    .page-content {
+
+        display: flex;
+        width: 100%;
+        margin-top: 2rem;
+        padding: 2%;
+        line-height: 1.7;
+        counter-reset: theorem corollary;
+        font-family: var(--font-playfair);
+
+        aside {
+            height: 100%;
+            overflow-y: scroll;
+            flex-grow: 0;
+            margin-right: 50px;
+            padding: 2%;
+            align-self: flex-start;
+            flex-shrink: 0;
+            position: sticky;
 
 
-      top: 0;
+            top: 0;
 
-      .meta {
-        display: block;
-        padding: 4px;
-        border-bottom-width: 1px;
-        margin-top: 20px;
-        margin-bottom: 20px;
+            .meta {
+                display: block;
+                padding: 4px;
+                border-bottom-width: 1px;
+                margin-top: 20px;
+                margin-bottom: 20px;
 
-        .page-details {
-          display: flex;
-          gap: 0.5rem;
-          font-size: 0.85rem;
-          color: #64748b;
-          margin-bottom: 0.5rem;
+                .page-details {
+                    display: flex;
+                    gap: 0.5rem;
+                    font-size: 0.85rem;
+                    color: #64748b;
+                    margin-bottom: 0.5rem;
+                }
+
+            }
+
+            .toc {
+                margin-top: 20px;
+
+                a {
+
+                    display: block;
+                    padding: 4px 6px;
+                    border-radius: 4px;
+                }
+
+                a:hover {
+                    background: rgba(0, 0, 0, 0.05);
+                }
+
+                a.active {
+                    font-weight: 600;
+                }
+
+            }
+
         }
 
-      }
 
-      .toc {
-        margin-top: 20px;
+        article {
+            flex-shrink: 1;
+            overflow-x: hidden;
+            height: 100%;
 
-        a {
-
-          display: block;
-          padding: 4px 6px;
-          border-radius: 4px;
         }
-
-        a:hover {
-          background: rgba(0, 0, 0, 0.05);
-        }
-
-        a.active {
-          font-weight: 600;
-        }
-
-      }
-
     }
-
-
-    article {
-      flex-shrink: 1;
-      overflow-x: hidden;
-      height: 100%;
-
-    }
-  }
 }
 
 main.paper article {
 
-  section {
-    scroll-margin-top: 50px;
-  }
+    section {
+        scroll-margin-top: 50px;
+    }
 
 
-  .theorem {
+    .theorem {
 
-    overflow-x: scroll;
-    background-color: #f0f7f9;
-    border-left: 4px solid #d97706;
-    border-radius: 4px;
-    padding: 50px;
-    margin: 20px 0;
-    /* Classic mathematical typography */
-  }
+        overflow-x: scroll;
+        background-color: #f0f7f9;
+        border-left: 4px solid #d97706;
+        border-radius: 4px;
+        padding: 50px;
+        margin: 20px 0;
+        /* Classic mathematical typography */
+    }
 
-  .theorem-title::before {
-    counter-increment: theorem;
-    content: "Theorem " counter(theorem) " ";
-    font-weight: bold;
-    color: #1e81b0;
-  }
+    .theorem-title::before {
+        counter-increment: theorem;
+        content: "Theorem " counter(theorem) " ";
+        font-weight: bold;
+        color: #1e81b0;
+    }
 
-  .theorem-content {
-    margin-top: 8px;
-    margin-bottom: 0;
-    font-style: italic;
-  }
+    .theorem-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+        font-style: italic;
+    }
 
-  /* --- Proof Block --- */
-  .proof {
-    overflow-x: scroll;
-    position: relative;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-left: 4px solid #a9a9a9;
-    border-radius: 4px;
-    padding: 16px 36px 16px 20px;
-    /* Extra right padding for QED symbol */
-    margin: 20px 0;
+    /* --- Proof Block --- */
+    .proof {
+        overflow-x: scroll;
+        position: relative;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-left: 4px solid #a9a9a9;
+        border-radius: 4px;
+        padding: 16px 36px 16px 20px;
+        /* Extra right padding for QED symbol */
+        margin: 20px 0;
 
-  }
+    }
 
-  .proof-title {
-    font-weight: bold;
-    color: #555555;
-  }
+    .proof-title {
+        font-weight: bold;
+        color: #555555;
+    }
 
-  .proof-content {
-    margin-top: 8px;
-    margin-bottom: 0;
-  }
+    .proof-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+    }
 
-  /* --- QED (End of Proof) Symbol --- */
-  .qed {
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    color: #333333;
-  }
+    /* --- QED (End of Proof) Symbol --- */
+    .qed {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        color: #333333;
+    }
 
-  .corollary {
-    background-color: #fdfaf6;
-    border-left: 4px solid #845ef7;
-    border-radius: 4px;
-    padding: 16px 20px;
-    margin: 20px 0;
+    .corollary {
+        background-color: #fdfaf6;
+        border-left: 4px solid #845ef7;
+        border-radius: 4px;
+        padding: 16px 20px;
+        margin: 20px 0;
 
-    /* Classic mathematical typography */
-  }
+        /* Classic mathematical typography */
+    }
 
-  .corollary-title::before {
-    counter-increment: corollary;
-    content: "Corollary " counter(corollary) " ";
-    font-weight: bold;
-    color: #7048e8;
-  }
+    .corollary-title::before {
+        counter-increment: corollary;
+        content: "Corollary " counter(corollary) " ";
+        font-weight: bold;
+        color: #7048e8;
+    }
 
-  .corollary-content {
-    margin-top: 8px;
-    margin-bottom: 0;
-    font-style: italic;
-  }
+    .corollary-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+        font-style: italic;
+    }
 
-  .quote {
-    margin: 20px 0;
-    padding: 10px 20px;
-    border-left: 5px solid #007bff;
-    background-color: #f8f9fa;
-    font-style: italic;
+    .quote {
+        margin: 20px 0;
+        padding: 10px 20px;
+        border-left: 5px solid #007bff;
+        background-color: #f8f9fa;
+        font-style: italic;
 
-  }
+    }
 
 
 }
 
 main.leetcode {
-  max-height: 100vh;
-  height: 100vh;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-
-  pre {
-    background-color: #111111 !important;
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 5px;
-    overflow-x: auto;
-    /* Adds a horizontal scrollbar if code is too wide */
-  }
-
-  .page-content {
-    height: 100%;
-
-  }
-
-  aside {
-    width: 30vw;
-    max-height: 75vw;
-    overflow-y: scroll;
-    padding: 5%;
-
-    .codeDesc {
-
-      margin-top: 20px;
-
-      h1,
-      h2 {
-        display: none !important;
-      }
-
-      pre {
-        color: white;
-        border-radius: 10px;
-
-      }
-
-    }
-  }
-
-  article {
-    flex-grow: 1;
-    max-height: 75vw;
-    overflow-y: scroll;
-    padding-right: 2%;
-
-
+    max-height: 100vh;
+    height: 100vh;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 
     pre {
-      border-radius: 10px;
+        background-color: #111111 !important;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        /* Adds a horizontal scrollbar if code is too wide */
     }
 
-  }
+    .page-content {
+        height: 100%;
+
+    }
+
+    aside {
+        width: 30vw;
+        max-height: 75vw;
+        overflow-y: scroll;
+        padding: 5%;
+
+        .codeDesc {
+
+            margin-top: 20px;
+
+            h1,
+            h2 {
+                display: none !important;
+            }
+
+            pre {
+                color: white;
+                border-radius: 10px;
+
+            }
+
+        }
+    }
+
+    article {
+        flex-grow: 1;
+        max-height: 75vw;
+        overflow-y: scroll;
+        padding-right: 2%;
+
+
+
+        pre {
+            border-radius: 10px;
+        }
+
+    }
 }
 
 /* 1. Target the scrollbar container */
 ::-webkit-scrollbar {
-  width: 12px;
-  /* Total width including your fake margin */
+    width: 12px;
+    /* Total width including your fake margin */
 }
 
 /* 2. Style the scrollbar track */
 ::-webkit-scrollbar-track {
-  background: transparent;
-  /* Makes the track area invisible */
+    background: transparent;
+    /* Makes the track area invisible */
 }
 
 /* 3. Style the scrollbar thumb (the draggable bar) */
 ::-webkit-scrollbar-thumb {
-  background-color: #888888;
-  /* Color of your scrollbar */
-  border-radius: 10px;
-  /* Rounds the scrollbar edges */
+    background-color: #888888;
+    /* Color of your scrollbar */
+    border-radius: 10px;
+    /* Rounds the scrollbar edges */
 
-  /* The Magic Trick: Fake a 5px right margin */
-  border-right: 5px solid transparent;
-  background-clip: padding-box;
-  /* Stops background color from flowing into the border */
+    /* The Magic Trick: Fake a 5px right margin */
+    border-right: 5px solid transparent;
+    background-clip: padding-box;
+    /* Stops background color from flowing into the border */
 }
 
 /* Optional: Darken on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #555555;
+    background-color: #555555;
 }
