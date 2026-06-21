@@ -15,19 +15,23 @@ export default async function PaperPage({ page }: { page: string }) {
     if (paper.type === "pdf") {
 
         return (
-            <main style={{ height: '100%' }}>
-                <h1>{paper.title}</h1>
+            <div className="paper pdf page-content"  >
+                <div className="meta" >
+                    <h1>{paper.title}</h1>
 
-                <div className="paper page-meta">
-                    <span>{paper.category}</span> · <span>{paper.date}</span>
+                    <div className="page-details">
+                        <span>{paper.category}</span> · <span>{paper.date}</span>
+                    </div>
                 </div>
-                <iframe
-                    src={`/papers/${paper.file}`}
-                    className="pdf-viewer"
-                    style={{ width: '80vw', height: '80%' }}
-                />
+                <article>
+                    <iframe
+                        src={`/papers/${paper.file}`}
+                        className="pdf-viewer"
+                        style={{ width: '80vw', height: '80%' }}
+                    />
+                </article>
+            </div>
 
-            </main>
         );
     }
 

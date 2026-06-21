@@ -91,7 +91,7 @@ export default function PageClient({ html, paper }: { html: string, paper: Paper
                 <div className="meta">
                     <h1>{paper.title}</h1>
 
-                    <div className="paper page-details">
+                    <div className="page-details">
                         <span>{paper.category}</span> · <span>{paper.date}</span>
                     </div>
 
