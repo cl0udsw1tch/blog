@@ -499,7 +499,7 @@
 
             <section id='loss-derivation' data-title="Supervised Learning Loss Function">
                 <ul style="margin-top: 10px;">
-                    <li class="chalkboard">
+                    <li class="hyper-focus">
                         If $(Y|X=\bm{x}) \in \{0,1\}$ in the case of a binary learning task, then
                         $$\mathcal{P}_0(Y;\hat{y})
                         =
@@ -546,7 +546,7 @@
                         $$
                         is required.
                     </li>
-                    <li class="chalkboard">
+                    <li class="hyper-focus">
                         If $(Y|X=\bm{x}) \in S \subset \mathbb{Z} : \lvert S \rvert &lt; \infty$ more broadly, in the
                         case
                         of
@@ -598,7 +598,7 @@
                         so that $(a)$ is satisfied.
                     </li>
 
-                    <li class="chalkboard">
+                    <li class="hyper-focus">
                         If $(Y|X=\bm{x}) \in \mathbb{R}$ in the case of a regression, then $$
                         \mathcal{P}_0(Y;\hat{y})=\mathcal{N}(Y;\mu=\hat{y},\sigma^2=1) $$
                         where $\hat{y} =
@@ -664,95 +664,148 @@
             = \frac{1}{I} {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
 
             $$
-            Perturb $\mathcal{F}(\cdot; \theta)$ by $h$, then
-            $$
-            \begin{align*}
-            d \mathcal{F}(\bar{\bf x}; \theta) &amp;= h(\bar{\bf x}) \\
-            \implies d {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
-            &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [d\mathcal{F}(\bar{\bf x};
-            \theta)]
-            \\
-            &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [h(\bar{\bf x})] \\
-            \implies d \hat{R}(\bar{\bf d},
-            \mathcal{F}(\cdot; \theta))
-            &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [h(\bar{\bf x})]
-            \\
-            &amp;= \frac{1}{I} \left( \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
-            \delta_{\bar{\bf
-            x}}\right) [h] \\
-            \implies \partial_2 \hat{R}(\bar{\bf d},
-            \mathcal{F}(\cdot; \theta))
-            &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
-            \delta_{\bar{\bf
-            x}}\\
+
+            <section id='last-activation-isolation' data-title="Prop: Last Activation Isolation">
+                <div class="proposition">
+
+                    <div class="proposition-title">
+
+                    </div>
+
+                    <div class="proposition-content">
+                        Define
+                        $$
+                        \begin{align}
+                        S &amp;= \frac{1}{I}{\bf \Delta}(\bar{\bm{v}}, \cdot) \circ F_{L+1} \\
+                        T(\cdot, \theta) &amp;=
+                        \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ ... \circ \mathcal{L}_0
+                        \end{align}
+                        $$ Then
+                        $$
+                        \mathcal{F}(\bar{\bf x}; \theta) = F_{L+1} \circ T(\bar{\bf x}, \theta)
+
+                        $$ and
+                        $$
+                        \partial_{\theta} \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        = DS
+                        ({\bf z}_{L+1}) \circ
+                        \partial_{2} T(\bar{\bf x},\theta)
+                        $$
+
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
+                        Perturb $\mathcal{F}(\cdot; \theta)$ by $h$, then
+                        $$
+                        \begin{align*}
+                        d \mathcal{F}(\bar{\bf x}; \theta) &amp;= h(\bar{\bf x}) \\
+                        \implies d {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
+                        &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
+                        [d\mathcal{F}(\bar{\bf x};
+                        \theta)]
+                        \\
+                        &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [h(\bar{\bf x})]
+                        \\
+                        \implies d \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
+                        [h(\bar{\bf x})]
+                        \\
+                        &amp;= \frac{1}{I} \left( \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x};
+                        \theta))
+                        \circ
+                        \delta_{\bar{\bf
+                        x}}\right) [h] \\
+                        \implies \partial_2 \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
+                        \delta_{\bar{\bf
+                        x}}\\
 
 
-            \end{align*}
-            $$
+                        \end{align*}
+                        $$
 
 
-            By the chain rule
-            $$
-            \partial_{\theta} \hat{R}(\bar{\bf d},
-            \mathcal{F}(\cdot; \theta))
-            = \partial_2 \hat{R}(\bar{\bf d},
-            \mathcal{F}(\cdot; \theta))
-            \circ \partial_{\theta} \mathcal{F}(\cdot; \theta) \\
-            = \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ \delta_{\bar{\bf
-            x}} \circ \partial_{\theta} \mathcal{F}(\cdot; \theta ) $$
-            $$
-            \begin{align}
-            &amp;= \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
-            \partial_{\theta}
-            \mathcal{F}(\bar{\bf x}; \theta )\\
-            \end{align}
-            $$
-
-            Define
-            $$
-            \begin{align}
-            S &amp;= \frac{1}{I}{\bf \Delta}(\bar{\bm{v}}, \cdot) \circ F_{L+1} \\
-            T(\cdot, \theta) &amp;=
-            \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ ... \circ \mathcal{L}_0
-            \implies \mathcal{F}(\bar{\bf x}; \theta) = F_{L+1} \circ T(\bar{\bf x}, \theta)
-            \end{align}
-            $$
+                        By the chain rule
+                        $$
+                        \partial_{\theta} \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        = \partial_2 \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        \circ \partial_{\theta} \mathcal{F}(\cdot; \theta) \\
+                        = \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
+                        \delta_{\bar{\bf
+                        x}} \circ \partial_{\theta} \mathcal{F}(\cdot; \theta ) $$
+                        $$
+                        \begin{align*}
+                        &amp;= \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
+                        \partial_{\theta}
+                        \mathcal{F}(\bar{\bf x}; \theta )\\
+                        \end{align*}
+                        $$
 
 
-            Then
+
+                        Then
 
 
-            $$
-            \begin{align}
-            \hat{R}(\bar{\bf d},
-            \mathcal{F}(\cdot; \theta))
-            &amp;= {\bf \Delta}(\bar{\bm{v}}, \cdot) \circ \mathcal{F}({\bf x}; \theta) \\
-            &amp; = S \circ T ({\bf x}, \theta) \\
-            \implies \partial_{\theta} \hat{R}(\bar{\bf d},
-            \mathcal{F}(\cdot; \theta))
-            &amp;= DS
-            ({\bf z}_{L+1}) \circ
-            \partial_{2} T(\bar{\bf x},\theta)\\
+                        $$
+                        \begin{align*}
+                        \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        &amp;= {\bf \Delta}(\bar{\bm{v}}, \cdot) \circ \mathcal{F}({\bf x}; \theta) \\
+                        &amp; = S \circ T ({\bf x}, \theta) \\
+                        \implies \partial_{\theta} \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        &amp;= DS
+                        ({\bf z}_{L+1}) \circ
+                        \partial_{2} T(\bar{\bf x},\theta)\\
 
-            \end{align}
-            $$
+                        \end{align*}
+                        $$
+
+
+                    </div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+
+            </section>
 
             It turns out that combining ${\bf \Delta}$ and $F_{L+1}$ into $S$ results in very elegant derivatives, which
             we
             will
             derive below.
-
-
-            <ul>
-                <li class="my-8">
-                    <div class="chalkboard">
+            <section id='partial-binary' data-title="Prop: Upstream Partial for Binary Classifiers">
+                <div class="proposition">
+                    <div class="proposition-title"></div>
+                    <div class="proposition-content">
                         If $\bm{\hat y} = \mathcal{F}(\bar{\bf x}, \theta) \in \Bbb{V} $ and $\Delta(\bar{v}^i,
                         \bm{\hat{y}}^{\rangle i \langle}) = -\left(\bar{v}^i\log(\hat{\bm{y}}^{\rangle i \langle}) +
                         (1-\bar{v}^i)\log(\hat{\bm{y}}^{\rangle i \langle})\right) $ in the case of a binary learning
                         task,
                         then
-                        tensorizing gives
+                        $$
+                        \partial_{\theta} \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        = \frac{1}{I} \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle \circ \partial_{2} T(\bar{\bf
+                        x},\theta)
+                        $$
 
+                    </div>
+
+                </div>
+                <div class="proof">
+                    <div class="proof-title">Proof</div>
+                    <div class="proof-content">
+                        Tensorizing gives
 
                         $$
                         {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = -{\bf 1}_{a} \left(\bar{\bm v} \odot
@@ -862,29 +915,40 @@
 
                         \end{align*}
                         $$
-
-                    </div>
-
-                    <div class="hyper-focus">
-
                         $$
                         \therefore \partial_{\theta} \hat{R}(\bar{\bf d},
                         \mathcal{F}(\cdot; \theta))
                         = \frac{1}{I} \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle \circ \partial_{2} T(\bar{\bf
                         x},\theta)
                         $$
+
                     </div>
-
-
-
-                </li>
-                <li class="my-8">
-                    <div class="chalkboard">
+                    <div class="qed">QED</div>
+                </div>
+            </section>
+            <section id='partial-categorical' data-title="Prop: Upstream Partial for Categorical Classifiers">
+                <div class="proposition">
+                    <div class="proposition-title"></div>
+                    <div class="proposition-content">
                         If $\hat{\bf y} = \mathcal{F}(\bar{\bf x}; \theta) \in \Bbb{V}^{\otimes 2}$ and
                         $\Delta(\bar{v}^i,
                         \hat{\bf y}^{\rangle i \langle})
                         = -\sum_c [\bar{v}^i = c] \log((\hat{\bf y}^{\rangle i \langle})^{c})$ in
-                        the case of a categorical learning task, then tensorizing gives
+                        the case of a categorical learning task, then
+                        $$
+                        \partial_{\theta} \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        = \frac{1}{I} \langle \cdot,{\bf \hat{y}} -\Bbb{X} \rangle \circ \partial_2 T(\bar{\bf
+                        x},\theta)
+
+                        $$
+                    </div>
+
+                </div>
+                <div class="proof">
+                    <div class="proof-title">Proof</div>
+                    <div class="proof-content">
+                        tensorizing gives
 
                         $$
                         {\bf \Delta}(\bar{\bm{v}}, \hat{\bf y}) = -{\bf 1}_{ab} \left(\Bbb{X} \odot \log(\hat{\bf y})
@@ -1066,11 +1130,6 @@
 
                         \end{align*}
                         $$
-
-                    </div>
-
-                    <div class="hyper-focus">
-
                         $$
                         \therefore \partial_{\theta} \hat{R}(\bar{\bf d},
                         \mathcal{F}(\cdot; \theta))
@@ -1078,15 +1137,33 @@
                         x},\theta)
                         $$
                     </div>
-                </li>
-                <li>
-                    <div class="chalkboard">
+                    <div class="qed">QED</div>
+                </div>
+            </section>
+            <section id='partial-regression' data-title="Prop: Upstream Partial for Regression Classifiers">
+                <div class="proposition">
+                    <div class="proposition-title"></div>
+                    <div class="proposition-content">
                         If $\bm{\hat y} = \mathcal{F}(\bar{\bf x}, \theta) \in \Bbb{V} $ and $\Delta(\bar{v}^i,
                         \bm{\hat{y}}^{\rangle i \langle}) = (\bar{v}^i - \bm{\hat{y}}^{\rangle i \langle})^2$ in the
                         case of
                         a
                         regression task, then
-                        tensorizing gives
+                        $$
+                        \partial_{\theta} \hat{R}(\bar{\bf d},
+                        \mathcal{F}(\cdot; \theta))
+                        = \frac{2}{I} \langle \cdot, \hat{\bm{y}}- \bm{\bar{v}} \rangle
+                        \circ \partial_2 T(\bar{\bf x},\theta)
+
+                        $$
+                    </div>
+
+                </div>
+                <div class="proof">
+                    <div class="proof-title">Proof</div>
+
+                    <div class="proof-content">
+                        Tensorizing gives
                         $$
                         {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = {\bf 1}_a((\bm{\bar{v}}-\hat{\bm{y}})^2)^a
                         $$
@@ -1111,21 +1188,21 @@
 
                         $$
 
-                    </div>
-
-                    <div class="hyper-focus">
-
                         $$
+
                         \therefore \partial_{\theta} \hat{R}(\bar{\bf d},
                         \mathcal{F}(\cdot; \theta))
                         = \frac{2}{I} \langle \cdot, \hat{\bm{y}}- \bm{\bar{v}} \rangle
                         \circ \partial_2 T(\bar{\bf x},\theta)
 
                         $$
-                    </div>
 
-                </li>
-            </ul>
+
+                    </div>
+                    <div class="qed">QED</div>
+                </div>
+            </section>
+
 
             We are now remained with finding $\partial_{\theta} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))
             $ which we
@@ -1255,67 +1332,142 @@
             e^{\mathcal{I}}(S(f_{\mathcal{J}})) T(e_{\mathcal{I}}) \otimes f^{\mathcal{J}} = (\phi(T))^{a}{}_b
             (\phi(S))^{b}{}_c
             $$
-            <ul style="list-style: disc; list-style-position: inside;" class="my-10">
-                <li class="my-4">
-                    $DF_l({\bf z}_l)$: <br />
-                    Perturb ${\bf z}_l$ by $d {\bf z}_l$, then
+
+            <section id="tensors-of-partials" data-title="Tensors of Partial Derivatives">
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$
+                        \phi(DFl({\bf z}_l)) = F'_l({\bf z}_l) \odot {\bf 1}_{ab}
+                        $$
+                        where $F_l'({\bf z}_l) := f_l'((z_l)^{i,j})e_i \otimes e_j$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
+                        Perturb ${\bf z}_l$ by $d {\bf z}_l$, then
+                        $$
+                        \begin{align*}
+                        dF_l({\bf z}_l) = f_l'((z_l)^{i,j})d(z_l)^{i,j}e_i \otimes e_j &amp;= F_l'({\bf z}_l) \odot
+                        d{\bf
+                        z}_l
+                        \\
+                        \implies DF_l({\bf z}_l) = {\bf h} \mapsto F_l'({\bf z}_l) \odot {\bf h}
+                        \end{align*}
+                        $$
+
+                        $$
+                        \begin{align*}
+                        \implies \phi(DFl({\bf z}_l)) &amp;= F'_l({\bf z}_l) \odot (e_i \otimes e_j) \otimes e^i
+                        \otimes e^j = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes e^i
+                        \otimes e^j \\
+                        \end{align*}
+                        $$
+
+                    </div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$
+                        \phi(\partial_{W_l} \Gamma_l({\bf
+                        y}_{l-1},
+                        \theta_l) ) = ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j
+                        $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
+                    </div>
+                    Contraction of two tensors against the metric is bilinear so
+
                     $$
                     \begin{align*}
-                    dF_l({\bf z}_l) = f_l'((z_l)^{i,j})d(z_l)^{i,j}e_i \otimes e_j &amp;= F_l'({\bf z}_l) \odot d{\bf
-                    z}_l
-                    \\
-                    \implies DF_l({\bf z}_l) = {\bf h} \mapsto F_l'({\bf z}_l) \odot {\bf h}
-                    \end{align*}
-                    $$
-                    where $F_l'({\bf z}_l) := f_l'((z_l)^{i,j})e_i \otimes e_j$
-                    $$
-                    \begin{align*}
-                    \implies \phi(DFl({\bf z}_l)) &amp;= F'_l({\bf z}_l) \odot (e_i \otimes e_j) \otimes e^i
-                    \otimes e^j = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes e^i
-                    \otimes e^j \\
-                    \end{align*}
-                    $$
-
-                </li>
-                <li class="my-4">
-                    $\partial_{2}\Gamma_l({\bf
-                    y}_{l-1},
-                    \theta_l) $: <br />
-                    Contraction of two tensors against the metric, and $\otimes$, are both bilinear so
-
-                    $$
-                    \begin{align*}
-
                     \partial_{W_l} \Gamma_l({\bf
                     y}_{l-1},
                     \theta_l) =&amp;\quad dW_l \mapsto g_{bc}({\bf y}_{l-1})^{ab}(dW_l)^{cd} \\
                     \xmapsto[]{\phi}&amp;\quad g_{bc}({\bf y}_{l-1})^{ab}(e_i \otimes e_j)^{cd} \otimes
                     e^i \otimes e^j\\
                     =&amp;\quad ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j\\
-
-                    \partial_{b_l} \Gamma_l({\bf
-                    y}_{l-1},
-                    \theta_l) =&amp;\quad db_l \mapsto \sum_i e_i \otimes db_l \\
-                    \xmapsto[]{\phi}&amp;\quad \sum_{i} e_i \otimes e_j \otimes e^j
-
-
                     \end{align*}
                     $$
-                </li>
-                <li class="my-4">
-                    $\partial_{1}\Gamma_l({\bf
-                    y}_{l-1},\theta_l) $: <br />
-                    $$
-                    \begin{align*}
-                    \partial_{1} \Gamma_l({\bf
-                    y}_{l-1},
-                    \theta_l) =&amp;\quad d{\bf y}_{l-1} \mapsto g_{bc}(d{\bf y}_{l-1})^{ab}(W_l)^{cd} \\
-                    \xmapsto[]{\phi}&amp;\quad g_{bc}(e_i \otimes e_j)^{ab}(W_l)^{cd} \otimes e^i \otimes e^j\\
-                    =&amp;\quad (W_l)^{jx} e_i \otimes e_x \otimes e^i \otimes e^j
-                    \end{align*}
-                    $$
-                </li>
-            </ul>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$\phi(\partial_{b_l} \Gamma_l({\bf
+                        y}_{l-1},
+                        \theta_l) ) = \sum_{i} e_i \otimes e_j \otimes e^j
+                        $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
+                        $\otimes$ is bilinear so
+                        $$
+                        \begin{align*}
+                        \partial_{b_l} \Gamma_l({\bf
+                        y}_{l-1},
+                        \theta_l) =&amp;\quad db_l \mapsto \sum_i e_i \otimes db_l \\
+                        \xmapsto[]{\phi}&amp;\quad \sum_{i} e_i \otimes e_j \otimes e^j
+                        \end{align*}
+                        $$
+                    </div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$
+                        \phi(\partial_{1}\Gamma_l({\bf
+                        y}_{l-1},\theta_l) ) = (W_l)^{jx} e_i \otimes e_x \otimes e^i \otimes e^j
+                        $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
+                        $$
+                        \begin{align*}
+                        \partial_{1} \Gamma_l({\bf
+                        y}_{l-1},
+                        \theta_l) =&amp;\quad d{\bf y}_{l-1} \mapsto g_{bc}(d{\bf y}_{l-1})^{ab}(W_l)^{cd} \\
+                        \xmapsto[]{\phi}&amp;\quad g_{bc}(e_i \otimes e_j)^{ab}(W_l)^{cd} \otimes e^i \otimes e^j\\
+                        =&amp;\quad (W_l)^{jx} e_i \otimes e_x \otimes e^i \otimes e^j
+                        \end{align*}
+                        $$
+
+                    </div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+            </section>
 
 
             Now we can calculate the full derivative of each parameter.
@@ -1351,7 +1503,7 @@
                 </div>
 
             </section>
-            <section id='gradients' data-title="The Gradients">
+            <section id='gradients' data-title="Tensors of Gradients">
                 <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">The Gradients</h2>
                 In practice, solving for $\theta^* = \argmin \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))$ is
                 infeasible
@@ -1399,11 +1551,23 @@
                 denote
                 permuting
                 the slots of 2-tensors.
-                <div class="flex flex-row justify-between align-baseline">
-                    <div>
+
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$
+                        \bm{\delta}_w^{\dagger} = g_{bc}({\bf y}_{l-1}^T)^{ab}(\bm{\xi}_z^{\dagger})^{cd}
+                        $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
                         $$
                         \begin{align*}
-
                         \bm{\delta}_w &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
                         \theta)
                         \circ DF_l({\bf z}_l)
@@ -1420,7 +1584,24 @@
                         \end{align*}
                         $$
                     </div>
-                    <div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$
+                        \bm{\delta}_b^{\dagger} = {\bm{1}}_{a}(\bm{\xi}_z^{\dagger})^{ab}
+                        $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
                         $$
                         \begin{align*}
                         \bm{\delta}_b &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
@@ -1436,28 +1617,54 @@
                         \implies \bm{\delta}_b^{\dagger} &amp;= \sum_p (\xi_z)_{p,q} e_q \\
                         &amp;= \sum_p (\xi_z^{\dagger})^{p,q} e_q \\
                         &amp;= {\bm{1}}_{a}(\bm{\xi}_z^{\dagger})^{ab} \\
-
                         \end{align*}
-
+                        $$
+                    </div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$
+                        \bm{\xi}_z^{\dagger} = \bm{\xi}_l^{\dagger} \odot F_l'({\bf z}_l)
                         $$
                     </div>
                 </div>
-                where
-                <div class="flex flex-row justify-between align-baseline">
-                    <div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
                         $$
                         \begin{align*}
                         \bm{\xi}_z &amp;= (\bm{\xi}_l)_{ab}(\bm{\epsilon}_z)^{ab}{}_{cd}\\
-
                         &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e^i \otimes e^j \\
                         \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
                         &amp;= (\xi_l^{\dagger})^{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
                         &amp;= \bm{\xi}_l^{\dagger} \odot F_l'({\bf z}_l) \\
                         \end{align*}
-
                         $$
                     </div>
-                    <div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$ \bm{\xi}_{l-1}^{\dagger}= g_{bc}(\bm{\xi_l}^{\dagger})^{ab} (W_l^T)^{cd}
+                        $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
                         $$
                         \begin{align*}
                         \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U_{l-1}({\bf y}_{l-1}, \theta)) = \phi(\partial_{1}
@@ -1467,23 +1674,21 @@
                         \circ
                         DF_{l}({\bf z}_{l}) \circ \partial_1 \Gamma_{l}({\bf y}_{l-1}, \theta_l))\\
                         &amp;= (\bm{\xi}_l)_{ab} (\bm{\epsilon}_z)^{ab}{}_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
-
                         &amp;= (\bm{\xi}_z)_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
                         &amp;= (\xi_z)_{p,q} (W_l)^{j, q} e^p \otimes e^j \\
                         \implies \bm{\xi}_{l-1}^{\dagger} &amp; = (\xi_l)_{p,q} (W_l)^{j, q} e_p \otimes e_j \\
                         &amp; = (\xi_l^{\dagger})^{p,q} (W_l^T)^{q, j} e_p \otimes e_j \\
                         &amp; = g_{bc}(\bm{\xi_l}^{\dagger})^{ab} (W_l^T)^{cd}
                         \end{align*}
-
                         $$
                     </div>
+                    <div class="qed">
+                        QED
+                    </div>
                 </div>
-
             </section>
         </section>
-
     </section>
-
 
     <section id="CNNs" data-title="2. Convolutional Neural Networks">
         <h2 class="text-3xl my-8" style="font-family: var(--font-playfair);"> 2. Convolutional Neural Networks
@@ -1621,89 +1826,161 @@
             \end{cases}
             \end{align} $$
             We compute the needed partials:
-            <ul style="list-style-type: disc">
-                <li>$DF^c_l({\bf z}^c_l) $: Same as for FNN's:
-                    $$
-                    \begin{align*}
-                    DF^c_l({\bf z}^c_l) &amp;= {\bf h} \mapsto F^{c}_l{}'({\bf z}^c_l) \odot {\bf h} \\
-                    \implies \phi(DF^c_l({\bf z}^c_l)) &amp;= f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes
-                    e^{ijmn}
-                    \end{align*}
+            <section id="CNN-tensors-of-partials" data-title="Tensors of Partial Derivatives">
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$ \phi(DF^c_l({\bf z}^c_l)) = F^{c}_l{}'({\bf z}^c_l) \odot {\bf 1}_{abcd} $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
+                        Same as for FNN's:
+                        $$
+                        \begin{align*}
+                        DF^c_l({\bf z}^c_l) &amp;= {\bf h} \mapsto F^{c}_l{}'({\bf z}^c_l) \odot {\bf h} \\
+                        \implies \phi(DF^c_l({\bf z}^c_l)) &amp;= f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes
+                        e^{ijmn}
+                        \end{align*}
 
-                    $$
-                </li>
-                <li>
-                    $
-                    \partial_{1}\Gamma_l^c({\bf
-                    y}_{l-1}^c,
-                    W_l^c, b_l^c) $: Perturb $y^c_{l-1}$.
-                    $$
-                    \begin{align*}
-                    \partial_{1}\Gamma_l^c({\bf
-                    y}_{l-1}^c,
-                    W_l^c, b_l^c)&amp;= dy^c_{l-1} \mapsto (dy^c_{l-1}) \rtimes W^c_l \\
-                    \implies \phi(\partial_{1}\Gamma_l^c({\bf
-                    y}_{l-1}^c,
-                    W_l^c, b_l^c)) &amp;= (e_{\alpha\beta\gamma\delta} \rtimes W^c_l) \otimes
-                    e^{\alpha\beta\gamma\delta} \\
-                    &amp;= (e_{\alpha\beta\gamma\delta})^{ituv} \tau(W^c_l; (s, r))^{jtuv} e_{ijsr} \otimes
-                    e^{\alpha\beta\gamma\delta} \\
+                        $$
 
-                    &amp;= \tau(W^c_l; (s, r))^{j\beta\gamma\delta} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma
-                    \delta} \\
-                    &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma \delta}
-                    \end{align*}
-                    $$
-                </li>
+                    </div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$ \phi(\partial_{1}\Gamma_l^c({\bf
+                        y}_{l-1}^c,
+                        W_l^c, b_l^c)) = (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta
+                        \gamma
+                        \delta}
+                        $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
+                        Perturb $y^c_{l-1}$.
+                        $$
+                        \begin{align*}
+                        \partial_{1}\Gamma_l^c({\bf
+                        y}_{l-1}^c,
+                        W_l^c, b_l^c)&amp;= dy^c_{l-1} \mapsto (dy^c_{l-1}) \rtimes W^c_l \\
+                        \implies \phi(\partial_{1}\Gamma_l^c({\bf
+                        y}_{l-1}^c,
+                        W_l^c, b_l^c)) &amp;= (e_{\alpha\beta\gamma\delta} \rtimes W^c_l) \otimes
+                        e^{\alpha\beta\gamma\delta} \\
+                        &amp;= (e_{\alpha\beta\gamma\delta})^{ituv} \tau(W^c_l; (s, r))^{jtuv} e_{ijsr} \otimes
+                        e^{\alpha\beta\gamma\delta} \\
 
-                <li>
-                    $\partial_{2}\Gamma_l^c({\bf
-                    y}_{l-1}^c,
-                    W_l^c, b_l^c)$: Perturb $W^c_l$:
-                    $$
-                    \begin{align*}
-                    \partial_{2}\Gamma_l^c({\bf
-                    y}_{l-1}^c,
-                    W_l^c, b_l^c) &amp;= dW^c_l \mapsto y^c_{l-1} \rtimes dW^c_l \\
-                    \implies \phi(\partial_{2}\Gamma_l^c({\bf
-                    y}_{l-1}^c,
-                    W_l^c, b_l^c)) &amp;= (y^c_{l-1} \rtimes e_{\alpha\beta\gamma\delta}) \otimes e^{\alpha
-                    \beta\gamma\delta} \\
-                    &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
-                    e^{\alpha\beta\gamma\delta} \\
-                    &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
-                    e^{\alpha\beta\gamma\delta} \\
-                    &amp;= (y^c_{l-1})^{ituv} (e_{\alpha\beta(\gamma+s)(\delta+r)})^{jtuv} e_{ijsr} \otimes
-                    e^{\alpha\beta\gamma\delta} \\
-                    &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
-                    e_{i\alpha sr}
-                    \otimes
-                    e^{\alpha\beta\gamma\delta} \\
+                        &amp;= \tau(W^c_l; (s, r))^{j\beta\gamma\delta} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma
+                        \delta} \\
+                        &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma
+                        \delta}
+                        \end{align*}
+                        $$
 
-                    \end{align*}
-                    $$
-                </li>
+                    </div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$ \phi(\partial_{2}\Gamma_l^c({\bf
+                        y}_{l-1}^c,
+                        W_l^c, b_l^c)) = (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
+                        e_{i\alpha sr}
+                        \otimes
+                        e^{\alpha\beta\gamma\delta} $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
+                        Perturb $W^c_l$:
+                        $$
+                        \begin{align*}
+                        \partial_{2}\Gamma_l^c({\bf
+                        y}_{l-1}^c,
+                        W_l^c, b_l^c) &amp;= dW^c_l \mapsto y^c_{l-1} \rtimes dW^c_l \\
+                        \implies \phi(\partial_{2}\Gamma_l^c({\bf
+                        y}_{l-1}^c,
+                        W_l^c, b_l^c)) &amp;= (y^c_{l-1} \rtimes e_{\alpha\beta\gamma\delta}) \otimes e^{\alpha
+                        \beta\gamma\delta} \\
+                        &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
+                        e^{\alpha\beta\gamma\delta} \\
+                        &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
+                        e^{\alpha\beta\gamma\delta} \\
+                        &amp;= (y^c_{l-1})^{ituv} (e_{\alpha\beta(\gamma+s)(\delta+r)})^{jtuv} e_{ijsr} \otimes
+                        e^{\alpha\beta\gamma\delta} \\
+                        &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
+                        e_{i\alpha sr}
+                        \otimes
+                        e^{\alpha\beta\gamma\delta} \\
 
-                <li>
-                    $\partial_{3}\Gamma_l^c({\bf
-                    y}_{l-1}^c,
-                    W_l^c, b_l^c)$: Perturb $b^c_l$
-                    $$
-                    \begin{align*}
-                    \partial_{3}\Gamma_l^c({\bf
-                    y}_{l-1}^c,
-                    W_l^c, b_l^c) &amp;= db^c_l \mapsto \bm{1}^{a} \otimes db^c_l \otimes \bm{1}^{bc} \\
-                    \implies \phi(\partial_{3}\Gamma_l^c({\bf
-                    y}_{l-1}^c,
-                    W_l^c, b_l^c) ) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
-                    e^{\alpha} \\
+                        \end{align*}
+                        $$
+
+                    </div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+
+                <div class="proposition">
+                    <div class="proposition-title">
+                    </div>
+                    <div class="proposition-content">
+                        $$ \phi(\partial_{3}\Gamma_l^c({\bf
+                        y}_{l-1}^c,
+                        W_l^c, b_l^c) ) = \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
+                        e^{\alpha} $$
+                    </div>
+                </div>
+                <div class="proof">
+                    <div class="proof-title">
+                        Proof
+                    </div>
+                    <div class="proof-content">
+                        Perturb $b^c_l$
+                        $$
+                        \begin{align*}
+                        \partial_{3}\Gamma_l^c({\bf
+                        y}_{l-1}^c,
+                        W_l^c, b_l^c) &amp;= db^c_l \mapsto \bm{1}^{a} \otimes db^c_l \otimes \bm{1}^{bc} \\
+                        \implies \phi(\partial_{3}\Gamma_l^c({\bf
+                        y}_{l-1}^c,
+                        W_l^c, b_l^c) ) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
+                        e^{\alpha} \\
 
 
-                    \end{align*}
-                    $$
-                </li>
-            </ul>
-            <section id='cnn-grad' data-title="The Gradients">
+                        \end{align*}
+                        $$
+
+                    </div>
+                    <div class="qed">
+                        QED
+                    </div>
+                </div>
+
+            </section>
+            <section id='cnn-grad' data-title="Tensors of Gradients">
                 <h2 class="text-2xl my-4">The Gradients</h2>
                 <div style="width: 100%;">
                     Define the following:
@@ -1711,10 +1988,13 @@
                     \begin{align*}
                     {\bm{\xi}}_l{} &amp;=
                     \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta)) &amp;= ({\xi}^c_l{})_{tuvw} e^{tuvw}\\
-                    {\bm{\xi}}_z &amp;= \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta) \circ DF^c_l{}({\bf z}^c_l{}))
+                    {\bm{\xi}}_z &amp;= \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta) \circ DF^c_l{}({\bf
+                    z}^c_l{}))
                     \\
-                    {\bm{\delta}}_w &amp;= \phi(\partial_{W^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta))) \\
-                    {\bm{\delta}}_b &amp;= \phi(\partial_{b^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))\\
+                    {\bm{\delta}}_w &amp;= \phi(\partial_{W^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot; \theta)))
+                    \\
+                    {\bm{\delta}}_b &amp;= \phi(\partial_{b^c_l{}} \hat{R}(\bar{\bf d}; \mathcal{F}(\cdot;
+                    \theta)))\\
                     \bm{\epsilon}_w &amp;= \phi(\partial_{W^c_l{}}\Gamma^c_l{}({\bf
                     y}_{l-1},
                     \theta^c_l{})) &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
@@ -1732,18 +2012,33 @@
                     \\
                     \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma^c_l{}({\bf
                     y}_{l-1};
-                    \theta^c_l{})) &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta
+                    \theta^c_l{})) &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha
+                    \beta
                     \gamma
                     \delta}
                     \\
 
                     \end{align*}
                     $$
-                    By the preceding work we can find the gradient tensors for each parameter. NOTE: all transpositions
+                    By the preceding work we can find the gradient tensors for each parameter. NOTE: all
+                    transpositions
                     denote
                     permuting the first two slots.
-                    <div class="flex flex-row justify-between align-baseline">
-                        <div>
+
+
+                    <div class="proposition">
+                        <div class="proposition-title">
+
+                        </div>
+                        <div class="proposition-content">
+                            $$ \bm{\delta}_w^{\dagger} = ({\bf y}^c_{l-1}{}^T \rtimes \bm{\xi}^T_z)^T $$
+                        </div>
+                    </div>
+                    <div class="proof">
+                        <div class="proof-title">
+                            Proof
+                        </div>
+                        <div class="proof-content">
                             $$
                             \begin{align*}
 
@@ -1769,8 +2064,25 @@
                             &amp;\equiv ({\bf y}^c_{l-1}{}^T \rtimes \bm{\xi}^T_z)^T \\
                             \end{align*}
                             $$
+
                         </div>
-                        <div>
+                        <div class="qed">
+                            QED
+                        </div>
+                    </div>
+                    <div class="proposition">
+                        <div class="proposition-title">
+                        </div>
+                        <div class="proposition-content">
+                            $$ \bm{\delta}_b^{\dagger} = \bm{1}_{acd}(\bm{\xi}^{\dagger}_z)^{abcd}
+                            $$
+                        </div>
+                    </div>
+                    <div class="proof">
+                        <div class="proof-title">
+                            Proof
+                        </div>
+                        <div class="proof-content">
                             $$
                             \begin{align*}
                             \bm{\delta}_b &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
@@ -1794,19 +2106,32 @@
                             \end{align*}
 
                             $$
+
+                        </div>
+                        <div class="qed">
+                            QED
                         </div>
                     </div>
-
-                    where
-
-                    <div class="flex flex-row justify-between align-baseline">
-                        <div>
+                    <div class="proposition">
+                        <div class="proposition-title">
+                        </div>
+                        <div class="proposition-content">
+                            $$ \bm{\xi}_z^{\dagger} = \bm{\xi}_l{}^{\dagger} \odot F^c_l{}'({\bf z}^c_l{})
+                            $$
+                        </div>
+                    </div>
+                    <div class="proof">
+                        <div class="proof-title">
+                            Proof
+                        </div>
+                        <div class="proof-content">
                             $$
                             \begin{align*}
                             \bm{\xi}_z &amp;= (\bm{\xi}_l{})_{abcd}(\bm{\epsilon}_z)^{abcd}{}_{efgh}\\
 
                             &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e^{tuvw} \\
-                            \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
+                            \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw})
+                            e_{tuvw} \\
                             &amp;= (\xi_l{}^{\dagger})^{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
                             &amp;= \bm{\xi}_l{}^{\dagger} \odot F^c_l{}'({\bf z}^c_l{}) \\
                             \end{align*}
@@ -1814,7 +2139,22 @@
                             $$
 
                         </div>
-                        <div>
+                        <div class="qed">
+                            QED
+                        </div>
+                    </div>
+                    <div class="proposition">
+                        <div class="proposition-title">
+                        </div>
+                        <div class="proposition-content">
+                            $$ \bm{\xi}_{l-1}{}^{\dagger} = \bm{\xi}^{\dagger}_z{} \bar{\rtimes} W^c_l{}^T $$
+                        </div>
+                    </div>
+                    <div class="proof">
+                        <div class="proof-title">
+                            Proof
+                        </div>
+                        <div class="proof-content">
                             $$
                             \begin{align*}
                             \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U^c_{l-1}({\bf y}^c_{l-1}, \theta)) =
@@ -1839,7 +2179,8 @@
                             &amp; = (\xi^{\dagger}_z{})^{tuvw} (W^c_l{}^T)^{\beta u(\gamma-v)(\delta-w)} e_{t\beta
                             \gamma
                             \delta} \\
-                            &amp; =(\xi^{\dagger}_z{})^{tuvw} \chi_2(W^c_l{}^T)^{\beta u(v-\gamma)(w-\delta)} e_{t\beta
+                            &amp; =(\xi^{\dagger}_z{})^{tuvw} \chi_2(W^c_l{}^T)^{\beta u(v-\gamma)(w-\delta)}
+                            e_{t\beta
                             \gamma
                             \delta}
                             \\
@@ -1848,8 +2189,13 @@
                             \end{align*}
 
                             $$
+
+                        </div>
+                        <div class="qed">
+                            QED
                         </div>
                     </div>
+
                 </div>
             </section>
 
@@ -1859,6 +2205,7 @@
 
     I hope this was an informative read; the backpropagation procedure is derived so often in a way that sweeps
     important
-    concepts under the rug. Tensors are the natural objects for high dimensional data, so it's important to know how to
+    concepts under the rug. Tensors are the natural objects for high dimensional data, so it's important to know how
+    to
     actually use them when they appear in ML.
 </section>

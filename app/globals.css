@@ -191,7 +191,7 @@ main.page {
         margin-top: 2rem;
         padding: 2%;
         line-height: 1.7;
-        counter-reset: theorem corollary;
+        counter-reset: theorem corollary proposition;
         font-family: var(--font-playfair);
 
         &.pdf {
@@ -283,7 +283,7 @@ main.paper article {
 
         overflow-x: scroll;
         background-color: rgba(0, 0, 255, 0.01);
-        border-left: 4px solid turquoise;
+        border-left: 4px solid darkcyan;
         border-radius: 4px;
         padding: 50px;
         margin: 20px 0;
@@ -294,7 +294,7 @@ main.paper article {
 
         overflow-x: scroll;
         background-color: rgba(0, 255, 0, 0.01);
-        border-left: 4px solid limegreen;
+        border-left: 4px solid darkslategray;
         border-radius: 4px;
         padding: 50px;
         margin: 20px 0;
@@ -305,7 +305,7 @@ main.paper article {
 
         overflow-x: scroll;
         background-color: rgba(255, 0, 0, 0.01);
-        border-left: 4px solid magenta;
+        border-left: 4px solid maroon;
         border-radius: 4px;
         padding: 50px;
         margin: 20px 0;
@@ -366,6 +366,38 @@ main.paper article {
         bottom: 16px;
         right: 16px;
         color: #333333;
+    }
+
+    /* --- Proposition Block --- */
+    .proposition {
+        overflow-x: scroll;
+        background-color: #f4fcf7;
+        /* Distinct, soft green tint */
+        border-left: 4px solid #059669;
+        /* Balanced green border to contrast with the theorem's orange */
+        border-radius: 4px;
+        padding: 24px;
+        /* Reduced from 50px for a more balanced, standard content padding */
+        margin: 20px 0;
+    }
+
+    .proposition-title {
+        font-weight: bold;
+        color: #065f46;
+    }
+
+    .proposition-title::before {
+        counter-increment: proposition;
+        content: "Proposition " counter(proposition) " ";
+        font-weight: bold;
+        color: #047857;
+    }
+
+    .proposition-content {
+        margin-top: 8px;
+        margin-bottom: 0;
+        font-style: italic;
+        /* Matches classic mathematical typography */
     }
 
     .corollary {
