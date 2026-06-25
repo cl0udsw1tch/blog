@@ -373,10 +373,6 @@
             l(x^i,\bar{v}^i, \mathcal{F}(\cdot; \theta)) \\
             = \argmin_{\theta}\frac{1}{I}\sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{x}^i;
             \theta))
-            = \argmin_{\theta}\frac{1}{I}\sum_i\Delta(\bar{v}^i,
-            \mathcal{F}(\bar{x}^i
-            ;
-            \theta) )
             $$
 
         </section>
@@ -434,13 +430,8 @@
             If we set $$\Delta(a, b) := -\log(p_0(a;b)) $$
 
             we then have
-            $$ \argmin_{\theta}\left(\sum_i \Delta(\bar{v}^i;\mathcal{F}(\bar{x}^i; \theta)^{\rangle i
-            \langle})\right) = \argmin_{\theta}\left(\sum_i l(\bar{x}^i, \bar{v}^i,
-            \mathcal{F}(\cdot;\theta))
-            \right)
-            \\
-
-            =\argmin_{\theta} I \hat{R}(\bar{\bm{d}},\mathcal{F}(\cdot; \theta)) =\argmin_{\theta}
+            $$ \argmin_{\theta} (- \log(\Bbb{L}(\theta; \bar{\bm{d}})) = \argmin_{\theta}\left(\sum_i
+            \Delta(\bar{v}^i;\mathcal{F}(\bar{x}^i; \theta))\right) =\argmin_{\theta}
             \hat{R}(\bar{\bm{d}},\mathcal{F}(\cdot; \theta))$$
 
 
@@ -549,10 +540,10 @@
                     </li>
 
                     <li class="hyper-focus">
-                        If $(Y|X=\bm{x}) \in \mathbb{R}$ in the case of a regression, then $$
+                        If $(Y|X=x) \in \mathbb{R}$ in the case of a regression, then $$
                         \mathcal{P}_0(Y;\hat{y})=\mathcal{N}(Y;\mu=\hat{y},\sigma^2=1) $$
                         where $\hat{y} =
-                        \mathcal{F}(\bm{x};\theta)$,
+                        \mathcal{F}(x;\theta)$,
 
                         is a suitable choice with $$p_0(y;\hat{y})=\frac{1}{\sqrt{2\pi}}
                         \exp\left({-\frac{(y-\hat{y})^2}{2}}\right)$$
@@ -562,16 +553,14 @@
                             Squared
                             Error</span> (MSE) term $(v-\hat{y})^2$.
                         Such a
-                        loss demands our output $\hat{\bm y}=\mathcal{F}({\bf x}, \theta)$ obey certain properties:
+                        loss demands our output $\hat{y}=\mathcal{F}(x, \theta)$ obey certain properties:
                         <ol style="list-style: lower-latin; margin: 10px;">
                             <li>
-                                $\hat{\bm y} \in \mathbb{V} $
+                                $\hat{y} \in \reals $
 
                             </li>
                         </ol>
-                        so that $\Delta$ is well defined, by using $\hat{\bm y}^{\rangle i \langle}$ in place of
-                        $\hat{y}$.
-                        To satisfy this requirement
+                        so that $\Delta$ is well defined. To satisfy this requirement
                         $$
                         W_{L+1} \in \mathbb{V}
                         $$ is required.
@@ -587,8 +576,7 @@
         <section id="backpropogation" data-title="Backpropogation">
             <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Backpropogation</h3>
 
-            We can now formulate the backpropogation algorithm, sticking with the language of tensors. Backpropogation
-            will
+            We can now formulate the backpropogation algorith which will
             be
             used to find
             $$
@@ -596,25 +584,45 @@
             \mathcal{F}(\cdot; \theta))
             $$
             via Gradient Descent.
+            Notice
+            $$
+            \argmin_{\theta} \hat{R}(\bar{\bm{d}},
+            \mathcal{F}(\cdot; \theta))
+            = \argmin_{\theta} \left(\frac{1}{I}\sum_i
+            \Delta(\bar{v}^i;\mathcal{F}(\bar{x}^i; \theta))\right) \\
+            = \argmin_{\theta} \left(\sum_i
+            \Delta(\bar{v}^i;\mathcal{F}(\bar{x}^i; \theta))\right) = \frac{1}{I} \sum_i \argmin_{\theta} \left(
+            \Delta(\bar{v}^i;\mathcal{F}(\bar{x}^i; \theta))\right)$$
+            so we could find the $\argmin$ pointwise then average. In practice, it's helpful to vectorize along the
+            batch sample because the partial derivatives will be more computationally efficient to work with. So the
+            procedure will be as follows: we will
+            find the pointwise derivatives then combine them to find a vector derivative wrt the independent variable
+            across all points.
+
+
             We proceed by finding the partial derivatives of the empirical risk. Assume as per the previous section we
             have
             a
-            loss function $\Delta$ and define the tensorized version by
+            loss function $\Delta$ and define the vectored version by
             $$
-            {\bf \Delta}(\bm{v}, T) = \sum_i \Delta(v^i, T^{\rangle i \langle})
+            {\bf \Delta}(\bm{v}, \hat{\bm y}) = \sum_i \Delta(v^i, \hat{y}^i)
             $$
             so that
             $$
-            {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) = \sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{\bf
-            x};
-            \theta)^{\rangle i
-            \langle}) \\
+            {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta)) = \sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{
+            x}^i;
+            \theta)) \\
             \implies \hat{R}(\bar{\bm{d}},
             \mathcal{F}(\cdot; \theta))
-            = \frac{1}{I} {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
+            = \frac{1}{I} {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
 
             $$
-
+            Note the overloading of the symbol $\mathcal{F}$, here it is taken to mean
+            $$
+            \mathcal{F}(\bm{x}; \theta) := \prod_i \mathcal{F}(x^i;\theta)
+            $$
+            This type of overload will be used for all the other module functions such as $F_l, \Gamma_l \ldots$, but it
+            should be very clear from the type of argument given.
             <section id='last-activation-isolation' data-title="Prop: Last Activation Isolation">
                 <div class="proposition">
 
@@ -632,7 +640,7 @@
                         \end{align}
                         $$ Then
                         $$
-                        \mathcal{F}(\bar{\bf x}; \theta) = F_{L+1} \circ T(\bar{\bf x}, \theta)
+                        \mathcal{F}(\bar{\bm{x}}; \theta) = F_{L+1} \circ T(\bar{\bm{x}}, \theta)
 
                         $$ and
                         $$
@@ -640,7 +648,7 @@
                         \mathcal{F}(\cdot; \theta))
                         = DS
                         ({\bf z}_{L+1}) \circ
-                        \partial_{2} T(\bar{\bf x},\theta)
+                        \partial_{2} T(\bar{\bm{x}},\theta)
                         $$
 
                     </div>
@@ -653,29 +661,30 @@
                         Perturb $\mathcal{F}(\cdot; \theta)$ by $h$, then
                         $$
                         \begin{align*}
-                        d \mathcal{F}(\bar{\bf x}; \theta) &amp;= h(\bar{\bf x}) \\
-                        \implies d {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
-                        &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
-                        [d\mathcal{F}(\bar{\bf x};
+                        d \mathcal{F}(\bar{\bm{x}}; \theta) &amp;= h(\bar{\bm{x}}) \\
+                        \implies d {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
+                        &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
+                        [d\mathcal{F}(\bar{\bm{x}};
                         \theta)]
                         \\
-                        &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) [h(\bar{\bf x})]
+                        &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
+                        [h(\bar{\bm{x}})]
                         \\
                         \implies d \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
-                        &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta))
-                        [h(\bar{\bf x})]
+                        &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
+                        [h(\bar{\bm{x}})]
                         \\
-                        &amp;= \frac{1}{I} \left( \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x};
+                        &amp;= \frac{1}{I} \left( \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}};
                         \theta))
                         \circ
-                        \delta_{\bar{\bf
-                        x}}\right) [h] \\
+                        \delta_{\bar{\bm{
+                        x}}}\right) [h] \\
                         \implies \partial_2 \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
-                        &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
-                        \delta_{\bar{\bf
-                        x}}\\
+                        &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
+                        \circ
+                        \delta_{\bar{\bm{x}}}\\
 
 
                         \end{align*}
@@ -689,14 +698,14 @@
                         = \partial_2 \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
                         \circ \partial_{\theta} \mathcal{F}(\cdot; \theta) \\
-                        = \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
-                        \delta_{\bar{\bf
-                        x}} \circ \partial_{\theta} \mathcal{F}(\cdot; \theta ) $$
+                        = \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta)) \circ
+                        \delta_{\bar{\bm{
+                        x}}} \circ \partial_{\theta} \mathcal{F}(\cdot; \theta ) $$
                         $$
                         \begin{align*}
-                        &amp;= \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bf x}; \theta)) \circ
+                        &amp;= \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta)) \circ
                         \partial_{\theta}
-                        \mathcal{F}(\bar{\bf x}; \theta )\\
+                        \mathcal{F}(\bar{\bm{x}}; \theta )\\
                         \end{align*}
                         $$
 
@@ -709,13 +718,13 @@
                         \begin{align*}
                         \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
-                        &amp;= {\bf \Delta}(\bar{\bm{v}}, \cdot) \circ \mathcal{F}({\bf x}; \theta) \\
-                        &amp; = S \circ T ({\bf x}, \theta) \\
+                        &amp;= {\bf \Delta}(\bar{\bm{v}}, \cdot) \circ \mathcal{F}(\bar{\bm{x}}; \theta) \\
+                        &amp; = S \circ T (\bar{\bm{x}}, \theta) \\
                         \implies \partial_{\theta} \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
                         &amp;= DS
                         ({\bf z}_{L+1}) \circ
-                        \partial_{2} T(\bar{\bf x},\theta)\\
+                        \partial_{2} T(\bar{\bm{x}},\theta)\\
 
                         \end{align*}
                         $$
@@ -737,16 +746,17 @@
                 <div class="proposition">
                     <div class="proposition-title"></div>
                     <div class="proposition-content">
-                        If $\bm{\hat y} = \mathcal{F}(\bar{\bf x}, \theta) \in \Bbb{V} $ and $\Delta(\bar{v}^i,
-                        \bm{\hat{y}}^{\rangle i \langle}) = -\left(\bar{v}^i\log(\hat{\bm{y}}^{\rangle i \langle}) +
-                        (1-\bar{v}^i)\log(\hat{\bm{y}}^{\rangle i \langle})\right) $ in the case of a binary learning
+                        If $\bm{\hat y} = \mathcal{F}(\bar{\bm{x}}, \theta) \in \prod_i \reals = \reals^I $ and
+                        $\Delta(\bar{v}^i,
+                        \hat{y}^i) = -\left(\bar{v}^i\log(\hat{y}^i) +
+                        (1-\bar{v}^i)\log(\hat{y}^i)\right) $ in the case of a binary learning
                         task,
                         then
                         $$
                         \partial_{\theta} \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
-                        = \frac{1}{I} \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle \circ \partial_{2} T(\bar{\bf
-                        x},\theta)
+                        = \frac{1}{I} \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle \circ \partial_{2} T(\bar{\bm{
+                        x}},\theta)
                         $$
 
                     </div>
@@ -880,7 +890,7 @@
                 <div class="proposition">
                     <div class="proposition-title"></div>
                     <div class="proposition-content">
-                        If $\hat{\bf y} = \mathcal{F}(\bar{\bf x}; \theta) \in \Bbb{V}^{\otimes 2}$ and
+                        If $\hat{\bf y} = \mathcal{F}(\bar{\bm{x}}; \theta) \in \Bbb{V}^{\otimes 2}$ and
                         $\Delta(\bar{v}^i,
                         \hat{\bf y}^{\rangle i \langle})
                         = -\sum_c [\bar{v}^i = c] \log((\hat{\bf y}^{\rangle i \langle})^{c})$ in
