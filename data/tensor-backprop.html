@@ -587,11 +587,7 @@
             \Delta(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta))\right) = \frac{1}{I} \sum_i \argmin_{\theta} \left(
             \Delta(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta))\right)$$
             so we could find the $\argmin$ pointwise then average. In practice, it's helpful to vectorize along the
-            batch sample because the partial derivatives will be more computationally efficient to work with. So the
-            procedure will be as follows: we will
-            find the pointwise derivatives then combine them to find a vector derivative wrt the independent variable
-            across all points.
-
+            batch sample because the partial derivatives will be more computationally efficient to work with.
 
             We proceed by finding the partial derivatives of the empirical risk. Assume as per the previous section we
             have
@@ -615,7 +611,12 @@
             \mathcal{F}(\bm{x}; \theta) := \prod_i \mathcal{F}(x_{(i)};\theta)
             $$
             This type of overload will be used for all the other module functions such as $F_l, \Gamma_l \ldots$, but it
-            should be very clear from the type of argument given.
+            should be very clear from the type of argument given. For any object $v_i$, the vectored version can be
+            given as either
+            $$
+            \prod_i v_i \cong \sum_i e_i \otimes v_i
+            $$ and moving back and forth requires applying the obvious isomorphism between $$ \reals^I \otimes \Bbb{V}
+            \cong \prod_i \Bbb{V}$$
             <section id='last-activation-isolation' data-title="Prop: Last Activation Isolation">
                 <div class="proposition">
 
