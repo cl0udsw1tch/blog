@@ -37,32 +37,33 @@
         and the sample features at previous layers and then applying a non-linear transform. Define the following:
         <ul style="list-style: disc;">
             <li>
-                Dataset: $$\mathcal{D} = \{\{(\bar{x}^i)^{j}\}_{j \leq J}, \bar{v}^i\}_{i \leq I} $$ for some $I \in
-                \Bbb{N}$ where
-                $(x^i)^{j}
+                Dataset: $$\mathcal{D} = \{\{{\bar{x}_{(i)}}^{j}\}_{j \leq J}, \bar{v}_{(i)}\}_{i \leq I} $$ for some $I
                 \in
-                \mathbb{R}$ is the jth feature of sample $i$ and $v^i \in \mathbb{R}$ is its label
+                \Bbb{N}$ where
+                ${x_{(i)}}^{j}
+                \in
+                \mathbb{R}$ is the jth feature of sample $i$ and $v_{(i)} \in \mathbb{R}$ is its label
 
             </li>
             <li>
                 The $j$th feature of the $i$th sample produced at hidden layer $l-1$, feeding into hidden
                 layer
                 $l$.
-                $$(y^{i,l-1})^{j}$$
+                $${y_{(i,l-1})}^{j}$$
 
             </li>
         </ul>
-        Suppose now we have $(y^{i,l-1})^{j}$ for every $j \leq J_l$. We aim to produce
+        Suppose now we have ${y_{(i,l-1)}}^{j}$ for every $j \leq J_l$. We aim to produce
         [one
         of]
-        the next features $(y^{i, l})^{k}$ for the same sample $i$; namely feature number $k \leq K_l=J_{l+1}$ not
+        the next features ${y_{(i, l)}}^{k}$ for the same sample $i$; namely feature number $k \leq K_l=J_{l+1}$ not
         necessarily
         equal to $j$. The feed-forward neural network (FFN) achieves this in two steps:
         <section id="components" data-title="FNN Components" class="model focus">
 
             <ol type="1" style="list-style-type: decimal; list-style-position: outside; padding-left: 0px;">
                 <li>
-                    We take a set of <span class="italic font-bold">parameters</span> $\{(W^l)^{j,k}, (b^l)^k \in
+                    We take a set of <span class="italic font-bold">parameters</span> $\{W_{(l)}^{j,k}, b_{(l)}^k \in
                     \Bbb{R}\}_{j
                     \leq J_l, k \leq K_l=J_{l+1}}$ - we may also call
                     these <span class="italic font-bold">weights and biases</span> - and multiply each to the respective
@@ -72,7 +73,7 @@
                     summing. That is, we produce
                     $$
                     \begin{equation}
-                    (z^{i,l})^{k} = \sum_{j \leq J_l}(y^{i, l-1})^{j} (W^l)^{j,k} + (b^l)^k
+                    (z_{(i,l)})^{k} = \sum_{j \leq J_l}(y^{i, l-1})^{j} W_{(l)}^{j,k} + b_{(l)}^k
                     \end{equation}
                     $$
                     a "preimage" of the $k$th feature of the $i$th sample at layer $l$. Just the preimage thus far,
@@ -88,7 +89,7 @@
                     henceforth applied:
                     $$
                     \begin{equation}
-                    (y^{i,l})^{k} = f_l((z^{i,l})^{k})
+                    (y_{(i,l)})^{k} = f_l((z_{(i,l)})^{k})
                     \end{equation}
                     $$
                     producing the desired feature.
@@ -112,29 +113,29 @@
             over said index. For example, we can rewrite (1) as
             $$
             \begin{equation}
-            (z^{i,l})^{k} = (y^{i,l-1})^{j} (W^l)^{j,k} + b^k
+            (z_{(i,l)})^{k} = (y_{(i,l-1)})^{j} W_{(l)}^{j,k} + b^k
             \end{equation}
             $$
             where the sum is meant to be over $j$, which repeats, and where all terms are zero outside of their domains.
             This
             too
-            deserves formalization. Firstly, let's consider $(y^{i,l})$ as a well defined object, namely, a <span
+            deserves formalization. Firstly, let's consider $(y_{(i,l)})$ as a well defined object, namely, a <span
                 class="italic font-bold">tensor</span> over infinite
             dimensional vector spaces, but with <span class="italic">finite support</span>. Let's clarify, fix a feature
             tensor at layer $l$:
-            $$y^{i,l} = (y^{i,l})^{j} e_j \in \Bbb{V}$$
+            $$y_{(i,l)} = (y_{(i,l)})^{j} e_j \in \Bbb{V}$$
             Importantly, this is just a vector. However we are going to blur the distinction to warm up he reader to
             tensors, since this can be considered a tensor with a single slot. Let's also define what samples are
             $$
-            x^i = (x^i)^j e_j \in \Bbb{V}
+            x_{(i)} = x_{(i)}^j e_j \in \Bbb{V}
             $$
             again, using ESC. Now we can define the other objects we'll use
             $$
             \begin{align}
-            \bar{\bm{x}} &amp;= \prod_i (\bar{x}^{i})^{j} e_j &amp;&amp;\in \prod_i \Bbb{V} \\
-            \bar{\bm{v}} &amp;= \sum_i \bar{v}^i e_i &amp;&amp;\in \mathbb{R}^{I}\\
-            W^l &amp;= (W^l)^{j,k} e_j \otimes e_k &amp;&amp;\in \Bbb{V} \otimes \Bbb{V} \\
-            b^l &amp;= (b^l)^{k} e_k &amp;&amp;\in \Bbb{V} \end{align}
+            \bar{\bm{x}} &amp;= \prod_i {\bar{x}_{(i)}}^{j} e_j &amp;&amp;\in \prod_i \Bbb{V} \\
+            \bar{\bm{v}} &amp;= \sum_i \bar{v}_{(i)} e_i &amp;&amp;\in \mathbb{R}^{I}\\
+            W_{(l)} &amp;= W_{(l)}^{j,k} e_j \otimes e_k &amp;&amp;\in \Bbb{V} \otimes \Bbb{V} \\
+            b_{(l)} &amp;= b_{(l)}^{k} e_k &amp;&amp;\in \Bbb{V} \end{align}
             $$
 
 
@@ -147,7 +148,7 @@
             a $\Bbb{V}\to \Bbb{V}$ transform that acts on tensors, by defining
             $$
             \begin{equation}
-            y^{i,l} = F_l(z^{i,l}) = f_l((z^{i,l})^{k}) e_k
+            y_{(i,l)} = F_l(z_{(i,l)}) = f_l({z_{(i,l)}}^{k}) e_k
             \end{equation}
             $$
 
@@ -155,8 +156,7 @@
             useful
             when
             representing the <span class="italic">shape</span> of
-            a tensor. For example, we could write $(y_l)^{ab}$ to denote that $y_l \in V \otimes V$, or
-            for a more general example
+            a tensor. For example, we could write
             $$
             T^{ab}{}_{c}{}^{d}{}_{e}
             $$
@@ -168,9 +168,8 @@
             <h3 class="text-2xl" style="font-family: var(--font-playfair);">Contraction, Inner Products, Metric Tensors
             </h3>
             <br />
-            The issue thus far is that we want to speak in a language of tensors and yet are using the
-            coefficients of the layer features and parameters. Using
-            basic linear algebra, one realizes that $z^{i,l}$ can be formulated as a matrix product, where the inner
+            Using
+            basic linear algebra, one realizes that $z_{(i,l)}$ can be formulated as a matrix product, where the inner
             product
             is
             over
@@ -214,17 +213,17 @@
                 g^{ab} S_{a} T_{b} = \delta_{ij} S_p e^p(e_i) T_q e^q(e_j) = S_i T_i $$
                 A [very] useful property is that the metric tensors can raise/lower indices. For example,
                 $$
-                g_{ab} v^a = \delta_{ij} e^i \otimes e^j(v^p e_p) = v^i e^i = v_a
+                g_{ab} v^a = \delta_{ij} e^i \otimes e^j(v^p e_p) = v_{(i)} e^i = v_a
                 $$
                 It should be understood that if $v_a$ is given when $v^a$ was defined, the index has been moved via
                 application of a metric tensor.
             </div>
 
-            Now we can find a suitable tensorial representation for $z^{i,l}$: <div>
+            Now we can find a suitable tensorial representation for $z_{(i,l)}$: <div>
                 $$
-                z^{i,l} = (y^{i,l-1})_{a}(W^l)^{ab}
+                z_{(i,l)} = (y^{(i,l-1)})_{a}W_{(l)}^{ab}
                 +
-                b^l
+                b_{(l)}
                 $$
             </div>
 
@@ -237,19 +236,19 @@
             <div class="hyper-focus">
                 <ul style="list-style: disc">
                     <li>
-                        We will call a <span class="font-bold">layer</span> $l=1...L$ the function $$y^{i,l-1} \mapsto
-                        \mathcal{L}_l(y^{i,l-1}
-                        ; W^l, b^l) = F_l \circ
-                        \Gamma_l(y^{i,l-1}, W^l, b^l)$$ where
+                        We will call a <span class="font-bold">layer</span> $l=1...L$ the function $$y_{(i,l-1)} \mapsto
+                        \mathcal{L}_l(y_{(i,l-1)}
+                        ; W_{(l)}, b_{(l)}) = F_l \circ
+                        \Gamma_l(y_{(i,l-1)}, W_{(l)}, b_{(l)})$$ where
                         $$
                         \begin{equation}
                         \Gamma_{l}(S^a,T^{ab},U^{a}) = S_{a}T^{ab}+ U^a
                         \end{equation}
                         $$
                         We will call the <span class="font-bold">neuron</span> $k$ at layer $l$ the function $$
-                        y^{i,l-1} \mapsto \mathcal{N}_{l,k}(y^{i,l-1} ; (W^l)^{j,k}
-                        e_j , (b^l)^k) = F_l \circ \gamma_{l}(y^{i,l-1}, (W^l)^{j,k}
-                        e_j, (b^l)^k)
+                        y_{(i,l-1)} \mapsto \mathcal{N}_{l,k}(y_{(i,l-1)} ; W_{(l)}^{j,k}
+                        e_j , b_{(l)}^k) = F_l \circ \gamma_{l}(y_{(i,l-1)}, W_{(l)}^{j,k}
+                        e_j, b_{(l)}^k)
                         $$ where
                         $$
                         \gamma_{l}(S^a,T^a, u) =
@@ -257,16 +256,16 @@
                         $$
                         Note that
                         $$
-                        \mathcal{N}_{l,k}(y^{i,l-1} ; (W^l)^{j,k}
-                        e_j , (b^l)^k) e_k = \mathcal{L}_l(y^{i,l-1}; W^l, b^l)
+                        \mathcal{N}_{l,k}(y_{(i,l-1)} ; W_{(l)}^{j,k}
+                        e_j , b_{(l)}^k) e_k = \mathcal{L}_l(y_{(i,l-1)}; W_{(l)}, b_{(l)})
                         $$
                         that is, a layer is a sum of neurons.
                     </li>
                     <li>
                         First we start with the <span class="font-bold">input layer </span>, $\mathcal{L}_0$. We define
-                        $$y^{i,0} := x^i $$
-                        for any sample $x^i \in \Bbb{V}$
-                        and define $\mathcal{L}_0$ by $x^i \mapsto y^{i,0}$, so $\mathcal{L}_0$ is the
+                        $$y_{(i,0)} := x_{(i)} $$
+                        for any sample $x_{(i)} \in \Bbb{V}$
+                        and define $\mathcal{L}_0$ by $x_{(i)} \mapsto y_{(i,0)}$, so $\mathcal{L}_0$ is the
                         identity. It's not
                         strictly a <span class="italic">computational</span> layer like defined earlier,
                         however some folks like to speak of an input layer, which refers to this.
@@ -275,18 +274,20 @@
                         The <span class="font-bold">hidden</span> layers are $\{\mathcal{L}_l\}_{ l=1\dots L}$
                     </li>
                     <li>
-                        The <span class="font-bold">output</span> layer is $$y^{i,L} \mapsto \mathcal{L}_{L+1}(y^{i,L};
-                        W^{L+1},
-                        b^{L+1}) =
-                        F_{L+1} \circ \Gamma(y^{i,L}, W^{L+1}, b^{L+1})$$ where $F_{L+1}$ is called the activation
+                        The <span class="font-bold">output</span> layer is $$y_{(i,l)} \mapsto
+                        \mathcal{L}_{L+1}(y_{(i,l)};
+                        W_{(L+1)},
+                        b_{(L+1)}) =
+                        F_{L+1} \circ \Gamma(y_{(i,l)}, W_{(L+1)}, b_{(L+1)})$$ where $F_{L+1}$ is called the activation
                         function.
                     </li>
                     <li>
                         The <span class="font-bold">model</span> $\mathcal{F}$ is defined by
-                        $$ \mathcal{F}(x ; \theta) = \mathcal{L}_{L+1}(\cdot ; W^{L+1},b^{L+1}) \circ \ldots \circ
+                        $$ \mathcal{F}(x ; \theta) = \mathcal{L}_{L+1}(\cdot ; W_{(L+1)},b_{(L+1)}) \circ \ldots \circ
                         \mathcal{L}_{1}(\cdot ;
-                        W^{1}, b^1)
-                        \circ \mathcal{L_0} (x) $$ where $$\theta = W_1,b_1 \ldots W_{L+1},b_{L+1} $$ are the parameters
+                        W_{(1)}, b_{(1)}
+                        \circ \mathcal{L_0} (x) $$ where $$\theta = W_{(1)},b_{(1)} \ldots W_{(L+1)},b_{(L+1)} $$ are
+                        the parameters
                         of
                         the
                         model.</li>
@@ -300,8 +301,8 @@
             <h3 class="text-2xl my-8" style="font-family: var(--font-playfair);">Loss, Empirical Risk</h3>
 
             <div>
-                We have so far the ability to compute the output of our parameterized model $y^{i,L+1} =
-                \mathcal{F}(x^i;\theta)$.
+                We have so far the ability to compute the output of our parameterized model $y_{(i,L+1)} =
+                \mathcal{F}(x_{(i)};\theta)$.
                 <br />
                 <br />
                 Let $X,Y$
@@ -316,14 +317,6 @@
                 <span class="font-bold">loss function</span> $\mathbb{R} \times \mathbb{V} \to \mathbb{R}:$
                 $$ w, \hat{w} \mapsto \Delta(w, \hat{w}) $$
 
-                Define
-                $$
-                \begin{align*}
-                T^{[i]} &amp;= \sum_{\alpha} T^{i,\alpha} e_i \otimes e_{\alpha} \\
-                T^{\rangle i \langle} &amp;= \sum_{\alpha} T^{i,\alpha} e_{\alpha} \\
-                T^{\langle i \rangle}& = \sum_{\alpha} T^{\alpha} e_i \otimes e_{\alpha} = e_i \otimes T
-                \end{align*}
-                $$
                 The <span class="font-bold italic">loss</span> at a
                 point $(x,y) \in \mathbb{V} \times \mathbb{R}$ is
                 $$
@@ -355,11 +348,11 @@
                 Our loss is defined as
 
                 $$
-                l(x^i, v^i, \mathcal{F}(\cdot; \theta)) = \Delta(v, \mathcal{F}(x^i;\theta))
+                l(x_{(i)}, v_{(i)}, \mathcal{F}(\cdot; \theta)) = \Delta(v, \mathcal{F}(x_{(i)};\theta))
                 $$
                 and for a sample $\bm{d} = (\bm{x}, \bm{v})$
                 $$
-                \hat{R}(\bm{d}, \mathcal{F}(\cdot; \theta)) = \frac{1}{I}\sum_i l(x^i, v^i,
+                \hat{R}(\bm{d}, \mathcal{F}(\cdot; \theta)) = \frac{1}{I}\sum_i l(x_{(i)}, v_{(i)},
                 \mathcal{F}(\cdot;
                 \theta))
                 \to \Bbb{E}_{X, Y}(l(x, v, \mathcal{F}(\cdot; \theta)))
@@ -370,8 +363,8 @@
             (\bar{\bm{x}}, \bar{\bm{v}})$ we find
             $$
             \argmin_{\theta} \hat{R}(\bar{\bm{d}}, \mathcal{F}(\cdot ; \theta)) = \argmin_{\theta}\frac{1}{I}\sum_i
-            l(x^i,\bar{v}^i, \mathcal{F}(\cdot; \theta)) \\
-            = \argmin_{\theta}\frac{1}{I}\sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{x}^i;
+            l(x_{(i)},\bar{v}_{(i)}, \mathcal{F}(\cdot; \theta)) \\
+            = \argmin_{\theta}\frac{1}{I}\sum_i \Delta(\bar{v}_{(i)}, \mathcal{F}(\bar{x}_{(i)};
             \theta))
             $$
 
@@ -395,8 +388,8 @@
             $p_{X,Y}(x,y;\theta) = p_0(y;\mathcal{F}(x;\theta))p_X(x)$ for some $\theta$.
             The sample distribution for the random vector ${\bf D}= ({\bf X}, {\bf Y})$ is then given by the density
             $$
-            p_{{\bf D}}(\bm{d};\theta)=_{i.i.d} \prod_i p(x^i, y^i;\theta) = \prod_i
-            p_0(y^i;\mathcal{F}(x^i;\theta))p_X(x^i)$$
+            p_{{\bf D}}(\bm{d};\theta)=_{i.i.d} \prod_i p(x_{(i)}, y_{(i)};\theta) = \prod_i
+            p_0(y_{(i)};\mathcal{F}(x_{(i)};\theta))p_X(x_{(i)})$$
 
 
             <div class="focus">
@@ -404,19 +397,19 @@
                 With our $\mathcal{X} = \Bbb{V}, \mathcal{Y} = \Bbb{R}$ and $\bm{d} = \bm{x}, \bm{v}$
                 $$
                 p_{\bf D} (\bm{d}; \theta)= \prod_i
-                p_0(v^i;\mathcal{F}(x^i;\theta))p_X(x^i)
+                p_0(v_{(i)};\mathcal{F}(x_{(i)};\theta))p_X(x_{(i)})
                 $$
             </div>
             The likelihood is
             $$
             \mathbb{L}(\theta; \bar{\bm{d}}) = p_{\bf D}(\bar{\bm{d}}; \theta) = \prod_i
-            p_0(\bar{v}^i;\mathcal{F}(\bar{x}^i;\theta))p_X(\bar{x}^i)
+            p_0(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)};\theta))p_X(\bar{x}_{(i)})
 
             $$
             Taking the negative log gives
             $$
-            -\log(\mathbb{L}(\theta; \bm{\bar{d}})) = -\sum_i \log(p_X(\bar{x}^i)) - \sum_i
-            \log(p_0(\bar{v}^i;\mathcal{F}(\bar{x}^{i};
+            -\log(\mathbb{L}(\theta; \bm{\bar{d}})) = -\sum_i \log(p_X(\bar{x}_{(i)})) - \sum_i
+            \log(p_0(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)};
             \theta)))
             $$
             which we want minimized over $\theta$.
@@ -424,14 +417,14 @@
             $$
 
             \begin{equation}
-            \argmin_{\theta}\left(- \sum_i \log(p_0(\bar{v}^i;\mathcal{F}(\bar{x}^{i}; \theta)))\right)
+            \argmin_{\theta}\left(- \sum_i \log(p_0(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta)))\right)
             \end{equation}
             $$
             If we set $$\Delta(a, b) := -\log(p_0(a;b)) $$
 
             we then have
             $$ \argmin_{\theta} (- \log(\Bbb{L}(\theta; \bar{\bm{d}})) = \argmin_{\theta}\left(\sum_i
-            \Delta(\bar{v}^i;\mathcal{F}(\bar{x}^i; \theta))\right) =\argmin_{\theta}
+            \Delta(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta))\right) =\argmin_{\theta}
             \hat{R}(\bar{\bm{d}},\mathcal{F}(\cdot; \theta))$$
 
 
@@ -478,7 +471,7 @@
                         </ol>
                         To satisfy (a),
                         $$
-                        W^{L+1} \in \mathbb{V}
+                        W_{(L+1)} \in \mathbb{V}
                         $$
                         is required.
 
@@ -513,7 +506,7 @@
                             <li>
                                 $
                                 \text{supp}(\hat{y}) \subset \{e_c\}_{c\leq C} (\implies
-                                \text{supp}(z_{L+1})
+                                \text{supp}(z_{(L+1)})
                                 \subset
                                 \{e_c\}_{c\leq
                                 C})
@@ -530,12 +523,12 @@
                         $F_{L+1}$ to be the <span class="font-bold">softmax</span>
                         activation, a type of tensor activation:
                         $$
-                        F_{L+1}: \mathbb{V} \to \mathbb{V} = (z^{i})^{j}e_j \mapsto
-                        \frac{e^{(z^{i})^{j}}}{\sum_k e^{(z^{i})^{k}}} e_j
+                        F_{L+1}: \mathbb{V} \to \mathbb{V} = z_{(i,L+1)}^{j}e_j \mapsto
+                        \frac{e^{z_{(i,L+1)}^{j}}}{\sum_k e^{z_{(i,L+1)}^{k}}} e_j
                         $$
                         At layer $L+1$, there is only one neuron, given by
                         $$\mathcal{N}_{L+1, 1} e_1 = \mathcal{L}_{L+1}$$ with
-                        $$\text{supp}^b ((W_{L+1})^{ab}) \subset \{e_c\}_{c\leq C} $$
+                        $$\text{supp}^b ((W_{(L+1)})^{ab}) \subset \{e_c\}_{c\leq C} $$
                         so that $(a)$ is satisfied.
                     </li>
 
@@ -562,7 +555,7 @@
                         </ol>
                         so that $\Delta$ is well defined. To satisfy this requirement
                         $$
-                        W_{L+1} \in \mathbb{V}
+                        W_{(L+1)} \in \mathbb{V}
                         $$ is required.
                         For regression,
                         the
@@ -589,10 +582,10 @@
             \argmin_{\theta} \hat{R}(\bar{\bm{d}},
             \mathcal{F}(\cdot; \theta))
             = \argmin_{\theta} \left(\frac{1}{I}\sum_i
-            \Delta(\bar{v}^i;\mathcal{F}(\bar{x}^i; \theta))\right) \\
+            \Delta(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta))\right) \\
             = \argmin_{\theta} \left(\sum_i
-            \Delta(\bar{v}^i;\mathcal{F}(\bar{x}^i; \theta))\right) = \frac{1}{I} \sum_i \argmin_{\theta} \left(
-            \Delta(\bar{v}^i;\mathcal{F}(\bar{x}^i; \theta))\right)$$
+            \Delta(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta))\right) = \frac{1}{I} \sum_i \argmin_{\theta} \left(
+            \Delta(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta))\right)$$
             so we could find the $\argmin$ pointwise then average. In practice, it's helpful to vectorize along the
             batch sample because the partial derivatives will be more computationally efficient to work with. So the
             procedure will be as follows: we will
@@ -605,12 +598,12 @@
             a
             loss function $\Delta$ and define the vectored version by
             $$
-            {\bf \Delta}(\bm{v}, \hat{\bm y}) = \sum_i \Delta(v^i, \hat{y}^i)
+            {\bf \Delta}(\bm{v}, \hat{\bm y}) = \sum_i \Delta(v_{(i)}, \hat{y}_{(i)})
             $$
             so that
             $$
-            {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta)) = \sum_i \Delta(\bar{v}^i, \mathcal{F}(\bar{
-            x}^i;
+            {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta)) = \sum_i \Delta(\bar{v}_{(i)},
+            \mathcal{F}(\bar{x}_{(i)};
             \theta)) \\
             \implies \hat{R}(\bar{\bm{d}},
             \mathcal{F}(\cdot; \theta))
@@ -619,7 +612,7 @@
             $$
             Note the overloading of the symbol $\mathcal{F}$, here it is taken to mean
             $$
-            \mathcal{F}(\bm{x}; \theta) := \prod_i \mathcal{F}(x^i;\theta)
+            \mathcal{F}(\bm{x}; \theta) := \prod_i \mathcal{F}(x_{(i)};\theta)
             $$
             This type of overload will be used for all the other module functions such as $F_l, \Gamma_l \ldots$, but it
             should be very clear from the type of argument given.
@@ -634,21 +627,24 @@
                         Define
                         $$
                         \begin{align}
-                        S &amp;= \frac{1}{I}{\bf \Delta}(\bar{\bm{v}}, \cdot) \circ F_{L+1} \\
+                        S(v, z) &amp;= \Delta(v, \cdot) \circ F_{L+1}(z) \\
                         T(\cdot, \theta) &amp;=
                         \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ ... \circ \mathcal{L}_0
                         \end{align}
                         $$ Then
                         $$
-                        \mathcal{F}(\bar{\bm{x}}; \theta) = F_{L+1} \circ T(\bar{\bm{x}}, \theta)
+                        \mathcal{F}(\bar{x}_{(i)}; \theta) = F_{L+1} \circ T(\bar{x}_{(i)}, \theta) \\
+                        \Delta(\bar{v}_{(i)}, \mathcal{F}(\bar{x}_{(i)}; \theta)) = S(\bar{v}_{(i)}, \cdot) \circ
+                        T(\bar{x}_{(i)},
+                        \theta)
 
                         $$ and
                         $$
-                        \partial_{\theta} \hat{R}(\bar{\bm{d}},
-                        \mathcal{F}(\cdot; \theta))
-                        = DS
-                        ({\bf z}_{L+1}) \circ
-                        \partial_{2} T(\bar{\bm{x}},\theta)
+                        \partial_{\theta} \Delta(\bar{v}_{(i)},
+                        \mathcal{F}(\bar{x}_{(i)}; \theta))
+                        = \partial_2S
+                        (\bar{v}_{(i)}, z_{(i,L+1)}) \circ
+                        \partial_{2} T(\bar{x}_{(i)},\theta)
                         $$
 
                     </div>
@@ -658,77 +654,7 @@
                         Proof
                     </div>
                     <div class="proof-content">
-                        Perturb $\mathcal{F}(\cdot; \theta)$ by $h$, then
-                        $$
-                        \begin{align*}
-                        d \mathcal{F}(\bar{\bm{x}}; \theta) &amp;= h(\bar{\bm{x}}) \\
-                        \implies d {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
-                        &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
-                        [d\mathcal{F}(\bar{\bm{x}};
-                        \theta)]
-                        \\
-                        &amp;= \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
-                        [h(\bar{\bm{x}})]
-                        \\
-                        \implies d \hat{R}(\bar{\bm{d}},
-                        \mathcal{F}(\cdot; \theta))
-                        &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
-                        [h(\bar{\bm{x}})]
-                        \\
-                        &amp;= \frac{1}{I} \left( \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}};
-                        \theta))
-                        \circ
-                        \delta_{\bar{\bm{
-                        x}}}\right) [h] \\
-                        \implies \partial_2 \hat{R}(\bar{\bm{d}},
-                        \mathcal{F}(\cdot; \theta))
-                        &amp;= \frac{1}{I} \partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta))
-                        \circ
-                        \delta_{\bar{\bm{x}}}\\
-
-
-                        \end{align*}
-                        $$
-
-
-                        By the chain rule
-                        $$
-                        \partial_{\theta} \hat{R}(\bar{\bm{d}},
-                        \mathcal{F}(\cdot; \theta))
-                        = \partial_2 \hat{R}(\bar{\bm{d}},
-                        \mathcal{F}(\cdot; \theta))
-                        \circ \partial_{\theta} \mathcal{F}(\cdot; \theta) \\
-                        = \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta)) \circ
-                        \delta_{\bar{\bm{
-                        x}}} \circ \partial_{\theta} \mathcal{F}(\cdot; \theta ) $$
-                        $$
-                        \begin{align*}
-                        &amp;= \frac{1}{I}\partial_2 {\bf \Delta}(\bm{\bar{v}}, \mathcal{F}(\bar{\bm{x}}; \theta)) \circ
-                        \partial_{\theta}
-                        \mathcal{F}(\bar{\bm{x}}; \theta )\\
-                        \end{align*}
-                        $$
-
-
-
-                        Then
-
-
-                        $$
-                        \begin{align*}
-                        \hat{R}(\bar{\bm{d}},
-                        \mathcal{F}(\cdot; \theta))
-                        &amp;= {\bf \Delta}(\bar{\bm{v}}, \cdot) \circ \mathcal{F}(\bar{\bm{x}}; \theta) \\
-                        &amp; = S \circ T (\bar{\bm{x}}, \theta) \\
-                        \implies \partial_{\theta} \hat{R}(\bar{\bm{d}},
-                        \mathcal{F}(\cdot; \theta))
-                        &amp;= DS
-                        ({\bf z}_{L+1}) \circ
-                        \partial_{2} T(\bar{\bm{x}},\theta)\\
-
-                        \end{align*}
-                        $$
-
+                        Follows from the chain rule.
 
                     </div>
                     <div class="qed">
@@ -737,19 +663,36 @@
                 </div>
 
             </section>
+            <div class="corollary">
+                <div class="corollary-title">
+                </div>
+                <div class="corollary-content">
+                    $$
+                    \partial_{\theta}\hat{R}(\bar{\bm{d}}, \mathcal{F}(\cdot;\theta)) = \frac{1}{I} \partial_2
+                    S(\bar{\bm{v}}, \bm{z}_{(L+1)}) \circ \partial_2 T(\bar{\bm{x}}, \theta)
+                    $$
+                    where
+                    $$
+                    S(\bar{\bm{v}}, \bm{z}_{(L+1)}) = {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = \sum_i S(\bar{v}_{(i)},
+                    z_{(i, L+1)}) \\
+                    T(\bm{x}, \theta) = \prod_i T(x_{(i)}, \theta)
+                    $$
+                </div>
+            </div>
 
-            It turns out that combining ${\bf \Delta}$ and $F_{L+1}$ into $S$ results in very elegant derivatives, which
+            It turns out that combining $\Delta$ and $F_{L+1}$ into $S$ results in very elegant derivatives, which
             we
             will
             derive below.
+
             <section id='partial-binary' data-title="Prop: Upstream Partial for Binary Classifiers">
                 <div class="proposition">
                     <div class="proposition-title"></div>
                     <div class="proposition-content">
-                        If $\bm{\hat y} = \mathcal{F}(\bar{\bm{x}}, \theta) \in \prod_i \reals = \reals^I $ and
-                        $\Delta(\bar{v}^i,
-                        \hat{y}^i) = -\left(\bar{v}^i\log(\hat{y}^i) +
-                        (1-\bar{v}^i)\log(\hat{y}^i)\right) $ in the case of a binary learning
+                        If $\hat y = \mathcal{F}(x, \theta) \in \reals $ and
+                        $\Delta(\bar{v}_{(i)},
+                        \hat{y}_{(i)}) = -\left(\bar{v}_{(i)}\log(\hat{y}_{(i)}) +
+                        (1-\bar{v}_{(i)})\log(\hat{y}_{(i)})\right) $ in the case of a binary learning
                         task,
                         then
                         $$
@@ -765,14 +708,14 @@
                 <div class="proof">
                     <div class="proof-title">Proof</div>
                     <div class="proof-content">
-                        Tensorizing gives
+                        Vectorizing gives
 
                         $$
-                        {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = -{\bf 1}_{a} \left(\bar{\bm v} \odot
+                        {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = - \bm{1} \cdot \left(\bar{\bm v} \odot
                         \log(\hat{\bm{y}}) + ({\bf 1}-
                         \bar{\bm v}) \odot \log({\bf 1} -
                         \hat{\bm{y}})
-                        \right)^{a}
+                        \right)
                         $$
 
                         Perburb $\hat{\bm{y}}$ by $d\hat{\bm{y}}$, then
@@ -782,95 +725,97 @@
                         \begin{align*}
                         d \log(\bm{\hat{y}} ) &amp;= \bm{\hat{y}}^{-1} \odot d \bm{\hat{y}} \\
                         d \log(1-\bm{\hat{y}}) &amp;= - ({\bf 1}-\bm{\hat{y}})^{-1} \odot d \bm{\hat{y}} \\
-                        \implies d {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= -{\bf 1}_{a} \left(\bar{\bm v} \odot
+                        \implies d {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= -{\bf 1} \cdot \left(\bar{\bm v}
+                        \odot
                         (\bm{\hat{y}}^{-1} \odot d \bm{\hat{y}}) + ({\bf 1}-\bar{\bm{v}}) \odot (- ({\bf
                         1}-\bm{\hat{y}})^{-1}
                         \odot
                         d \bm{\hat{y}})
-                        \right)^a \\
-                        &amp;= {\bf 1}_{a} \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf
+                        \right) \\
+                        &amp;= {\bf 1}\cdot \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf
                         1}-\bm{\hat{y}})^{-1}
-                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right)^a \\
-                        \implies D_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto {\bf 1}_{a}
+                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right) \\
+                        \implies D_2 {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto {\bf 1}\cdot
                         \left(\left(({\bf
                         1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf 1}-\bm{\hat{y}})^{-1}
-                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \bm{h}\right)^a
+                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \bm{h}\right)
 
                         \end{align*}
                         $$
-                        Tensoring the sigmoid activation gives
+                        Vectorizing the sigmoid activation gives
                         $$
-                        \hat{\bm{y}} = F_{L+1}(\bm{z}_{L+1}) = \sigma(\bm{z}_{L+1}) = ({\bf 1} +
-                        \exp(-\bm{z}_{L+1}))^{-1}
+                        \hat{\bm{y}} = F_{L+1}(\bm{z}_{(L+1)}) = \sigma(\bm{z}_{(L+1)}) = ({\bf 1} +
+                        \exp(-\bm{z}_{(L+1)}))^{-1}
                         $$
-                        Perturb $\bm{z}_{L+1}$ by $d\bm{z}_{L+1}$, then
+                        Perturb $\bm{z}_{(L+1)}$ by $d\bm{z}_{(L+1)}$, then
                         $$
                         \begin{align*}
 
-                        d \exp(-\bm{z}_{L+1}) &amp;= -\exp(-\bm{z}_{L+1}) \odot d\bm{z}_{L+1} \\
-                        \implies d\hat{\bm{y}} = d F_{L+1}(\bm{z}_{L+1}) &amp;=({\bf 1} + \exp(-\bm{z}_{L+1}))^{-2}\odot
-                        \exp(-\bm{z}_{L+1})\odot
-                        d\bm{z}_{L+1} \\
+                        d \exp(-\bm{z}_{(L+1)}) &amp;= -\exp(-\bm{z}_{(L+1)}) \odot d\bm{z}_{(L+1)} \\
+                        \implies d\hat{\bm{y}} = d F_{L+1}(\bm{z}_{(L+1)}) &amp;=({\bf 1} +
+                        \exp(-\bm{z}_{(L+1)}))^{-2}\odot
+                        \exp(-\bm{z}_{(L+1)})\odot
+                        d\bm{z}_{(L+1)} \\
 
                         &amp;= \hat{\bm{y}}^{2}\odot
-                        \exp(-\bm{z}_{L+1})\odot
-                        d\bm{z}_{L+1} \\
+                        \exp(-\bm{z}_{(L+1)})\odot
+                        d\bm{z}_{(L+1)} \\
                         &amp;= \hat{\bm{y}}^{2}\odot
-                        ({\bf -1 + 1} + \exp(-\bm{z}_{L+1}))\odot
-                        d\bm{z}_{L+1} \\
+                        ({\bf -1 + 1} + \exp(-\bm{z}_{(L+1)}))\odot
+                        d\bm{z}_{(L+1)} \\
                         &amp;= \hat{\bm{y}}^{2}\odot
                         ({\bf - 1} + \hat{\bm{y}}^{-1})\odot
-                        d\bm{z}_{L+1} \\
+                        d\bm{z}_{(L+1)} \\
                         &amp;= \hat{\bm{y}}\odot
                         ({\bf 1} - \hat{\bm{y}})\odot
-                        d\bm{z}_{L+1} \\
+                        d\bm{z}_{(L+1)} \\
                         \end{align*}
 
                         $$
                         Now we find $DS
-                        (\bm{z}_{L+1})
+                        (\bm{z}_{(L+1)})
                         $ by making the previous preturbations
 
                         $$
                         \begin{align*}
                         & d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
-                        &amp;= {\bf 1}_a \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf
+                        &amp;= {\bf 1}\cdot\left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf
                         1}-\bm{\hat{y}})^{-1}
-                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right)^a \\
-                        &amp;= {\bf 1}_a \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf
+                        -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot d \bm{\hat{y}}\right) \\
+                        &amp;= {\bf 1} \cdot \left(\left(({\bf 1}-\bm{\hat{y}})^{-1} -\bar{\bm{v}} \odot ({\bf
                         1}-\bm{\hat{y}})^{-1}
                         -\bar{\bm v} \odot \bm{\hat{y}}^{-1} \right) \odot \left(\hat{\bm{y}}\odot
                         ({\bf 1} - \hat{\bm{y}})\odot
-                        d\bm{z}_{L+1} \right)\right)^a \\
-                        &amp;= {\bf 1}_a \left(
+                        d\bm{z}_{(L+1)} \right)\right) \\
+                        &amp;= {\bf 1} \left(
 
                         \left(
                         \bm{\hat{y}} -\bar{\bm{v}} \odot \bm{\hat{y}}
                         -\bar{\bm v} \odot ({\bf 1} - \bm{\hat{y}})
                         \right) \odot
 
-                        d\bm{z}_{L+1}
-                        \right)^a \\
+                        d\bm{z}_{(L+1)}
+                        \right) \\
 
-                        &amp;= {\bf 1}_a \left(
+                        &amp;= {\bf 1} \cdot \left(
 
                         \left(
                         \bm{\hat{y}} -\bar{\bm{v}} \right) \odot
 
-                        d\bm{z}_{L+1}
-                        \right)^a \\
+                        d\bm{z}_{(L+1)}
+                        \right) \\
                         \implies DS
-                        (\bm{z}_{L+1})
+                        (\bm{z}_{(L+1)})
                         &amp;= \bm{h}
                         \mapsto
-                        {\bf 1}_a \left(
+                        {\bf 1} \cdot \left(
 
                         \left(
                         \bm{\hat{y}} -\bar{\bm{v}} \right) \odot
 
                         \bm{h}
 
-                        \right)^a \\
+                        \right) \\
                         &amp;= \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle
 
                         \end{align*}
@@ -878,8 +823,8 @@
                         $$
                         \therefore \partial_{\theta} \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
-                        = \frac{1}{I} \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle \circ \partial_{2} T(\bar{\bf
-                        x},\theta)
+                        = \frac{1}{I} \langle \cdot,\bm{\hat{y}} -\bar{\bm{v}} \rangle \circ \partial_{2} T(\bar{\bm{
+                        x}},\theta)
                         $$
 
                     </div>
@@ -890,16 +835,16 @@
                 <div class="proposition">
                     <div class="proposition-title"></div>
                     <div class="proposition-content">
-                        If $\hat{\bf y} = \mathcal{F}(\bar{\bm{x}}; \theta) \in \Bbb{V}^{\otimes 2}$ and
-                        $\Delta(\bar{v}^i,
-                        \hat{\bf y}^{\rangle i \langle})
-                        = -\sum_c [\bar{v}^i = c] \log((\hat{\bf y}^{\rangle i \langle})^{c})$ in
+                        If $\hat{y} = \mathcal{F}(x; \theta) \in \Bbb{V}$ and
+                        $\Delta(\bar{v}_{(i)},
+                        \hat{y}_{(i)})
+                        = -\sum_c [\bar{v}_{(i)} = c] \log({\hat{ y}_{(i)}}^{c})$ in
                         the case of a categorical learning task, then
                         $$
                         \partial_{\theta} \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
-                        = \frac{1}{I} \langle \cdot,{\bf \hat{y}} -\Bbb{X} \rangle \circ \partial_2 T(\bar{\bf
-                        x},\theta)
+                        = \frac{1}{I} \langle \cdot,\hat{\bm{y}} -\Bbb{X} \rangle \circ \partial_2 T(\bar{\bm{
+                        x}},\theta)
 
                         $$
                     </div>
@@ -908,193 +853,99 @@
                 <div class="proof">
                     <div class="proof-title">Proof</div>
                     <div class="proof-content">
-                        tensorizing gives
+                        Vectorizing gives
 
                         $$
-                        {\bf \Delta}(\bar{\bm{v}}, \hat{\bf y}) = -{\bf 1}_{ab} \left(\Bbb{X} \odot \log(\hat{\bf y})
-                        \right)^{ab}
+                        {\bf \Delta}(\bar{\bm{v}}, \hat{\bm{y}}) = - \Bbb{X} : \log(\hat{\bm{y}}) $$
+                        where $\Bbb{X} \in \Bbb{V} \times \Bbb{V}$ is the one hot vector of $\bar{\bm{v}}$ defined by
                         $$
-                        where $\Bbb{X} \in \Bbb{V}^{\otimes 2}$ is the one hot tensor of $\bar{\bm{v}}$ defined by
-                        $$
-                        \Bbb{X} = \delta_{\bar{v}^i, j} e_i \otimes e_j$$
-                        Perturb $\hat{\bf y}$ by $d \hat{\bf y}$, then
+                        \Bbb{X}^i = \delta_{\bar{v}_{(i)}, j} e_j $$
+                        Perturb $\hat{\bm{y}}$ by $d \hat{\bm{y}}$, then
 
                         $$
                         \begin{align*}
-                        d \log(\hat{\bf y}) &amp;= \hat{\bf y}^{-1} \odot d \hat{\bf y} \\
-                        \implies d (\Bbb{X} \odot \log(\hat{\bf y})) &amp;= \Bbb{X} \odot \hat{\bf y}^{-1} \odot d
-                        \hat{\bf
-                        y}
-                        \\
-                        \implies d {\bf \Delta} (\bar{\bm{v}}, \hat{\bf y}) &amp;= -{\bf 1}_{ab} \left(\Bbb{X} \odot
-                        \hat{\bf
-                        y}^{-1}
-                        \odot
-                        d \hat{\bf y} \right)^{ab}
-                        \\
-
+                        d \log(\hat{\bm{y}}) &amp;= \hat{\bm{y}}^{-1} \odot d \hat{\bm{y}} \\
+                        \implies d {\bf \Delta} (\bar{\bm{v}}, \hat{\bm{y}}) = -d (\Bbb{X} : \log(\hat{\bm{y}})) &amp;=
+                        -\Bbb{X} : \hat{\bm{y}}^{-1} \odot d
+                        \hat{\bm{y}}
                         \end{align*}
 
                         $$
-                        Tensorizing the softmax activation gives
+                        Vectorizing the softmax activation gives
                         $$
-                        \hat{\bf y} = F_{L+1}({\bf z}_{L+1}) = \text{Diag}((\exp({\bf z}_{L+1})^{ab} {\bf
-                        1}_b)^{-1})^{a}{}_b \exp({\bf
-                        z}_{L+1})^{bc}
+                        \hat{\bm{y}} = F_{L+1}(\bm{z}_{(L+1)}) = \exp(\bm{z}_{(L+1)}) \oslash \exp(\bm{z}_{(L+1)}) {\bf
+                        1}
+                        {\bf 1}^T
                         $$
-                        Perturb ${\bf z}_{L+1}$ by $d{\bf z}_{L+1}$, then letting $E = \exp({\bf z}_{L+1})$
+                        Perturb $\bm{z}_{(L+1)}$ by $d\bm{z}_{(L+1)}$, then letting $E = \exp(\bm{z}_{(L+1)})$
+
+
                         $$
                         \begin{align*}
-                        d E &amp;= E \odot d{\bf z}_{L+1} \\
-                        \implies d (E^{ab} {\bf 1}_b) &amp;= (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \\
-                        \implies d (E^{ab} {\bf 1}_b)^{-1} &amp;= - (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf
-                        z}_{L+1})^{ab}{\bf 1}_b)
+                        d \hat{\bm{y}} &amp;= (E {\bf 1}{\bf 1}^T \odot dE - E \odot dE {\bf 1}{\bf 1}^T ) \oslash
+                        ( E {\bf 1}{\bf 1}^T)^2\\
+                        &amp;= ((E {\bf 1}{\bf 1}^T ) \odot E \odot d \bm{z}_{(L+1)} - E \odot (E \odot d\bm{z}_{(L+1)}
+                        ){\bf
+                        1} {\bf 1}^T)
+                        \oslash
+                        ( E {\bf 1}{\bf 1}^T)^2
                         \\
-
-                        \implies d \hat{\bf y} &amp;= d (\text{Diag}((E^{ab}{\bf 1}_b)^{-1}))^a{}_bE^{bc} +
-                        \text{Diag}((E^{ab}{\bf 1}_b)^{-1})^a{}_bd E^{bc} \\
-                        &amp;= \text{Diag}(- (E^{ab}{\bf 1}_b)^{-2} \odot ((E \odot d {\bf z}_{L+1})^{ab}{\bf
-                        1}_b))^a{}_bE^{bc}
-                        +
-                        \text{Diag}((E^{ab}{\bf
-                        1}_b)^{-1})^a{}_b(E
-                        \odot d {\bf z}_{L+1})^{bc}
+                        &amp;= E \oslash (E {\bf 1}{\bf 1}^T ) \odot d \bm{z}_{(L+1)} - (E \oslash (E{\bf 11}^T )) \odot
+                        (((E
+                        \odot d\bm{z}_{(L+1)}) {\bf
+                        1}{\bf 1}^T)\oslash ( E {\bf 1}{\bf 1}^T)) \\
+                        &amp;= \hat{\bm{y}} \odot d\bm{z}_{(L+1)} - \hat{\bm{y}} \odot (((E \oslash ( E {\bf 1}{\bf
+                        1}^T)
+                        \odot d\bm{z}_{(L+1)}) {\bf
+                        1}{\bf 1}^T)) \\
+                        &amp;= \hat{\bm{y}} \odot d\bm{z}_{(L+1)} - \hat{\bm{y}} \odot ((\hat{\bm{y}} \odot
+                        d\bm{z}_{(L+1)}){\bf
+                        1}{\bf 1}^T))
                         \end{align*}
                         $$
-                        Let $A, B$ be arbitrary, and $C=\text{Diag}(c), D=\text{Diag}(d)$ be diagonal. We will use a few
-                        facts
-                        concerning diagonal degree-2 tensors and the $\odot $ operator:
-                        <ol style="list-style: decimal; list-style-position: inside;">
-                            <li>
-                                $D^a{}_bA^{bc} = (d^{a} \otimes {\bf 1}_{b}) \odot A$
-                            </li>
-                            <li>
-                                $D^a{}_b(A \odot B)^{bc} = (D^a{}_bA^{bc}) \odot B$
-                            </li>
-                            <li>
-                                $C^a{}_bD^{bc} = \text{Diag}(c \odot d)$
-                            </li>
-                        </ol>
-                        Noting that $\hat{\bf y} = \text{Diag}((E^{ab}{\bf 1}_b)^{-1})^a{}_bE^{bc} =
-                        (\text{Diag}(E^{ab}{\bf
-                        1}_b)^{-1})^a{}_bE^{bc}
-                        \implies E =
-                        \text{Diag}(E^{ab}{\bf 1}_b)^{a}{}_b \hat{\bf
-                        y}^{bc}$
-                        $$
-                        \begin{align*}
-                        d \hat{\bf y} &amp;= -\text{Diag}( (E^{ab}{\bf 1}_b)^{-2})^a{}_b\text{Diag}((E \odot d {\bf
-                        z}_{L+1})^{ab}{\bf
-                        1}_b)^b{}_c\text{Diag}(E^{ab}{\bf
-                        1}_b)^{c}{}_d
-                        \hat{\bf
-                        y}^{de} +
-                        (\text{Diag}((E^{ab}{\bf
-                        1}_b)^{-1}
-                        )^a{}_bE^{bc})
-                        \odot
-                        d {\bf z}_{L+1}\\
-                        &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b\text{Diag}( (E \odot d {\bf z}_{L+1})^{ab}{\bf
-                        1}_b)^b{}_c
-                        \hat{\bf
-                        y}^{cd} + \hat{\bf y}
-                        \odot
-                        d {\bf z}_{L+1} \\
-                        &amp;=-\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b(( (E \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b
-                        \otimes
-                        {\bf
-                        1}^c)\odot
-                        \hat{\bf
-                        y})^{bc} + \hat{\bf y}
-                        \odot
-                        d {\bf z}_{L+1} \\
-                        &amp;=-(\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_b(E \odot d {\bf z}_{L+1})^{bc}{\bf 1}_c
-                        \otimes
-                        {\bf
-                        1}^d)\odot
-                        \hat{\bf
-                        y} + \hat{\bf y}
-                        \odot
-                        d {\bf z}_{L+1} \\
 
-                        &amp;=-(((\text{Diag}( (E^{ab}{\bf 1}_b)^{-1})^a{}_bE^{bc}) \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b
-                        \otimes
-                        {\bf
-                        1}^c)\odot
-                        \hat{\bf
-                        y} + \hat{\bf y}
-                        \odot
-                        d {\bf z}_{L+1} \\
-                        &amp;=-((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
-                        1}^c)\odot
-                        \hat{\bf
-                        y} + \hat{\bf y}
-                        \odot
-                        d {\bf z}_{L+1} \\
-                        \end{align*}
-                        $$
-                        Now we find $DS({\bf z}_{L+1}) $ by making the previous preturbations
+
+                        Now we find $DS(\bm{z}_{(L+1)}) $ by making the previous preturbations
 
                         $$
                         \begin{align*}
-                        & d {\bf \Delta}(\bm{\bar{v}},\hat{\bf y}) \\
+                        & d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
                         &amp;= d {\bf \Delta}(\bm{\bar{v}},
-                        F_{L+1}({\bf z}_{L+1}) ) = d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
-                        &amp;= -{\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
-                        d \hat{\bf y} \right)^{ab} \\
+                        F_{L+1}(\bm{z}_{(L+1)}) ) = d {\bf \Delta}(\bm{\bar{v}},\hat{\bm{y}}) \\
+                        &amp;= - \Bbb{X} : \left(\hat{\bm{y}}^{-1} \odot
+                        d \hat{\bm{y}} \right) \\
 
-                        &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot \hat{\bf y}^{-1} \odot
-                        (((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b \otimes {\bf
-                        1}^c)\odot
-                        \hat{\bf
-                        y} - \hat{\bf y}
-                        \odot
-                        d {\bf z}_{L+1} ) \right)^{ab} \\
+                        &amp;= \Bbb{X} : \left( \hat{\bm{y}}^{-1} \odot
+                        \hat{\bm{y}} \odot ((\hat{\bm{y}} \odot
+                        d\bm{z}_{(L+1)}){\bf
+                        1}{\bf 1}^T) - \hat{\bm{y}}^{-1} \odot
+                        \hat{\bm{y}} \odot d\bm{z}_{(L+1)} \right) \\
 
-                        &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b
-                        \otimes
-                        {\bf
-                        1}^c) - \Bbb{X}
-                        \odot
-                        d
-                        {\bf z}_{L+1} \right)^{ab} \\
-                        &amp;= {\bf 1}_{ab} \left(\Bbb{X} \odot ((\hat{\bf y} \odot d {\bf z}_{L+1})^{ab}{\bf 1}_b
-                        \otimes
-                        {\bf
-                        1}^c)\right)^{ab}-
-                        {\bf 1}_{ab} \left( \Bbb{X} \odot d
-                        {\bf z}_{L+1} \right)^{ab} \\
-                        &amp;= {\bf 1}_{ab} \left(\hat{\bf y} \odot d {\bf z}_{L+1} \right)^{ab} - {\bf 1}_{ab}\left(
-                        \Bbb{X} \odot d
-                        {\bf z}_{L+1} \right)^{ab} \\
-                        &amp;= {\bf 1}_{ab} \left((\hat{\bf y} - \Bbb{X}) \odot d {\bf z}_{L+1} \right)^{ab}
+                        &amp;= \Bbb{X} : \left( (\hat{\bm{y}} \odot
+                        d\bm{z}_{(L+1)}){\bf
+                        1}{\bf 1}^T - d\bm{z}_{(L+1)} \right) \\
+                        &amp;= \hat{\bm{y}} : d \bm{z}_{(L+1)} - \Bbb{X} : d
+                        \bm{z}_{(L+1)} \\
+                        &amp;= (\hat{\bm{y}} - \Bbb{X}) : d \bm{z}_{(L+1)}
 
                         \end{align*}
                         $$
 
-                        where the second to last line makes use of the identity ${\bf 1}_{ab}(\Bbb{X} \odot (A^{ab} {\bf
-                        1}_b
-                        \otimes {\bf 1}^c))^{ab} = {\bf 1}_{ab} A^{ab} $
-                        for any
-                        $A$ and 1-hot
-                        $\Bbb{X}$.
                         Thus
 
                         $$
                         \begin{align*}
-                        DS({\bf z}_{L+1}) &amp;= {\bf h} \mapsto {\bf 1}_{ab} \left((\hat{\bf y} - \Bbb{X}) \odot {\bf
-                        h}
-                        \right)^{ab}
-                        \\
-                        &amp;= \langle \cdot,{\bf \hat{y}} -\Bbb{X} \rangle
+                        DS(\bm{z}_{(L+1)}) &amp;= \bm{h} \mapsto \left((\hat{\bm{y}} - \Bbb{X}) : \bm{h}
+                        \right) \\
+                        &amp;= \langle \cdot,\hat{\bm{y}} -\Bbb{X} \rangle
 
                         \end{align*}
                         $$
                         $$
                         \therefore \partial_{\theta} \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
-                        = \frac{1}{I} \langle \cdot,{\bf \hat{y}} -\Bbb{X} \rangle \circ \partial_2 T(\bar{\bf
-                        x},\theta)
+                        = \frac{1}{I} \langle \cdot,\hat{\bm{y}} -\Bbb{X} \rangle \circ \partial_2
+                        T(\bar{\bm{x}},\theta)
                         $$
                     </div>
                     <div class="qed">QED</div>
@@ -1104,8 +955,8 @@
                 <div class="proposition">
                     <div class="proposition-title"></div>
                     <div class="proposition-content">
-                        If $\bm{\hat y} = \mathcal{F}(\bar{\bf x}, \theta) \in \Bbb{V} $ and $\Delta(\bar{v}^i,
-                        \bm{\hat{y}}^{\rangle i \langle}) = (\bar{v}^i - \bm{\hat{y}}^{\rangle i \langle})^2$ in the
+                        If $\bm{\hat y} = \mathcal{F}(\bar{\bm{x}}, \theta) \in \Bbb{V} $ and $\Delta(\bar{v}_{(i)},
+                        \hat{y}) = (\bar{v}_{(i)} - \hat{y})^2$ in the
                         case of
                         a
                         regression task, then
@@ -1113,7 +964,7 @@
                         \partial_{\theta} \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
                         = \frac{2}{I} \langle \cdot, \hat{\bm{y}}- \bm{\bar{v}} \rangle
-                        \circ \partial_2 T(\bar{\bf x},\theta)
+                        \circ \partial_2 T(\bar{\bm{x}},\theta)
 
                         $$
                     </div>
@@ -1123,18 +974,19 @@
                     <div class="proof-title">Proof</div>
 
                     <div class="proof-content">
-                        Tensorizing gives
+                        Vectorizing gives
                         $$
-                        {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = {\bf 1}_a((\bm{\bar{v}}-\hat{\bm{y}})^2)^a
+                        {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = {\bf 1}\cdot ((\bm{\bar{v}}-\hat{\bm{y}})^2)
                         $$
                         Perturbing $\hat{\bm{y}}$ by $d\hat{\bm{y}}$ gives
                         $$
                         \begin{align*}
-                        d{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= {\bf 1}_a(-2(\bm{\bar{v}}-\hat{\bm{y}}) \odot
-                        d\hat{\bm{y}})^a \\
-                        &amp;= -2{\bf 1}_a((\bm{\bar{v}}-\hat{\bm{y}}) \odot d\hat{\bm{y}})^{a} \\
+                        d{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= {\bf 1}\cdot(-2(\bm{\bar{v}}-\hat{\bm{y}})
+                        \odot
+                        d\hat{\bm{y}}) \\
+                        &amp;= -2{\bf 1}\cdot((\bm{\bar{v}}-\hat{\bm{y}}) \odot d\hat{\bm{y}}) \\
                         \implies D_2{\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) &amp;= \bm{h} \mapsto -2{\bf
-                        1}_a((\bm{\bar{v}}-\hat{\bm{y}}) \odot h)^{a} \\
+                        1}\cdot((\bm{\bar{v}}-\hat{\bm{y}}) \odot h) \\
                         &amp;= 2\langle \cdot, \hat{\bm{y}}- \bm{\bar{v}}
                         \rangle
 
@@ -1143,7 +995,7 @@
                         $$
                         If $F_{L+1}$ is the identity, we further conclude
                         $$
-                        DS(\bm{z}_{L+1}) = 2\langle \cdot,
+                        DS(\bm{z}_{(L+1)}) = 2\langle \cdot,
                         \hat{\bm{y}}- \bm{\bar{v}} \rangle
 
                         $$
@@ -1153,7 +1005,7 @@
                         \therefore \partial_{\theta} \hat{R}(\bar{\bm{d}},
                         \mathcal{F}(\cdot; \theta))
                         = \frac{2}{I} \langle \cdot, \hat{\bm{y}}- \bm{\bar{v}} \rangle
-                        \circ \partial_2 T(\bar{\bf x},\theta)
+                        \circ \partial_2 T(\bar{\bm{x}},\theta)
 
                         $$
 
@@ -1174,8 +1026,8 @@
             $$
             \begin{align*}
             \partial_{\theta_{L+1}} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
-            &amp;= DS({\bf z}_{L+1}) \circ
-            \partial_{2}\Gamma_{L+1}({\bf y}_L,
+            &amp;= DS(\bm{z}_{(l+1)}) \circ
+            \partial_{2}\Gamma_{L+1}(\bm{y}_{(l)},
             \theta_{L+1})
             \end{align*}
             $$
@@ -1190,24 +1042,22 @@
             \implies \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
             &amp;= \left(
             U_l(\cdot, \theta) \circ F_l \circ \Gamma_l(\cdot, \theta_l) \circ \ldots \circ \mathcal{L}_0
-            \right)(\bar{\bf
-            x})
+            \right)(\bar{\bm{
+            x}})
             \end{align*}
             $$$$
             \begin{align}
 
             \implies \begin{cases}
-            \partial_{W_l} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
-            &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
+            \partial_{W_{(l)}} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
+            &amp;= \partial_{1} U_l(\bm{y}_{(l)}, \theta) \circ DF_l(\bm{z}_{(l)})
             \circ
-            \partial_{2}\Gamma_l({\bf
-            y}_{l-1},
+            \partial_{2}\Gamma_l(\bm{y}_{(l-1)},
             \theta_l) \\
-            \partial_{b_l} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
-            &amp;= \partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)
+            \partial_{b_{(l)}} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
+            &amp;= \partial_{1} U_l(\bm{y}_{(l)}, \theta) \circ DF_l(\bm{z}_{(l)})
             \circ
-            \partial_{3}\Gamma_l({\bf
-            y}_{l-1},
+            \partial_{3}\Gamma_l(\bm{y}_{(l-1)},
             \theta_l) \end{cases}
 
 
@@ -1220,29 +1070,16 @@
             S \circ \Gamma_{L+1}(\cdot, \theta_{L+1}) & l=L \\
             U_{l+1}(\cdot, \theta) \circ F_{l+1} \circ \Gamma_{l+1}(\cdot, \theta_{l+1}) & l&lt;L \end{cases} \\
             \implies
-            \partial_{1} U_l({\bf y}_l, \theta) &amp;=\begin{cases}
-            DS({\bf z}_{L+1}) \circ \partial_1
-            \Gamma_{L+1}({\bf y}_{L}, \theta_{L+1}) & l=L\\
-            \partial_{1} U_{l+1}({\bf y}_{l+1}, \theta) \circ
-            DF_{l+1}({\bf z}_{l+1}) \circ \partial_1 \Gamma_{l+1}({\bf y}_l, \theta_{l+1}) & l&lt;L \end{cases}
+            \partial_{1} U_l(\bm{y}_{(l)}, \theta) &amp;=\begin{cases}
+            DS(\bm{z}_{(l+1)}) \circ \partial_1
+            \Gamma_{L+1}(\bm{y}_{(L)}, \theta_{L+1}) & l=L\\
+            \partial_{1} U_{l+1}(\bm{y}_{(l+1)}, \theta) \circ
+            DF_{l+1}(\bm{z}_{(l+1)}) \circ \partial_1 \Gamma_{l+1}(\bm{y}_{(l)}, \theta_{l+1}) & l&lt;L \end{cases}
             \end{align}
             $$
 
             So
             the recursion is well posed.
-
-            Finally
-            $$
-            \partial_{\theta} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
-            \\ = \left( (dW_1, db_1 \ldots dW_{L+1}, db_{L+1})
-            \mapsto \sum_l
-            \partial_{W_l}
-            \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
-            [d W_l] + \sum_l \partial_{b_l}
-            \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
-            [d b_l] \right)
-            $$
-            allowing the full computation of $\partial_{\theta}\hat{R}(\bar{\bm{d}}, \mathcal{F}(\cdot;\theta))$.
 
             A few derivatives will need to be computed. We will write the maps using their tensor identifications, as
             that
@@ -1299,9 +1136,7 @@
                     </div>
                     <div class="proposition-content">
                         $$
-                        \phi(DFl({\bf z}_l)) = F'_l({\bf z}_l) \odot {\bf 1}_{ab}
-                        $$
-                        where $F_l'({\bf z}_l) := f_l'((z_l)^{i,j})e_i \otimes e_j$
+                        \phi(DF_l(\bm{z}_{(l)})) = f_l'((z_l)^{i,j})e_i \otimes e_j \otimes e^i \otimes e^j $$
                     </div>
                 </div>
                 <div class="proof">
@@ -1309,20 +1144,21 @@
                         Proof
                     </div>
                     <div class="proof-content">
-                        Perturb ${\bf z}_l$ by $d {\bf z}_l$, then
+                        Perturb ${\bm{z}_{(l)}}$ by $d {\bm{z}_{(l)}}$, then
                         $$
                         \begin{align*}
-                        dF_l({\bf z}_l) = f_l'((z_l)^{i,j})d(z_l)^{i,j}e_i \otimes e_j &amp;= F_l'({\bf z}_l) \odot
-                        d{\bf
-                        z}_l
+                        dF_l({\bm{z}_{(l)}}) = f_l'((z_l)^{i,j})d(z_l)^{i,j}e_i \otimes e_j &amp;= F_l'({\bm{z}_{(l)}})
+                        \odot
+                        d \bm{z}_{(l)}
                         \\
-                        \implies DF_l({\bf z}_l) = {\bf h} \mapsto F_l'({\bf z}_l) \odot {\bf h}
+                        \implies DF_l({\bm{z}_{(l)}}) = \bm{h} \mapsto F_l'({\bm{z}_{(l)}}) \odot \bm{h}
                         \end{align*}
                         $$
 
                         $$
                         \begin{align*}
-                        \implies \phi(DFl({\bf z}_l)) &amp;= F'_l({\bf z}_l) \odot (e_i \otimes e_j) \otimes e^i
+                        \implies \phi(DFl({\bm{z}_{(l)}})) &amp;= F'_l({\bm{z}_{(l)}}) \odot (e_i \otimes e_j) \otimes
+                        e^i
                         \otimes e^j = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes e^i
                         \otimes e^j \\
                         \end{align*}
@@ -1339,9 +1175,9 @@
                     </div>
                     <div class="proposition-content">
                         $$
-                        \phi(\partial_{W_l} \Gamma_l({\bf
-                        y}_{l-1},
-                        \theta_l) ) = ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j
+                        \phi(\partial_{W_{(l)}} \Gamma_l(\bm{
+                        y}_{(l-1)},
+                        \theta_l) ) = {y}_{(l-1)}^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j
                         $$
                     </div>
                 </div>
@@ -1355,12 +1191,12 @@
 
                     $$
                     \begin{align*}
-                    \partial_{W_l} \Gamma_l({\bf
-                    y}_{l-1},
-                    \theta_l) =&amp;\quad dW_l \mapsto g_{bc}({\bf y}_{l-1})^{ab}(dW_l)^{cd} \\
-                    \xmapsto[]{\phi}&amp;\quad g_{bc}({\bf y}_{l-1})^{ab}(e_i \otimes e_j)^{cd} \otimes
+                    \partial_{W_{(l)}} \Gamma_l(\bm{
+                    y}_{(l-1)},
+                    \theta_l) =&amp;\quad dW_{(l)} \mapsto g_{bc}({\bm{y}_{(l-1)}})^{ab}(dW_{(l)})^{cd} \\
+                    \xmapsto[]{\phi}&amp;\quad g_{bc}({\bm{y}_{(l-1)}})^{ab}(e_i \otimes e_j)^{cd} \otimes
                     e^i \otimes e^j\\
-                    =&amp;\quad ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j\\
+                    =&amp;\quad y_{(l-1)}^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j\\
                     \end{align*}
                     $$
                     <div class="qed">
@@ -1371,8 +1207,7 @@
                     <div class="proposition-title">
                     </div>
                     <div class="proposition-content">
-                        $$\phi(\partial_{b_l} \Gamma_l({\bf
-                        y}_{l-1},
+                        $$\phi(\partial_{b_{(l)}} \Gamma_l(\bm{y}_{(l-1)},
                         \theta_l) ) = \sum_{i} e_i \otimes e_j \otimes e^j
                         $$
                     </div>
@@ -1385,9 +1220,8 @@
                         $\otimes$ is bilinear so
                         $$
                         \begin{align*}
-                        \partial_{b_l} \Gamma_l({\bf
-                        y}_{l-1},
-                        \theta_l) =&amp;\quad db_l \mapsto \sum_i e_i \otimes db_l \\
+                        \partial_{b_{(l)}} \Gamma_l(\bm{y}_{(l-1)},
+                        \theta_l) =&amp;\quad db_{(l)} \mapsto \sum_i e_i \otimes db_{(l)} \\
                         \xmapsto[]{\phi}&amp;\quad \sum_{i} e_i \otimes e_j \otimes e^j
                         \end{align*}
                         $$
@@ -1402,8 +1236,8 @@
                     </div>
                     <div class="proposition-content">
                         $$
-                        \phi(\partial_{1}\Gamma_l({\bf
-                        y}_{l-1},\theta_l) ) = (W_l)^{jx} e_i \otimes e_x \otimes e^i \otimes e^j
+                        \phi(\partial_{1}\Gamma_l(\bm{y}_{(l-1)},\theta_l) ) = (W_{(l)})^{jx} e_i \otimes e_x \otimes
+                        e^i \otimes e^j
                         $$
                     </div>
                 </div>
@@ -1414,11 +1248,10 @@
                     <div class="proof-content">
                         $$
                         \begin{align*}
-                        \partial_{1} \Gamma_l({\bf
-                        y}_{l-1},
-                        \theta_l) =&amp;\quad d{\bf y}_{l-1} \mapsto g_{bc}(d{\bf y}_{l-1})^{ab}(W_l)^{cd} \\
-                        \xmapsto[]{\phi}&amp;\quad g_{bc}(e_i \otimes e_j)^{ab}(W_l)^{cd} \otimes e^i \otimes e^j\\
-                        =&amp;\quad (W_l)^{jx} e_i \otimes e_x \otimes e^i \otimes e^j
+                        \partial_{1} \Gamma_l(\bm{y}_{(l-1)},
+                        \theta_l) =&amp;\quad d{\bm{y}_{(l-1)}} \mapsto (d{\bm{y}_{(l-1)}})^{a}{}_b(W_{(l)})^{bc} \\
+                        \xmapsto[]{\phi}&amp;\quad (e_i \otimes e_j)^{a}{}_b(W_{(l)})^{bc} \otimes e^i \otimes e^j\\
+                        =&amp;\quad (W_{(l)})^{jx} e_i \otimes e_x \otimes e^i \otimes e^j
                         \end{align*}
                         $$
 
@@ -1484,23 +1317,21 @@
                 $$
                 \begin{align*}
                 {\bm{\xi}}_l &amp;=
-                \phi(\partial_{1} U_l({\bf y}_l, \theta)) &amp;= ({\xi}_l)^{i,j} e^i \otimes e^j\\
-                {\bm{\xi}}_z &amp;= \phi(\partial_{1} U_l({\bf y}_l, \theta) \circ DF_l({\bf z}_l)) \\
-                {\bm{\delta}}_w &amp;= \phi(\partial_{W_l} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))) \\
-                {\bm{\delta}}_b &amp;= \phi(\partial_{b_l} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta)))\\
-                \bm{\epsilon}_w &amp;= \phi(\partial_{W_l}\Gamma_l({\bf
-                y}_{l-1},
-                \theta_l)) &amp;= ({y}_{l-1})^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j \\
-                \bm{\epsilon}_b &amp;= \phi(\partial_{b_l}\Gamma_l({\bf
-                y}_{l-1},
+                \phi(\partial_{1} U_l({\bm{y}_{(l)}}, \theta)) &amp;= ({\xi}_l)^{i,j} e^i \otimes e^j\\
+                {\bm{\xi}}_z &amp;= \phi(\partial_{1} U_l({\bm{y}_{(l)}}, \theta) \circ DF_l({\bm{z}_{(l)}})) \\
+                {\bm{\delta}}_w &amp;= \phi(\partial_{W_{(l)}} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))) \\
+                {\bm{\delta}}_b &amp;= \phi(\partial_{b_{(l)}} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta)))\\
+                \bm{\epsilon}_w &amp;= \phi(\partial_{W_{(l)}}\Gamma_l(\bm{y}_{(l-1)},
+                \theta_l)) &amp;= y_{(l-1)}^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j \\
+                \bm{\epsilon}_b &amp;= \phi(\partial_{b_{(l)}}\Gamma_l(\bm{y}_{(l-1)},
                 \theta_l)) &amp;= \sum_{i,j} e_i \otimes e_j \otimes e^j
                 \\
-                \bm{\epsilon}_z &amp;= \phi(DF_l({\bf z}_l)) &amp; = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes
+                \bm{\epsilon}_z &amp;= \phi(DF_l({\bm{z}_{(l)}})) &amp; = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j
+                \otimes
                 e^i
                 \otimes e^j\\
-                \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma_l({\bf
-                y}_{l-1};
-                \theta_l)) &amp;= (W_l)^{j,x} e_i \otimes e_x \otimes e^i \otimes e^j
+                \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma_l(\bm{y}_{(l-1)};
+                \theta_l)) &amp;= (W_{(l)})^{j,x} e_i \otimes e_x \otimes e^i \otimes e^j
                 \\
 
                 \end{align*}
@@ -1517,7 +1348,7 @@
                     </div>
                     <div class="proposition-content">
                         $$
-                        \bm{\delta}_w^{\dagger} = g_{bc}({\bf y}_{l-1}^T)^{ab}(\bm{\xi}_z^{\dagger})^{cd}
+                        \bm{\delta}_w^{\dagger} = ({\bm{y}_{(l-1)}}^T)^{a}{}_b(\bm{\xi}_z^{\dagger})^{bc}
                         $$
                     </div>
                 </div>
@@ -1528,19 +1359,19 @@
                     <div class="proof-content">
                         $$
                         \begin{align*}
-                        \bm{\delta}_w &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
+                        \bm{\delta}_w &amp;= \phi \left( \partial_{1} U_l({\bm{y}_{(l)}},
                         \theta)
-                        \circ DF_l({\bf z}_l)
+                        \circ DF_l({\bm{z}_{(l)}})
                         \circ
-                        \partial_{W_l}\Gamma_l({\bf
-                        y}_{l-1},
+                        \partial_{W_{(l)}}\Gamma_l(\bm{y}_{(l-1)},
                         \theta_l) \right) \\
                         &amp;= (\bm{\xi}_z){}_{ab}
                         (\bm{\epsilon}_w)^{ab}{}_{cd} \\
-                        &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e^i \otimes e^q \\
-                        \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{p,q} (y_{l-1})^{p,i} \otimes e_i \otimes e_q \\
-                        &amp;= (\xi_z^{\dagger})^{p,q} (y_{l-1}^T)^{i,p} \otimes e_i \otimes e_q \\
-                        &amp;= g_{bc}({\bf y}_{l-1}^T)^{ab}(\bm{\xi}_z^{\dagger})^{cd}
+                        &amp;= (\xi_z)_{p,q} y_{(l-1)}^{p,i} \otimes e^i \otimes e^q \\
+                        \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{p,q} {y_{(l-1)}}^{p,i} \otimes e_i \otimes e_q
+                        \\
+                        &amp;= (\xi_z^{\dagger})^{p,q} (y_{(l-1)}^T)^{i,p} \otimes e_i \otimes e_q \\
+                        &amp;= ({\bm{y}_{(l-1)}}^T)^{a}{}_{b}(\bm{\xi}_z^{\dagger})^{bc}
                         \end{align*}
                         $$
                     </div>
@@ -1564,12 +1395,11 @@
                     <div class="proof-content">
                         $$
                         \begin{align*}
-                        \bm{\delta}_b &amp;= \phi \left( \partial_{1} U_l({\bf y}_l,
+                        \bm{\delta}_b &amp;= \phi \left( \partial_{1} U_l({\bm{y}_{(l)}},
                         \theta)
-                        \circ DF_l({\bf z}_l)
+                        \circ DF_l({\bm{z}_{(l)}})
                         \circ
-                        \partial_{b_l}\Gamma_l({\bf
-                        y}_{l-1},
+                        \partial_{b_{(l)}}\Gamma_l(\bm{y}_{(l-1)},
                         \theta_l) \right) \\
                         &amp;= (\bm{\xi}_z){}_{ab}
                         (\bm{\epsilon}_b)^{ab}{}_{c} \\
@@ -1589,7 +1419,7 @@
                     </div>
                     <div class="proposition-content">
                         $$
-                        \bm{\xi}_z^{\dagger} = \bm{\xi}_l^{\dagger} \odot F_l'({\bf z}_l)
+                        \bm{\xi}_z^{\dagger} = \bm{\xi}_l^{\dagger} \odot F_l'({\bm{z}_{(l)}})
                         $$
                     </div>
                 </div>
@@ -1604,7 +1434,7 @@
                         &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e^i \otimes e^j \\
                         \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l)_{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
                         &amp;= (\xi_l^{\dagger})^{i,j} f_l'((z_l)^{i,j}) e_i \otimes e_j \\
-                        &amp;= \bm{\xi}_l^{\dagger} \odot F_l'({\bf z}_l) \\
+                        &amp;= \bm{\xi}_l^{\dagger} \odot F_l'({\bm{z}_{(l)}}) \\
                         \end{align*}
                         $$
                     </div>
@@ -1616,7 +1446,7 @@
                     <div class="proposition-title">
                     </div>
                     <div class="proposition-content">
-                        $$ \bm{\xi}_{l-1}^{\dagger}= g_{bc}(\bm{\xi_l}^{\dagger})^{ab} (W_l^T)^{cd}
+                        $$ \bm{\xi}_{l-1}^{\dagger}= (\bm{\xi_l}^{\dagger})^{a}{}_b (W_{(l)}^T)^{bc}
                         $$
                     </div>
                 </div>
@@ -1627,18 +1457,17 @@
                     <div class="proof-content">
                         $$
                         \begin{align*}
-                        \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U_{l-1}({\bf y}_{l-1}, \theta)) = \phi(\partial_{1}
-                        U_{l}({\bf
-                        y}_{l},
+                        \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U_{l-1}({\bm{y}_{(l-1)}}, \theta)) = \phi(\partial_{1}
+                        U_{l}(\bm{y}_{(l)},
                         \theta)
                         \circ
-                        DF_{l}({\bf z}_{l}) \circ \partial_1 \Gamma_{l}({\bf y}_{l-1}, \theta_l))\\
+                        DF_{l}({\bm{z}}_{l}) \circ \partial_1 \Gamma_{l}({\bm{y}_{(l-1)}}, \theta_l))\\
                         &amp;= (\bm{\xi}_l)_{ab} (\bm{\epsilon}_z)^{ab}{}_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
                         &amp;= (\bm{\xi}_z)_{cd} (\bm{\epsilon}_{l-1})^{cd}{}_{ef}\\
-                        &amp;= (\xi_z)_{p,q} (W_l)^{j, q} e^p \otimes e^j \\
-                        \implies \bm{\xi}_{l-1}^{\dagger} &amp; = (\xi_l)_{p,q} (W_l)^{j, q} e_p \otimes e_j \\
-                        &amp; = (\xi_l^{\dagger})^{p,q} (W_l^T)^{q, j} e_p \otimes e_j \\
-                        &amp; = g_{bc}(\bm{\xi_l}^{\dagger})^{ab} (W_l^T)^{cd}
+                        &amp;= (\xi_z)_{p,q} (W_{(l)})^{j, q} e^p \otimes e^j \\
+                        \implies \bm{\xi}_{l-1}^{\dagger} &amp; = (\xi_l)_{p,q} (W_{(l)})^{j, q} e_p \otimes e_j \\
+                        &amp; = (\xi_l^{\dagger})^{p,q} (W_{(l)}^T)^{q, j} e_p \otimes e_j \\
+                        &amp; =(\bm{\xi_l}^{\dagger})^{a}{}_b (W_{(l)}^T)^{bc}
                         \end{align*}
                         $$
                     </div>
@@ -1656,33 +1485,27 @@
         The machinery used to formalize FNNs is even more applicable to convolutional neural networks (CNNs). Lets start
         with the key operation; define the operator
         $$
-        Y^{\mathcal{A}b_1\ldots b_n} *^n_{m} W^{\mathcal{C}b_1 \ldots b_n} = \sum_{\alpha \in \Bbb{Z}^{|m|}}Y_{
-        \mathcal{A}b_1 \ldots b_n}
-        \tau(W; sgn(m)\cdot\alpha)^{\mathcal{C}b_1\ldots b_n} \otimes e_{\alpha}
+        Y^{bcd} *^{\pm} W^{abcd} = \sum_{s,r}Y_{bcd}
+        \tau(W; \pm i, \pm j)^{abcd} \otimes e_{s} \otimes e_r
         $$
 
-        for $|m| \leq n$ and, using $\mathcal{I}$ to index all but the last $m$ slots and $\mathcal{J}$ to index the
-        last
-        $|m|$ slots
+        where $$
+        \tau(W;s,r) = W^{i,j,k-s,l-r} e_{i,j,k,l} = W^{i,j,k,l}
+        e_{i,j,k+s,l+r}
         $$
-        \tau(W;\alpha) = W^{\mathcal{I},\mathcal{J}-\alpha} e_{\mathcal{I}}\otimes e_{\mathcal{J}} = W^{\mathcal{I},
-        \mathcal{J}}
-        e_{\mathcal{I}}\otimes e_{\mathcal{J}+\alpha}
-        $$
-        is the translation operator over the last $|m|=\text{len}(\alpha)$ slots. $\mathcal{A},\mathcal{C}$ are abstract
-        multiindices. Now let $m \in \Bbb{N}$ and $$\chi_m(W)^{\mathcal{I},\mathcal{J}} =
-        W^{\mathcal{I},-\mathcal{J}}$$ be the tensor flipped at the last $m$ slots.
+        is the translation operator. Now let $$\chi(W)^{i,j,k,l} =
+        W^{i,j,-k,-l}$$ be the tensor flipped at the last $2$ slots.
         Define a few operators
         $$
         \begin{align*}
-        &amp;Y \rtimes W = Y *^3_2 W \\
-        &amp;Y \bar{\rtimes} W = Y *^3_2 \chi_2(W) \\
+        &amp;Y \rtimes W = Y *^+ W \\
+        &amp;Y \bar{\rtimes} W = Y *^+ \chi(W) \\
 
-        &amp;Y \ltimes W = Y *^3_{-2} W \\
+        &amp;Y \ltimes W = Y *^- W \\
 
-        &amp;Y \bar{\ltimes} W = Y *^3_{-2} \chi_2(W) \end{align*}
+        &amp;Y \bar{\ltimes} W = Y *^- \chi(W) \end{align*}
         $$
-        Let $y_{l-1}^c, W_{l}^c \in \Bbb{V}^{\otimes 4}, b_{l}^c \in \Bbb{V}$.
+        Let $y_{(l-1)}^c, W_{l}^c \in \Bbb{V}^{\otimes 4}, b_{l}^c \in \Bbb{V}$.
         <section id='cnn-model' data-title="The Model">
             <h3 class="text-2xl mt-8 mb-8" style="font-family: var(--font-playfair);">The Model </h3>
 
@@ -1690,31 +1513,33 @@
 
                 The convolutional layer is defined for $l=1\ldots L_c$ as the map
                 $$
-                y_{l-1}^c \mapsto \mathcal{L}^c_l(y_{l-1}^c;W_l^c, b_l^c) = F^c_l \circ \Gamma^c_l(y_{l-1}^c, W_l^c,
-                b_l^c)
+                y_{(i,l-1)}^c \mapsto \mathcal{L}^c_l(y_{(i,l-1)}^c;W_{(l)}^c, b_{(l)}^c) = F^c_l \circ
+                \Gamma^c_l(y_{(i,l-1)}^c,
+                W_{(l)}^c,
+                b_{(l)}^c)
                 $$
 
                 where $$
                 \Gamma^c_l(Y, W, b)
-                =Y \rtimes W + \bm{1}^{a} \otimes b \otimes
-                \bm{1}^{bc}
+                =Y \rtimes W + b \otimes
+                \bm{1}^{ab}
                 $$
                 We will call the neuron $k$ at layer $l$ the function
                 $$
-                y_{l-1}^c \mapsto \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k
-                \langle}) =
+                y_{(i,l-1)}^c \mapsto \mathcal{N}^c_{l,k}(y_{(i,l-1)}^c;(W_{(l)}^c)^{k,m,i,j}e_{m,i,j},
+                (b_{(l)}^c)^{k}) =
                 F^c_l
                 \circ
-                \Gamma^c_l(y_{l-1}^c, (W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k \langle})
+                \Gamma^c_l(y_{(i,l-1)}^c, (W_{(l)}^c)^{k,m,i,j} e_{m,i,j}, (b_{(l)}^c)^{k})
                 $$
 
-                Note that $$ \mathcal{N}^c_{l,k}(y_{l-1}^c;(W_l^c)^{\rangle k \langle}, (b_l^c)^{\rangle k
-                \langle})^{\rangle i
-                \langle \langle k \rangle \langle i \rangle} =
-                \mathcal{L}^c_l(y_{l-1}^c;W_l^c, b_l^c)$$
-                The <span class="font-bold">flattening layer </span> changes the dimension of $y^c_{L_c}$ so that $y_0 =
-                y^c_{L_c+1}
-                \in \Bbb{V}^{\otimes 2}$ as follows:
+                Note that $$ e_k \otimes\mathcal{N}^c_{l,k}(y_{(l-1)}^c;(W_{(l)}^c)^{k,m,i,j}e_{m,i,j},
+                (b_{(l)}^c)^{k}) =
+                \mathcal{L}^c_l(y_{(l-1)}^c;W_{(l)}^c, b_{(l)}^c)$$
+                The <span class="font-bold">flattening layer </span> changes the dimension of $y^c_{(i,L_c)}$ so that
+                $y_{(i,0)} =
+                y^c_{(i,L_c+1)}
+                \in \Bbb{V}$ as follows:
                 Let $T \in \Bbb{V}^{\otimes n}$ for some $n$. Define
                 $$
                 \alpha_{m} = \min \{ \alpha | e_{\alpha} \in \text{supp}(T) \} \\
@@ -1732,8 +1557,7 @@
                 $$\gamma(T) = \sum_{\alpha} T^{\alpha} e_{|\beta \cdot (\alpha-\alpha_m)|+1}$$
                 The flattening layer is the map
                 $$
-                y^c_{L_c} \mapsto \Gamma^c_{L_c}(y^c_{L_c}) = \sum_i \gamma((y^c_{L_c})^{\rangle i \langle}) \otimes e_i
-                $$
+                y^c_{(i,L_c)} \mapsto \Gamma^c_{L_c}(y^c_{(i,L_c)}) = \gamma((y^c_{(i,L_c)}) $$
             </div>
         </section>
         <section id='cnn-backprop' data-title="Backpropogation">
@@ -1748,23 +1572,21 @@
             \implies \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
             &amp;= \left(
             U_l^c(\cdot, \theta) \circ F_l^c \circ \Gamma_l^c(\cdot, \theta_l^c) \circ \ldots \circ \mathcal{L}_0
-            \right)(\bar{\bf x})
+            \right)(\bar{\bm{x}})
             \end{align*}
             $$$$
             \begin{align}
 
             \implies \begin{cases}
-            \partial_{W_l^c} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
-            &amp;= \partial_{1} U_l^c({\bf y}_l^c, \theta) \circ DF_l^c({\bf z}_l^c)
+            \partial_{W_{(l)}^c} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
+            &amp;= \partial_{1} U_l^c({\bm{y}_{(l)}}^c, \theta) \circ DF_l^c({\bm{z}_{(l)}}^c)
             \circ
-            \partial_{2}\Gamma_l^c({\bf
-            y}_{l-1}^c,
+            \partial_{2}\Gamma_l^c(\bm{y}_{(l-1)}^c,
             \theta_l^c) \\
-            \partial_{b_l^c} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
-            &amp;= \partial_{1} U_l^c({\bf y}_l^c, \theta) \circ DF_l^c({\bf z}_l^c)
+            \partial_{b_{(l)}^c} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))
+            &amp;= \partial_{1} U_l^c({\bm{y}_{(l)}}^c, \theta) \circ DF_l^c({\bm{z}_{(l)}}^c)
             \circ
-            \partial_{3}\Gamma_l^c({\bf
-            y}_{l-1}^c,
+            \partial_{3}\Gamma_l^c(\bm{y}_{(l-1)}^c,
             \theta_l^c) \end{cases}
 
 
@@ -1778,11 +1600,11 @@
             U_{l+1}^c(\cdot, \theta) \circ F_{l+1}^c \circ \Gamma_{l+1}^c(\cdot, \theta_{l+1}^c) & l&lt;L_c \end{cases}
             \\
             \implies
-            \partial_{1} U_l^c({\bf y}_l^c, \theta) &amp;=\begin{cases}
-            DS({\bf z}_{L_c+1}^c) \circ \partial_1
-            \Gamma_{L+1}^c({\bf y}_{L_c}^c, \theta_{L+1}^c) & l=L_c\\
-            \partial_{1} U_{l+1}^c({\bf y}_{l+1}^c, \theta) \circ
-            DF_{l+1}({\bf z}_{l+1}^c) \circ \partial_1 \Gamma_{l+1}^c({\bf y}_l^c, \theta_{l+1}^c) & l&lt;L_c
+            \partial_{1} U_l^c({\bm{y}_{(l)}}^c, \theta) &amp;=\begin{cases}
+            DS({\bm{z}}_{(L_c+1)}^c) \circ \partial_1
+            \Gamma_{L+1}^c({\bm{y}}_{(L_c)}^c, \theta_{L+1}^c) & l=L_c\\
+            \partial_{1} U_{l+1}^c({\bm{y}}_{(l+1)}^c, \theta) \circ
+            DF_{l+1}({\bm{z}}_{(l+1)}^c) \circ \partial_1 \Gamma_{l+1}^c({\bm{y}_{(l)}}^c, \theta_{l+1}^c) & l&lt;L_c
             \end{cases}
             \end{align} $$
             We compute the needed partials:
@@ -1791,7 +1613,10 @@
                     <div class="proposition-title">
                     </div>
                     <div class="proposition-content">
-                        $$ \phi(DF^c_l({\bf z}^c_l)) = F^{c}_l{}'({\bf z}^c_l) \odot {\bf 1}_{abcd} $$
+                        $$ \phi(DF^c_l({\bm{z}}^c_{(l)})) = f^{c}_l{}'((z^c_{(l)})^{ijmn}) \otimes e_{ijmn}
+                        \otimes
+                        e^{ijmn}
+                        $$
                     </div>
                 </div>
                 <div class="proof">
@@ -1802,8 +1627,9 @@
                         Same as for FNN's:
                         $$
                         \begin{align*}
-                        DF^c_l({\bf z}^c_l) &amp;= {\bf h} \mapsto F^{c}_l{}'({\bf z}^c_l) \odot {\bf h} \\
-                        \implies \phi(DF^c_l({\bf z}^c_l)) &amp;= f^{c}_l{}'((z^c_l)^{ijmn}) \otimes e_{ijmn} \otimes
+                        DF^c_l({\bm{z}}^c_{(l)}) &amp;= \bm{h} \mapsto F^{c}_l{}'({\bm{z}}^c_{(l)}) \odot \bm{h} \\
+                        \implies \phi(DF^c_l({\bm{z}}^c_{(l)})) &amp;= f^{c}_l{}'((z^c_{(l)})^{ijmn}) \otimes e_{ijmn}
+                        \otimes
                         e^{ijmn}
                         \end{align*}
 
@@ -1818,9 +1644,10 @@
                     <div class="proposition-title">
                     </div>
                     <div class="proposition-content">
-                        $$ \phi(\partial_{1}\Gamma_l^c({\bf
-                        y}_{l-1}^c,
-                        W_l^c, b_l^c)) = (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta
+                        $$ \phi(\partial_{1}\Gamma_l^c(\bm{y}_{(l-1)}^c,
+                        W_{(l)}^c, b_{(l)}^c)) = (W^c_{(l)})^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes
+                        e^{\alpha
+                        \beta
                         \gamma
                         \delta}
                         $$
@@ -1831,22 +1658,21 @@
                         Proof
                     </div>
                     <div class="proof-content">
-                        Perturb $y^c_{l-1}$.
+                        Perturb $y^c_{(l-1)}$.
                         $$
                         \begin{align*}
-                        \partial_{1}\Gamma_l^c({\bf
-                        y}_{l-1}^c,
-                        W_l^c, b_l^c)&amp;= dy^c_{l-1} \mapsto (dy^c_{l-1}) \rtimes W^c_l \\
-                        \implies \phi(\partial_{1}\Gamma_l^c({\bf
-                        y}_{l-1}^c,
-                        W_l^c, b_l^c)) &amp;= (e_{\alpha\beta\gamma\delta} \rtimes W^c_l) \otimes
+                        \partial_{1}\Gamma_l^c(\bm{y}_{(l-1)}^c,
+                        W_{(l)}^c, b_{(l)}^c)&amp;= dy^c_{(l-1)} \mapsto (dy^c_{(l-1)}) \rtimes W^c_{(l)} \\
+                        \implies \phi(\partial_{1}\Gamma_l^c(\bm{y}_{(l-1)}^c,
+                        W_{(l)}^c, b_{(l)}^c)) &amp;= (e_{\alpha\beta\gamma\delta} \rtimes W^c_{(l)}) \otimes
                         e^{\alpha\beta\gamma\delta} \\
-                        &amp;= (e_{\alpha\beta\gamma\delta})^{ituv} \tau(W^c_l; (s, r))^{jtuv} e_{ijsr} \otimes
+                        &amp;= (e_{\alpha\beta\gamma\delta})^{ituv} \tau(W^c_{(l)}; (s, r))^{jtuv} e_{ijsr} \otimes
                         e^{\alpha\beta\gamma\delta} \\
 
-                        &amp;= \tau(W^c_l; (s, r))^{j\beta\gamma\delta} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma
+                        &amp;= \tau(W^c_{(l)}; (s, r))^{j\beta\gamma\delta} e_{\alpha jsr} \otimes e^{\alpha \beta
+                        \gamma
                         \delta} \\
-                        &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma
+                        &amp;= (W^c_{(l)})^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha \beta \gamma
                         \delta}
                         \end{align*}
                         $$
@@ -1860,9 +1686,8 @@
                     <div class="proposition-title">
                     </div>
                     <div class="proposition-content">
-                        $$ \phi(\partial_{2}\Gamma_l^c({\bf
-                        y}_{l-1}^c,
-                        W_l^c, b_l^c)) = (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
+                        $$ \phi(\partial_{2}\Gamma_l^c(\bm{y}_{(l-1)}^c,
+                        W_{(l)}^c, b_{(l)}^c)) = (y^c_{(l-1)})^{i\beta(\gamma+s)(\delta+r)}
                         e_{i\alpha sr}
                         \otimes
                         e^{\alpha\beta\gamma\delta} $$
@@ -1873,23 +1698,22 @@
                         Proof
                     </div>
                     <div class="proof-content">
-                        Perturb $W^c_l$:
+                        Perturb $W^c_{(l)}$:
                         $$
                         \begin{align*}
-                        \partial_{2}\Gamma_l^c({\bf
-                        y}_{l-1}^c,
-                        W_l^c, b_l^c) &amp;= dW^c_l \mapsto y^c_{l-1} \rtimes dW^c_l \\
-                        \implies \phi(\partial_{2}\Gamma_l^c({\bf
-                        y}_{l-1}^c,
-                        W_l^c, b_l^c)) &amp;= (y^c_{l-1} \rtimes e_{\alpha\beta\gamma\delta}) \otimes e^{\alpha
+                        \partial_{2}\Gamma_l^c(\bm{y}_{(l-1)}^c,
+                        W_{(l)}^c, b_{(l)}^c) &amp;= dW^c_{(l)} \mapsto y^c_{(l-1)} \rtimes dW^c_{(l)} \\
+                        \implies \phi(\partial_{2}\Gamma_l^c(\bm{y}_{(l-1)}^c,
+                        W_{(l)}^c, b_{(l)}^c)) &amp;= (y^c_{(l-1)} \rtimes e_{\alpha\beta\gamma\delta}) \otimes
+                        e^{\alpha
                         \beta\gamma\delta} \\
-                        &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
+                        &amp;= (y^c_{(l-1)})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
                         e^{\alpha\beta\gamma\delta} \\
-                        &amp;= (y^c_{l-1})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
+                        &amp;= (y^c_{(l-1)})^{ituv} \tau(e_{\alpha\beta\gamma\delta}; (s, r))^{jtuv} e_{ijsr} \otimes
                         e^{\alpha\beta\gamma\delta} \\
-                        &amp;= (y^c_{l-1})^{ituv} (e_{\alpha\beta(\gamma+s)(\delta+r)})^{jtuv} e_{ijsr} \otimes
+                        &amp;= (y^c_{(l-1)})^{ituv} (e_{\alpha\beta(\gamma+s)(\delta+r)})^{jtuv} e_{ijsr} \otimes
                         e^{\alpha\beta\gamma\delta} \\
-                        &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
+                        &amp;= (y^c_{(l-1)})^{i\beta(\gamma+s)(\delta+r)}
                         e_{i\alpha sr}
                         \otimes
                         e^{\alpha\beta\gamma\delta} \\
@@ -1907,9 +1731,8 @@
                     <div class="proposition-title">
                     </div>
                     <div class="proposition-content">
-                        $$ \phi(\partial_{3}\Gamma_l^c({\bf
-                        y}_{l-1}^c,
-                        W_l^c, b_l^c) ) = \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
+                        $$ \phi(\partial_{3}\Gamma_l^c(\bm{y}_{(l-1)}^c,
+                        W_{(l)}^c, b_{(l)}^c) ) = \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
                         e^{\alpha} $$
                     </div>
                 </div>
@@ -1921,12 +1744,10 @@
                         Perturb $b^c_l$
                         $$
                         \begin{align*}
-                        \partial_{3}\Gamma_l^c({\bf
-                        y}_{l-1}^c,
-                        W_l^c, b_l^c) &amp;= db^c_l \mapsto \bm{1}^{a} \otimes db^c_l \otimes \bm{1}^{bc} \\
-                        \implies \phi(\partial_{3}\Gamma_l^c({\bf
-                        y}_{l-1}^c,
-                        W_l^c, b_l^c) ) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
+                        \partial_{3}\Gamma_l^c(\bm{y}_{(l-1)}^c,
+                        W_{(l)}^c, b_{(l)}^c) &amp;= db^c_l \mapsto \bm{1}^{a} \otimes db^c_l \otimes \bm{1}^{bc} \\
+                        \implies \phi(\partial_{3}\Gamma_l^c(\bm{y}_{(l-1)}^c,
+                        W_{(l)}^c, b_{(l)}^c) ) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
                         e^{\alpha} \\
 
 
@@ -1947,32 +1768,31 @@
                     $$
                     \begin{align*}
                     {\bm{\xi}}_l{} &amp;=
-                    \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta)) &amp;= ({\xi}^c_l{})_{tuvw} e^{tuvw}\\
-                    {\bm{\xi}}_z &amp;= \phi(\partial_{1} U^c_l{}({\bf y}^c_l{}, \theta) \circ DF^c_l{}({\bf
-                    z}^c_l{}))
+                    \phi(\partial_{1} U^c_l{}(\bm{y}^c_{(l)}{}, \theta)) &amp;= ({\xi}^c_l{})_{tuvw} e^{tuvw}\\
+                    {\bm{\xi}}_z &amp;= \phi(\partial_{1} U^c_l{}(\bm{y}^c_{(l)}{}, \theta) \circ
+                    DF^c_l{}(\bm{z}_{(l)}^c))
                     \\
-                    {\bm{\delta}}_w &amp;= \phi(\partial_{W^c_l{}} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta)))
+                    {\bm{\delta}}_w &amp;= \phi(\partial_{W^c_{(l)}{}} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot;
+                    \theta)))
                     \\
                     {\bm{\delta}}_b &amp;= \phi(\partial_{b^c_l{}} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot;
                     \theta)))\\
-                    \bm{\epsilon}_w &amp;= \phi(\partial_{W^c_l{}}\Gamma^c_l{}({\bf
-                    y}_{l-1},
-                    \theta^c_l{})) &amp;= (y^c_{l-1})^{i\beta(\gamma+s)(\delta+r)}
+                    \bm{\epsilon}_w &amp;= \phi(\partial_{W^c_{(l)}{}}\Gamma^c_l{}(\bm{y}_{(l-1)},
+                    \theta^c_l{})) &amp;= (y^c_{(l-1)})^{i\beta(\gamma+s)(\delta+r)}
                     e_{i\alpha sr}
                     \otimes
                     e^{\alpha\beta\gamma\delta}\\
-                    \bm{\epsilon}_b &amp;= \phi(\partial_{b^c_l{}}\Gamma^c_l{}({\bf
-                    y}_{l-1},
+                    \bm{\epsilon}_b &amp;= \phi(\partial_{b^c_l{}}\Gamma^c_l{}(\bm{y}_{(l-1)},
                     \theta^c_l{})) &amp;= \bm{1}^{a} \otimes e_{\alpha} \otimes \bm{1}^{bc} \otimes
                     e^{\alpha} \\
-                    \bm{\epsilon}_z &amp;= \phi(DF^c_l{}({\bf z}^c_l{})) &amp; = f^{c}_l{}'((z^c_l)^{ijmn}) \otimes
+                    \bm{\epsilon}_z &amp;= \phi(DF^c_l{}({\bm{z}}^c_{(l)}{})) &amp; = f^{c}_l{}'((z^c_{(l)})^{ijmn})
+                    \otimes
                     e_{ijmn}
                     \otimes
                     e^{ijmn}
                     \\
-                    \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma^c_l{}({\bf
-                    y}_{l-1};
-                    \theta^c_l{})) &amp;= (W^c_l)^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha
+                    \bm{\epsilon}_{l-1} &amp;= \phi(\partial_{1} \Gamma^c_l{}(\bm{y}_{(l-1)};
+                    \theta^c_{(l)}) &amp;= {W^c_{(l)}}^{j\beta (\gamma-s)(\delta-r)} e_{\alpha jsr} \otimes e^{\alpha
                     \beta
                     \gamma
                     \delta}
@@ -1991,7 +1811,7 @@
 
                         </div>
                         <div class="proposition-content">
-                            $$ \bm{\delta}_w^{\dagger} = ({\bf y}^c_{l-1}{}^T \rtimes \bm{\xi}^T_z)^T $$
+                            $$ \bm{\delta}_w^{\dagger} = (\bm{y}^c_{(l-1)}{}^T \rtimes \bm{\xi}^T_z)^T $$
                         </div>
                     </div>
                     <div class="proof">
@@ -2002,26 +1822,25 @@
                             $$
                             \begin{align*}
 
-                            \bm{\delta}_w &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
+                            \bm{\delta}_w &amp;= \phi \left( \partial_{1} U^c_l{}(\bm{y}^c_{(l)}{},
                             \theta)
-                            \circ DF^c_l{}({\bf z}^c_l{})
+                            \circ DF^c_l{}({\bm{z}}^c_{(l)}{})
                             \circ
-                            \partial_{W^c_l{}}\Gamma^c_l{}({\bf
-                            y}_{l-1},
-                            \theta^c_l{}) \right) \\
+                            \partial_{W^c_{(l)}{}}\Gamma^c_l{}(\bm{y}_{(l-1)},
+                            \theta^c_{(l)}) \right) \\
                             &amp;= (\bm{\xi}_z){}_{abcd}
                             (\bm{\epsilon}_w)^{abcd}{}_{efgh} \\
-                            &amp;= (\xi_z)_{tuvw} (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
+                            &amp;= (\xi_z)_{tuvw} (y^c_{(l-1)})^{t\beta(\gamma+v)(\delta+w)}
 
                             e^{u\beta\gamma\delta}\\
                             \implies \bm{\delta}_w^{\dagger} &amp;= (\xi_z)_{tuvw}
-                            (y^c_{l-1})^{t\beta(\gamma+v)(\delta+w)}
+                            (y^c_{(l-1)})^{t\beta(\gamma+v)(\delta+w)}
                             e_{u\beta\gamma\delta} \\
-                            &amp;= (\xi^{\dagger}_z{}^T)^{utvw} (y^c_{l-1}{}^T)^{\beta t(\gamma+v)(\delta+w)}
+                            &amp;= (\xi^{\dagger}_z{}^T)^{utvw} (y^c_{(l-1)}{}^T)^{\beta t(\gamma+v)(\delta+w)}
                             e_{u\beta\gamma\delta} \\
-                            &amp;= \bm{\xi}^T_z \ltimes {\bf y}^c_{l-1}{}^T \\
+                            &amp;= \bm{\xi}^T_z \ltimes \bm{y}^c_{(l-1)}{}^T \\
 
-                            &amp;\equiv ({\bf y}^c_{l-1}{}^T \rtimes \bm{\xi}^T_z)^T \\
+                            &amp;\equiv (\bm{y}^c_{(l-1)}{}^T \rtimes \bm{\xi}^T_z)^T \\
                             \end{align*}
                             $$
 
@@ -2045,12 +1864,11 @@
                         <div class="proof-content">
                             $$
                             \begin{align*}
-                            \bm{\delta}_b &amp;= \phi \left( \partial_{1} U^c_l{}({\bf y}^c_l{},
+                            \bm{\delta}_b &amp;= \phi \left( \partial_{1} U^c_l{}(\bm{y}^c_{(l)}{},
                             \theta)
-                            \circ DF^c_l{}({\bf z}^c_l{})
+                            \circ DF^c_l{}({\bm{z}}^c_{(l)}{})
                             \circ
-                            \partial_{b^c_l{}}\Gamma^c_l{}({\bf
-                            y}_{l-1},
+                            \partial_{b^c_l{}}\Gamma^c_l{}(\bm{y}_{(l-1)},
                             \theta^c_l{}) \right) \\
                             &amp;= (\bm{\xi}_z){}_{abcd}
                             (\bm{\epsilon}_b)^{abcd}{}_{e} \\
@@ -2076,7 +1894,7 @@
                         <div class="proposition-title">
                         </div>
                         <div class="proposition-content">
-                            $$ \bm{\xi}_z^{\dagger} = \bm{\xi}_l{}^{\dagger} \odot F^c_l{}'({\bf z}^c_l{})
+                            $$ \bm{\xi}_z^{\dagger} = \bm{\xi}_l{}^{\dagger} \odot F^c_l{}'({\bm{z}}^c_{(l)}{})
                             $$
                         </div>
                     </div>
@@ -2089,11 +1907,11 @@
                             \begin{align*}
                             \bm{\xi}_z &amp;= (\bm{\xi}_l{})_{abcd}(\bm{\epsilon}_z)^{abcd}{}_{efgh}\\
 
-                            &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e^{tuvw} \\
-                            \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_l{})^{tuvw})
+                            &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_{(l)}{})^{tuvw}) e^{tuvw} \\
+                            \implies \bm{\xi}_z^{\dagger} &amp;= (\xi_l{})_{tuvw} f^c_l{}'((z^c_{(l)}{})^{tuvw})
                             e_{tuvw} \\
-                            &amp;= (\xi_l{}^{\dagger})^{tuvw} f^c_l{}'((z^c_l{})^{tuvw}) e_{tuvw} \\
-                            &amp;= \bm{\xi}_l{}^{\dagger} \odot F^c_l{}'({\bf z}^c_l{}) \\
+                            &amp;= (\xi_l{}^{\dagger})^{tuvw} f^c_l{}'((z^c_{(l)}{})^{tuvw}) e_{tuvw} \\
+                            &amp;= \bm{\xi}_l{}^{\dagger} \odot F^c_l{}'({\bm{z}}^c_{(l)}{}) \\
                             \end{align*}
 
                             $$
@@ -2107,7 +1925,7 @@
                         <div class="proposition-title">
                         </div>
                         <div class="proposition-content">
-                            $$ \bm{\xi}_{l-1}{}^{\dagger} = \bm{\xi}^{\dagger}_z{} \bar{\rtimes} W^c_l{}^T $$
+                            $$ \bm{\xi}_{l-1}{}^{\dagger} = \bm{\xi}^{\dagger}_z{} \bar{\rtimes} W^c_{(l)}{}^T $$
                         </div>
                     </div>
                     <div class="proof">
@@ -2117,34 +1935,33 @@
                         <div class="proof-content">
                             $$
                             \begin{align*}
-                            \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U^c_{l-1}({\bf y}^c_{l-1}, \theta)) =
+                            \bm{\xi}_{l-1} &amp;= \phi(\partial_1 U^c_{l-1}(\bm{y}^c_{(l-1)}, \theta)) =
                             \phi(\partial_{1}
-                            U^c_{l}({\bf
-                            y}^c_{l},
+                            U^c_{l}(\bm{y}^c_{(l)},
                             \theta)
                             \circ
-                            DF^c_{l}({\bf z}^c_{l}) \circ \partial_1 \Gamma^c_{l}({\bf y}^c_{l-1}, \theta^c_l{}))\\
+                            DF^c_{l}({\bm{z}}^c_{l}) \circ \partial_1 \Gamma^c_{l}(\bm{y}^c_{(l-1)}, \theta^c_l{}))\\
                             &amp;= (\bm{\xi}_l{})_{abcd} (\bm{\epsilon}_z)^{abcd}{}_{efgh}
                             (\bm{\epsilon}_{l-1})^{efgh}{}_{wxyz}\\
 
                             &amp;= (\bm{\xi}_z)_{efgh} (\bm{\epsilon}_{l-1})^{efgh}{}_{wxyz}\\
-                            &amp;= (\xi_z)_{tuvw} (W^c_l)^{u\beta (\gamma-v)(\delta-w)} e^{t\beta \gamma \delta}
+                            &amp;= (\xi_z)_{tuvw} (W^c_{(l)})^{u\beta (\gamma-v)(\delta-w)} e^{t\beta \gamma \delta}
                             \\
-                            \implies \bm{\xi}_{l-1}{}^{\dagger} &amp; = (\xi_z)_{tuvw} (W^c_l)^{u\beta
+                            \implies \bm{\xi}_{l-1}{}^{\dagger} &amp; = (\xi_z)_{tuvw} (W^c_{(l)})^{u\beta
                             (\gamma-v)(\delta-w)}
                             e_{t\beta
                             \gamma
                             \delta}
                             \\
-                            &amp; = (\xi^{\dagger}_z{})^{tuvw} (W^c_l{}^T)^{\beta u(\gamma-v)(\delta-w)} e_{t\beta
+                            &amp; = (\xi^{\dagger}_z{})^{tuvw} (W^c_{(l)}{}^T)^{\beta u(\gamma-v)(\delta-w)} e_{t\beta
                             \gamma
                             \delta} \\
-                            &amp; =(\xi^{\dagger}_z{})^{tuvw} \chi_2(W^c_l{}^T)^{\beta u(v-\gamma)(w-\delta)}
+                            &amp; =(\xi^{\dagger}_z{})^{tuvw} \chi_2(W^c_{(l)}{}^T)^{\beta u(v-\gamma)(w-\delta)}
                             e_{t\beta
                             \gamma
                             \delta}
                             \\
-                            &amp; = \bm{\xi}^{\dagger}_z{} \bar{\rtimes} W^c_l{}^T
+                            &amp; = \bm{\xi}^{\dagger}_z{} \bar{\rtimes} W^c_{(l)}{}^T
 
                             \end{align*}
 
