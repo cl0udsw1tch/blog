@@ -586,13 +586,30 @@
             = \argmin_{\theta} \left(\sum_i
             \Delta(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta))\right) = \frac{1}{I} \sum_i \argmin_{\theta} \left(
             \Delta(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta))\right)$$
-            so we could find the $\argmin$ pointwise then average. In practice, it's helpful to vectorize along the
+            so we could find the $\argmin$ pointwise then average. In practice, solving for $\theta^* = \argmin
+            \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))$ is
+            infeasible
+            for
+            many reasons, two important ones being the many flat regions of the objective $\hat{R}$ and the large
+            matrix
+            inversions that would have to be computed. However, if we've obtained the partial derivative of
+            $\hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot;
+            \theta))$ with respect to $\theta$
+            we
+            can
+            subtract the gradient from $\theta$ to move towards the optimal point. In practice [again, sorry], it's
+            helpful to
+            vectorize along the
             batch sample because the partial derivatives will be more computationally efficient to work with.
-
-            We proceed by finding the partial derivatives of the empirical risk. Assume as per the previous section we
-            have
-            a
-            loss function $\Delta$ and define the vectored version by
+            Right now, we would have to find $I$ partials
+            $$
+            \partial_{\theta} \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot;
+            \theta)) = \frac{1}{I} \sum_i \partial_{\theta} \Delta(\bar{v}_{(i)};\mathcal{F}(\bar{x}_{(i)}; \theta))
+            $$ which on its own is fine, except for the fact that the intermediate backpropogation steps would require
+            looping over each point.
+            Instead, we would rather backpropogate aggregate objects over the entire dataset. To do this, we need to
+            define a secondary model where the entire forward propogation concerns only a single object for all points.
+            Define the vectored version of the loss function$\Delta$ by
             $$
             {\bf \Delta}(\bm{v}, \hat{\bm y}) = \sum_i \Delta(v_{(i)}, \hat{y}_{(i)})
             $$
@@ -608,15 +625,62 @@
             $$
             Note the overloading of the symbol $\mathcal{F}$, here it is taken to mean
             $$
-            \mathcal{F}(\bm{x}; \theta) := \prod_i \mathcal{F}(x_{(i)};\theta)
+            \mathcal{F}(\bm{x}; \theta) := \bigoplus_i \mathcal{F}(x_{(i)};\theta)
             $$
             This type of overload will be used for all the other module functions such as $F_l, \Gamma_l \ldots$, but it
-            should be very clear from the type of argument given. For any object $v_i$, the vectored version can be
-            given as either
+            should be very clear from the type of argument given. For any objects $v_i$, the vectored version can be
+            given as
             $$
-            \prod_i v_i \cong \sum_i e_i \otimes v_i
-            $$ and moving back and forth requires applying the obvious isomorphism between $$ \reals^I \otimes \Bbb{V}
-            \cong \prod_i \Bbb{V}$$
+            \bm{v} = v_1 \oplus \ldots \oplus v_I = \sum_i e_i \otimes v_i
+            $$ since $$ \reals^I \otimes \Bbb{V}
+            \cong \bigoplus_i \Bbb{V}$$
+            We define each $\bm{z}_{(l)}, \bm{y}_{(l)}, \Gamma_l, F_l$ similarly
+            $$
+            \bm{z}_{(l)} = z_{(1,l)} \oplus \ldots \oplus z_{(I, l)} = \sum_i e_i \otimes z_{(i,l)} \\
+            \bm{y}_{(l)} = y_{(1,l)} \oplus \ldots \oplus y_{(I, l)} = \sum_i e_i \otimes y_{(i,l)} \\
+
+            \Gamma_l(\bm{y}_{(l-1)}) := \bigoplus_i \Gamma_l(y_{(i,l-1)};\theta) = \sum_ie_i \otimes
+            \Gamma_l(y_{(i,l-1)};\theta) \\
+            F_l(\bm{z}_{(l)}) := \bigoplus_i F_l(z_{(i,l)}) = \sum_ie_i \otimes F_l(z_{(i,l)})
+            $$ and note $\bm{z}_{(l)} = \Gamma_l(\bm{y}_{(l-1)};\theta) $ and $\bm{y}_{(l)} = F_l(\bm{z}_{(l)}) $. So we
+            actually have the same model
+            $$
+            \mathcal{F}(\bm{x}; \theta) = \bigoplus_i \mathcal{F}(x_i; \theta) = \bm{y}_{(L+1)} = F_{L+1}
+            \circ \ldots \circ
+            \Gamma_1(\cdot; \theta)(\bm{x})
+            $$
+            that is, instead of direct summing at the end, we can compose the above maps into a model on batches.
+            Infact, the direct sum satisfies, for any $f(x) = f_n \circ \ldots \circ f_1(x)$
+            $$
+            \bigoplus_i f(x_i) = \bigoplus_i f_n \circ \ldots \circ \bigoplus_i f_1 (\bigoplus_i x_i)
+            $$
+            Define
+            $$
+            \begin{align*}
+            S(v, z) &amp;= \Delta(v, \cdot) \circ F_{L+1}(z) \\
+            T(\cdot, \theta) &amp;=
+            \Gamma_{L+1}(\cdot, \theta) \circ ... \circ \Gamma_1(\cdot,\theta)
+            \\
+            S(\bar{\bm{v}}, \bm{z}_{(L+1)}) &amp;= {\bf \Delta}(\bm{\bar{v}}, \cdot) \circ
+            F_l(\bm{z}_{(L+1)}) \\ &amp;= \sum_i \Delta(\bar{v}_{(i)}, F_{L+1}(z_{(i,L+1)})) \\&amp;= \sum_i
+            S(\bar{v}_{(i)},
+            z_{(i, L+1)}) \\
+            T(\bm{x}, \theta) &amp;= \bigoplus_i T(x_{(i)}, \theta) \\&amp;= \Gamma_{L+1}(\cdot,\theta) \circ \ldots
+            \circ
+            \Gamma_1(\cdot , \theta) (\bm{x})
+            \end{align*}
+            $$
+            Then
+            $$
+
+            \hat{R}(\bar{\bm{d}}, \mathcal{F}(\cdot;\theta)) = \frac{1}{I} \sum_i
+            S(\bar{v}_{(i)}, \cdot) \circ
+            T(\bar{x}_{(i)},
+            \theta)= \frac{1}{I}
+            S(\bar{\bm{v}}, \cdot) \circ \ T(\bar{\bm{x}}, \theta)
+
+
+            $$
             <section id='last-activation-isolation' data-title="Prop: Last Activation Isolation">
                 <div class="proposition">
 
@@ -625,27 +689,16 @@
                     </div>
 
                     <div class="proposition-content">
-                        Define
                         $$
-                        \begin{align}
-                        S(v, z) &amp;= \Delta(v, \cdot) \circ F_{L+1}(z) \\
-                        T(\cdot, \theta) &amp;=
-                        \Gamma_{L+1}(\cdot, \theta_{L+1}) \circ ... \circ \mathcal{L}_0
-                        \end{align}
-                        $$ Then
-                        $$
-                        \mathcal{F}(\bar{x}_{(i)}; \theta) = F_{L+1} \circ T(\bar{x}_{(i)}, \theta) \\
-                        \Delta(\bar{v}_{(i)}, \mathcal{F}(\bar{x}_{(i)}; \theta)) = S(\bar{v}_{(i)}, \cdot) \circ
-                        T(\bar{x}_{(i)},
-                        \theta)
-
-                        $$ and
-                        $$
+                        \begin{align*}
                         \partial_{\theta} \Delta(\bar{v}_{(i)},
                         \mathcal{F}(\bar{x}_{(i)}; \theta))
-                        = \partial_2S
+                        &amp;= \partial_2S
                         (\bar{v}_{(i)}, z_{(i,L+1)}) \circ
-                        \partial_{2} T(\bar{x}_{(i)},\theta)
+                        \partial_{2} T(\bar{x}_{(i)},\theta) \\
+                        \partial_{\theta}\hat{R}(\bar{\bm{d}}, \mathcal{F}(\cdot;\theta)) &amp;= \frac{1}{I} \partial_2
+                        S(\bar{\bm{v}}, \bm{z}_{(L+1)}) \circ \partial_2 T(\bar{\bm{x}}, \theta)
+                        \end{align*}
                         $$
 
                     </div>
@@ -664,22 +717,6 @@
                 </div>
 
             </section>
-            <div class="corollary">
-                <div class="corollary-title">
-                </div>
-                <div class="corollary-content">
-                    $$
-                    \partial_{\theta}\hat{R}(\bar{\bm{d}}, \mathcal{F}(\cdot;\theta)) = \frac{1}{I} \partial_2
-                    S(\bar{\bm{v}}, \bm{z}_{(L+1)}) \circ \partial_2 T(\bar{\bm{x}}, \theta)
-                    $$
-                    where
-                    $$
-                    S(\bar{\bm{v}}, \bm{z}_{(L+1)}) = {\bf \Delta}(\bm{\bar{v}}, \hat{\bm{y}}) = \sum_i S(\bar{v}_{(i)},
-                    z_{(i, L+1)}) \\
-                    T(\bm{x}, \theta) = \prod_i T(x_{(i)}, \theta)
-                    $$
-                </div>
-            </div>
 
             It turns out that combining $\Delta$ and $F_{L+1}$ into $S$ results in very elegant derivatives, which
             we
@@ -1299,17 +1336,7 @@
             </section>
             <section id='gradients' data-title="Tensors of Gradients">
                 <h2 class="text-2xl my-8" style="font-family: var(--font-playfair);">The Gradients</h2>
-                In practice, solving for $\theta^* = \argmin \hat{R}(\bar{\bm{d}}; \mathcal{F}(\cdot; \theta))$ is
-                infeasible
-                for
-                many reasons, two important ones being the many flat regions of the objective $\hat{R}$ and the large
-                matrix
-                inversions that would have to be computed. However,
-                now that we've obtained the partial derivatives of $\hat{R}$ at $(\bar{\bm{d}}; \mathcal{F}(\cdot;
-                \theta))$
-                we
-                can
-                subtract the gradient from $\theta$ to move towards the optimal point. The procedure to find the
+                The procedure to find the
                 gradients
                 will
                 be
