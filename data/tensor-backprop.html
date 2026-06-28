@@ -891,19 +891,14 @@
         <div class="proof">
           <div class="proof-title">Proof</div>
           <div class="proof-content">
-            Another useful property of direct sums is you can move between representations. Given a function $f$ on a
-            direct sum over $\reals^I \otimes \reals^C$, and $\Phi$ is the unique isomorphism from $\reals^I \otimes
-            \reals^C \to \reals^{I \times C}$ induced by the universality of the two spaces for direct sums over $I$
-            copies of $\reals^C$, then
-            $f \circ \Phi^{-1} , f $ will have the same formula, since both spaces are the same direct sum spaces up to
-            unique isomorphism.
-            Matricizing gives
+
+            Tensorizing the loss function gives
 
             $$
             {\bf \Delta}(\bar{\bm{v}}, \hat{\bm{y}}) = - \Bbb{X} : \log(\hat{\bm{y}}) $$
-            where $\Bbb{X} \in \reals^{I \times I}$ is the one hot vector of $\bar{\bm{v}}$ defined by
+            where $\Bbb{X} \in \reals^I \otimes \Bbb{V}$ is the one hot vector of $\bar{\bm{v}}$ defined by
             $$
-            \Bbb{X}[i,j] = \delta_{\bar{v}_{(i)}, j} \\ \Bbb{X} = \bigoplus_{i,j} \delta_{\bar{v}_{(i)}, j} $$ and $:$
+            \Bbb{X}^{i,j} = \delta_{\bar{v}_{(i)}, j} $$ and $:$
             is the frobenius inner product.
             Perturb $\hat{\bm{y}}$ by $d \hat{\bm{y}}$, then
 
@@ -916,36 +911,32 @@
             \end{align*}
 
             $$
-            Matricizing the softmax activation gives
+            Tensorizing the softmax activation gives
             $$
-            \hat{\bm{y}} = F_{L+1}(\bm{z}_{(L+1)}) = \exp(\bm{z}_{(L+1)}) \oslash \exp(\bm{z}_{(L+1)}) {\bf
-            1}
-            {\bf 1}^T
+            \hat{\bm{y}} = F_{L+1}(\bm{z}_{(L+1)}) = \exp(\bm{z}_{(L+1)}) \oslash \mathfrak{c}(\exp(\bm{z}_{(L+1)}))
+            $$ where
+            $$
+            \mathfrak{c}(T)^{i,j} = \sum_k T^{i,k}
             $$
             Perturb $\bm{z}_{(L+1)}$ by $d\bm{z}_{(L+1)}$, then letting $E = \exp(\bm{z}_{(L+1)})$
 
 
             $$
             \begin{align*}
-            d \hat{\bm{y}} &amp;= (E {\bf 1}{\bf 1}^T \odot dE - E \odot dE {\bf 1}{\bf 1}^T ) \oslash
-            ( E {\bf 1}{\bf 1}^T)^2\\
-            &amp;= ((E {\bf 1}{\bf 1}^T ) \odot E \odot d \bm{z}_{(L+1)} - E \odot (E \odot d\bm{z}_{(L+1)}
-            ){\bf
-            1} {\bf 1}^T)
+            d \hat{\bm{y}} &amp;= (\mathfrak{c}(E) \odot dE - E \odot \mathfrak{c}(dE) ) \oslash
+            \mathfrak{c}(E)^2\\
+            &amp;= (\mathfrak{c}(E) \odot E \odot d \bm{z}_{(L+1)} - E \odot \mathfrak{c}(E \odot d\bm{z}_{(L+1)}
+            ))
             \oslash
-            ( E {\bf 1}{\bf 1}^T)^2
+            \mathfrak{c}(E) ^2
             \\
-            &amp;= E \oslash (E {\bf 1}{\bf 1}^T ) \odot d \bm{z}_{(L+1)} - (E \oslash (E{\bf 11}^T )) \odot
-            (((E
-            \odot d\bm{z}_{(L+1)}) {\bf
-            1}{\bf 1}^T)\oslash ( E {\bf 1}{\bf 1}^T)) \\
-            &amp;= \hat{\bm{y}} \odot d\bm{z}_{(L+1)} - \hat{\bm{y}} \odot (((E \oslash ( E {\bf 1}{\bf
-            1}^T)
-            \odot d\bm{z}_{(L+1)}) {\bf
-            1}{\bf 1}^T)) \\
-            &amp;= \hat{\bm{y}} \odot d\bm{z}_{(L+1)} - \hat{\bm{y}} \odot ((\hat{\bm{y}} \odot
-            d\bm{z}_{(L+1)}){\bf
-            1}{\bf 1}^T))
+            &amp;= E \oslash \mathfrak{c}(E) \odot d \bm{z}_{(L+1)} - (E \oslash \mathfrak{c}(E) ) \odot
+            (\mathfrak{c}(E
+            \odot d\bm{z}_{(L+1)})\oslash \mathfrak{c}(E)) \\
+            &amp;= \hat{\bm{y}} \odot d\bm{z}_{(L+1)} - \hat{\bm{y}} \odot \mathfrak{c}(E \oslash \mathfrak{c}(E)
+            \odot d\bm{z}_{(L+1)}) \\
+            &amp;= \hat{\bm{y}} \odot d\bm{z}_{(L+1)} - \hat{\bm{y}} \odot \mathfrak{c}(\hat{\bm{y}} \odot
+            d\bm{z}_{(L+1)}))
             \end{align*}
             $$
 
@@ -961,14 +952,12 @@
             d \hat{\bm{y}} \right) \\
 
             &amp;= \Bbb{X} : \left( \hat{\bm{y}}^{-1} \odot
-            \hat{\bm{y}} \odot ((\hat{\bm{y}} \odot
-            d\bm{z}_{(L+1)}){\bf
-            1}{\bf 1}^T) - \hat{\bm{y}}^{-1} \odot
+            \hat{\bm{y}} \odot \mathfrak{c}(\hat{\bm{y}} \odot
+            d\bm{z}_{(L+1)}) - \hat{\bm{y}}^{-1} \odot
             \hat{\bm{y}} \odot d\bm{z}_{(L+1)} \right) \\
 
-            &amp;= \Bbb{X} : \left( (\hat{\bm{y}} \odot
-            d\bm{z}_{(L+1)}){\bf
-            1}{\bf 1}^T - d\bm{z}_{(L+1)} \right) \\
+            &amp;= \Bbb{X} : \left(\mathfrak{c}(\hat{\bm{y}} \odot
+            d\bm{z}_{(L+1)}) - d\bm{z}_{(L+1)} \right) \\
             &amp;= \hat{\bm{y}} : d \bm{z}_{(L+1)} - \Bbb{X} : d
             \bm{z}_{(L+1)} \\
             &amp;= (\hat{\bm{y}} - \Bbb{X}) : d \bm{z}_{(L+1)}
@@ -1181,7 +1170,7 @@
           </div>
           <div class="proposition-content">
             $$
-            \phi(DF_l(\bm{z}_{(l)})) = f_l'((z_l)^{i,j})e_i \otimes e_j \otimes e^i \otimes e^j $$
+            \phi(DF_l(\bm{z}_{(l)})) = f_l'(z_{(i,l)}^{j})e_i \otimes e_j \otimes e^i \otimes e^j $$
           </div>
         </div>
         <div class="proof">
@@ -1192,7 +1181,7 @@
             Perturb ${\bm{z}_{(l)}}$ by $d {\bm{z}_{(l)}}$, then
             $$
             \begin{align*}
-            dF_l({\bm{z}_{(l)}}) = f_l'((z_l)^{i,j})d(z_l)^{i,j}e_i \otimes e_j &amp;= F_l'({\bm{z}_{(l)}})
+            dF_l({\bm{z}_{(l)}}) = f_l'(z_{(i,l)}^{j}) dz_{(i,l)}^{j}e_i \otimes e_j &amp;= F_l'({\bm{z}_{(l)}})
             \odot
             d \bm{z}_{(l)}
             \\
@@ -1204,7 +1193,7 @@
             \begin{align*}
             \implies \phi(DFl({\bm{z}_{(l)}})) &amp;= F'_l({\bm{z}_{(l)}}) \odot (e_i \otimes e_j) \otimes
             e^i
-            \otimes e^j = f'_l(({z}_l)^{i,j}) \otimes e_i \otimes e_j \otimes e^i
+            \otimes e^j = f'_l({z}_{(i,l)}^{j}) \otimes e_i \otimes e_j \otimes e^i
             \otimes e^j \\
             \end{align*}
             $$
@@ -1238,8 +1227,8 @@
           \begin{align*}
           \partial_{W_{(l)}} \Gamma_l(\bm{
           y}_{(l-1)},
-          \theta_l) =&amp;\quad dW_{(l)} \mapsto g_{bc}({\bm{y}_{(l-1)}})^{ab}(dW_{(l)})^{cd} \\
-          \xmapsto[]{\phi}&amp;\quad g_{bc}({\bm{y}_{(l-1)}})^{ab}(e_i \otimes e_j)^{cd} \otimes
+          \theta_l) =&amp;\quad dW_{(l)} \mapsto {\bm{y}_{(l-1)}}^{a}{}_b(dW_{(l)})^{cd} \\
+          \xmapsto[]{\phi}&amp;\quad {\bm{y}_{(l-1)}}^{a}{}_b(e_i \otimes e_j)^{cd} \otimes
           e^i \otimes e^j\\
           =&amp;\quad y_{(l-1)}^{x,i} e_{x} \otimes e_j \otimes e^i \otimes e^j\\
           \end{align*}
